@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instrukcja montażu – Pompa w HA</title>
+<meta name="description" content="Krok po kroku: podłączenie modułu do sterownika ściennego pompy (H1/H2), sieć Wi-Fi albo LAN, dodatek „Pompa w HA”, diagnostyka. Zestaw Wi-Fi, zestaw LAN i własny moduł.">
+<style>
+:root{--bg:#f5f7fb;--karta:#fff;--txt:#17203a;--mut:#56627e;--lin:#dbe2ef;--ak:#1677d2;--ok:#138a5e;--zle:#c62f45;--warn:#9a6a00;--warnbg:#fff6dc}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1524;--karta:#16203a;--txt:#e7edfb;--mut:#9fb0d0;--lin:#28365a;--ak:#5cb3ff;--ok:#3fd09c;--zle:#ff7b8d;--warn:#f2c35a;--warnbg:#2c2410}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.w{max-width:820px;margin:0 auto;padding:20px 16px 60px}
+a{color:var(--ak)}
+h1{font-size:clamp(26px,5vw,36px);line-height:1.15;margin:8px 0 6px}
+h2{font-size:22px;margin:0 0 10px}
+h3{font-size:17px;margin:16px 0 6px}
+.pod{color:var(--mut);margin:0 0 16px}
+.spis{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;padding:0;list-style:none}
+.spis a{display:inline-block;padding:7px 12px;border:1px solid var(--lin);border-radius:999px;text-decoration:none;background:var(--karta);font-size:14.5px}
+.k{background:var(--karta);border:1px solid var(--lin);border-radius:14px;padding:18px;margin:0 0 16px;break-inside:avoid}
+ol.kroki{margin:0;padding-left:22px}
+ol.kroki li{margin:0 0 10px}
+.uw{background:var(--warnbg);border-left:4px solid var(--warn);padding:10px 12px;border-radius:8px;margin:12px 0}
+.uw b{color:var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{border-bottom:1px solid var(--lin);padding:8px 6px;text-align:left;vertical-align:top}
+th{font-size:13.5px;color:var(--mut);font-weight:700}
+.schemat{width:100%;height:auto;border:1px solid var(--lin);border-radius:10px;background:#fff}
+.btn{display:inline-block;background:var(--ak);color:#fff;text-decoration:none;font-weight:700;padding:11px 16px;border-radius:10px;margin:6px 0}
+.dwa{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.dwa{grid-template-columns:1fr}}
+.wariant{border:1px solid var(--lin);border-radius:12px;padding:12px 14px}
+.wariant h3{margin-top:0}
+code{font:14px ui-monospace,Menlo,monospace;background:rgba(127,140,170,.15);padding:1px 5px;border-radius:5px}
+.stopka{color:var(--mut);font-size:14px;margin-top:24px}
+@media print{
+  body{background:#fff;color:#000;font-size:12.5pt}
+  .spis,.nodruk{display:none}
+  .k{border:1px solid #bbb;page-break-inside:avoid}
+  a{color:#000;text-decoration:none}
+}
+</style>
+</head>
+<body>
+<div class="w">
+  <p class="pod" style="margin:0"><a href="https://pompa.woleoze.pl">← pompa.woleoze.pl</a></p>
+  <h1>Instrukcja montażu</h1>
+  <p class="pod">Pompa w Home Assistant: zestaw Wi-Fi, zestaw Wi-Fi + LAN albo własny moduł. Całość zajmuje ok. 20 minut. Nie trzeba otwierać jednostki zewnętrznej ani niczego programować.</p>
+  <ul class="spis">
+    <li><a href="#zanim">1. Zanim zaczniesz</a></li>
+    <li><a href="#pompa">2. Ustawienie pompy</a></li>
+    <li><a href="#przewody">3. Dwie żyły</a></li>
+    <li><a href="#siec">4. Zasilanie i sieć</a></li>
+    <li><a href="#ha">5. Home Assistant</a></li>
+    <li><a href="#diagnostyka">6. Diagnostyka</a></li>
+    <li><a href="#pomoc">7. Pomoc</a></li>
+  </ul>
+
+  <section class="k" id="zanim">
+    <h2>1. Zanim zaczniesz</h2>
+    <ul>
+      <li><b>Pompa</b> na płycie Midea M-Thermal z czarno-białym sterownikiem ściennym (np. Rotenso Aquami, Kaisai Arctic, Galmet Prima). Pełna lista: <a href="https://pompa.woleoze.pl/#zgodnosc">z jakimi pompami działa</a>.</li>
+      <li><b>Home Assistant OS</b> (Raspberry Pi, Home Assistant Green, mini PC z HA OS) w tej samej sieci domowej.</li>
+      <li><b>Klucz Pro</b> z maila po zakupie (RPRO-…).</li>
+      <li><b>Mały śrubokręt płaski</b> i dwie żyły przewodu, np. jedna para z kabla sieciowego.</li>
+      <li><b>Zestaw Wi-Fi:</b> ładowarka USB-C od telefonu (5 V, min. 1 A). Nie ma jej w zestawie.</li>
+      <li><b>Zestaw LAN:</b> wolne gniazdo w routerze i kabel sieciowy do miejsca, gdzie wisi sterownik.</li>
+    </ul>
+    <div class="uw"><b>Bezpieczeństwo.</b> Sterownik ścienny ma niskie napięcie, ale jednostka pompy ma 230/400 V. Pracujesz tylko przy sterowniku ściennym. Przed zdjęciem sterownika ze ściany wyłącz pompę przyciskiem na panelu. Nigdy nie podawaj zasilania na zaciski H1/H2. Nie czujesz się pewnie? Poproś instalatora: <a href="https://woleoze.pl/firmy/pompy-ciepla/" target="_blank" rel="noopener">firmy od pomp ciepła w twojej okolicy (woleOZE)</a>.</div>
+  </section>
+
+  <section class="k" id="pompa">
+    <h2>2. Ustawienie pompy (2 minuty)</h2>
+    <ol class="kroki">
+      <li>Na sterowniku ściennym wejdź w menu serwisanta (hasło zwykle 234, sprawdź w instrukcji pompy).</li>
+      <li>Pozycja <b>17.2 „ADRES HMI DLA BMS”</b> ma mieć wartość <b>1</b>. To ustawienie fabryczne.</li>
+      <li>Pozycja <b>HMI SET</b> ma mieć wartość <b>0</b> (sterownik główny). Nie zmieniaj jej na podrzędny.</li>
+    </ol>
+    <div class="uw"><b>Ważne.</b> Po wyjściu z menu serwisanta pompa się wyłącza. To normalne. Włącz ją przyciskiem zasilania na panelu i sprawdź, czy świeci się grzanie i ciepła woda.</div>
+  </section>
+
+  <section class="k" id="przewody">
+    <h2>3. Dwie żyły do sterownika ściennego (10 minut)</h2>
+    <ol class="kroki">
+      <li>Wyłącz pompę na panelu i zdejmij sterownik ze ściany.</li>
+      <li>Z tyłu sterownika znajdź zaciski <b>H1</b> i <b>H2</b> (czasem na osobnej listwie obok zasilania panelu).</li>
+      <li>Połącz: <b>A+ modułu → H2</b>, <b>B− modułu → H1</b>. Masy (GND) nie łączysz. Istniejących przewodów nie odpinasz.</li>
+      <li>Załóż sterownik z powrotem i włącz pompę na panelu.</li>
+    </ol>
+    <img class="schemat" src="../docs/schemat-modbus-panel.png" alt="Schemat: zacisk A+ modułu do H2, B− do H1 na sterowniku ściennym; nie na płycie głównej jednostki" loading="lazy">
+    <div class="uw"><b>Tylko sterownik ścienny.</b> Na płycie głównej jednostki też są zaciski H1/H2, ale to magistrala do panelu, nie Modbus. Nie podłączaj się tam.</div>
+  </section>
+
+  <section class="k" id="siec">
+    <h2>4. Zasilanie i sieć (3 minuty)</h2>
+    <div class="dwa">
+      <div class="wariant">
+        <h3>Zestaw Wi-Fi</h3>
+        <ol class="kroki">
+          <li>Podłącz moduł do ładowarki USB-C.</li>
+          <li>Po ok. 30 s w telefonie pojawi się sieć Wi-Fi <b>„pompa-setup”</b>. Połącz się. Hasło: <b>pompa-setup</b>.</li>
+          <li>Otworzy się strona modułu (jeśli nie otworzy się sama, wpisz w przeglądarce <b>192.168.4.1</b>). Wybierz swoją sieć domową i wpisz jej hasło. Hasło zostaje w module, nikt go nie zna.</li>
+          <li>Moduł połączy się z twoją siecią, a sieć „pompa-setup” zniknie.</li>
+        </ol>
+      </div>
+      <div class="wariant">
+        <h3>Zestaw Wi-Fi + LAN</h3>
+        <ol class="kroki">
+          <li>Podłącz zasilacz z zestawu do bramki.</li>
+          <li>Wepnij kabel sieciowy do bramki i do routera.</li>
+          <li>Nic więcej nie ustawiasz. Bramkę znajdzie dodatek w kroku 5.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="k" id="ha">
+    <h2>5. Home Assistant (5 minut)</h2>
+    <ol class="kroki">
+      <li><b>Tylko zestaw Wi-Fi:</b> Ustawienia → Urządzenia i usługi. U góry pojawi się <b>„Wykryto: Pompa Modbus”</b>. Kliknij „Skonfiguruj” i „Dodaj”.</li>
+      <li>Kliknij przycisk niżej (ten sam jest w mailu). Otworzy się twój Home Assistant z pytaniem o dodanie repozytorium. Potwierdź.<br>
+        <a class="btn nodruk" href="https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FWoleOze%2Frotenso-midea-modbus-ha" target="_blank" rel="noopener">Dodaj „Pompa w HA” do mojego Home Assistant</a></li>
+      <li>Zainstaluj dodatek <b>„Pompa w HA”</b>, kliknij „Uruchom”, a potem „Otwórz interfejs” (albo „Pompa – instalator” w pasku bocznym).</li>
+      <li><b>Tylko zestaw LAN:</b> kliknij „Szukaj bramki LAN”, a przy znalezionej bramce „Użyj”.</li>
+      <li>Wklej klucz z maila i kliknij <b>„Zainstaluj”</b>. Dodatek zapisze pakiety, karty i pulpit, sprawdzi konfigurację i zrestartuje Home Assistant.</li>
+      <li>Po ok. minucie w pasku bocznym pojawi się <b>„Pompa”</b>. Gotowe.</li>
+    </ol>
+    <p><b>Opcjonalnie:</b> w panelu instalatora, w sekcji „Ustawienia”, wybierz z listy swój licznik prądu, telefon do powiadomień o anomaliach i swoją taryfę. Dodatek sam to wszystko podepnie.</p>
+  </section>
+
+  <section class="k" id="diagnostyka">
+    <h2>6. Diagnostyka: co znaczy czerwony punkt</h2>
+    <p>Panel „Pompa – instalator” sam sprawdza całość. Zielone = działa. Czerwone = jedna z sytuacji niżej.</p>
+    <table>
+      <tr><th>Komunikat</th><th>Co zrobić</th></tr>
+      <tr><td>Home Assistant nie widzi modułu pompy</td><td>Wi-Fi: dodaj „Pompa Modbus” w Urządzeniach i usługach (krok 5.1). Nie ma go? Sprawdź zasilanie i czy telefon nie widzi sieci „pompa-setup” (wtedy moduł nie zna twojej sieci, wróć do kroku 4). LAN: „Szukaj bramki LAN”.</td></tr>
+      <tr><td>Brak odczytów z pompy</td><td>1) Zamień przewody A i B. 2) Sprawdź 17.2 = 1 i HMI SET = 0. 3) Przewody muszą iść do sterownika ściennego, nie płyty głównej. 4) Pompa musi być włączona.</td></tr>
+      <tr><td>Moduł jest offline</td><td>Sprawdź zasilanie modułu i zasięg Wi-Fi przy sterowniku.</td></tr>
+      <tr><td>Pompa zgłasza błąd</td><td>Sprawdź kod w instrukcji pompy. Gdy nie wiesz, co dalej, wyślij raport (krok 7).</td></tr>
+      <tr><td>Pakiety Pro nie są wczytane / brak pulpitu</td><td>Kliknij „Zainstaluj ponownie”.</td></tr>
+      <tr><td>Klucz nieaktywny albo zablokowany</td><td>Napisz na pompa@woleoze.pl.</td></tr>
+    </table>
+  </section>
+
+  <section class="k" id="pomoc">
+    <h2>7. Pomoc</h2>
+    <ol class="kroki">
+      <li>W panelu „Pompa – instalator” kliknij <b>„Wyślij raport do wsparcia”</b>. Raport zawiera wynik diagnostyki i stany encji pompy, bez haseł i bez danych z reszty domu.</li>
+      <li>Napisz na <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a>, co widzisz. Odpowiadam mailowo w ciągu 2 dni roboczych.</li>
+      <li>Jeśli poprawka jest po mojej stronie, dodatek pobierze ją sam (sprawdza co godzinę). Nikt nie łączy się z twoim Home Assistant z zewnątrz.</li>
+    </ol>
+    <p>Pomoc jest tylko mailowa. Nie prowadzę wsparcia telefonicznego.</p>
+  </section>
+
+  <p class="stopka">Pompa w Home Assistant · <a href="https://pompa.woleoze.pl">pompa.woleoze.pl</a> · partner technologiczny: <a href="https://woleoze.pl" target="_blank" rel="noopener">woleoze.pl</a> (<a href="https://woleoze.pl/kalkulator-pompy-ciepla/" target="_blank" rel="noopener">kalkulator pompy ciepła</a>, <a href="https://woleoze.pl/firmy/pompy-ciepla/" target="_blank" rel="noopener">firmy od pomp</a>). Projekt niezależny, niezwiązany z Rotenso ani Midea.</p>
+</div>
+</body>
+</html>
