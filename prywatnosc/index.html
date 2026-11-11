@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polityka prywatności – Pompa w HA</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="canonical" href="https://pompa.woleoze.pl/prywatnosc/">
+<meta name="description" content="Polityka prywatności „Pompa w Home Assistant”: jakie dane zbieramy przy zamówieniu, licencji Pro i raporcie diagnostyki, komu je powierzamy i jak długo przechowujemy.">
+<style>
+:root{--bg:#f5f7fb;--karta:#fff;--txt:#17203a;--mut:#56627e;--lin:#dbe2ef;--ak:#1677d2}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1524;--karta:#16203a;--txt:#e7edfb;--mut:#9fb0d0;--lin:#28365a;--ak:#5cb3ff}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.w{max-width:820px;margin:0 auto;padding:20px 16px 60px}
+a{color:var(--ak)}
+h1{font-size:clamp(26px,5vw,34px);line-height:1.15;margin:8px 0 6px}
+h2{font-size:20px;margin:0 0 10px}
+.pod{color:var(--mut);margin:0 0 16px}
+.k{background:var(--karta);border:1px solid var(--lin);border-radius:14px;padding:18px;margin:0 0 16px}
+.k ol,.k ul{margin:0;padding-left:22px}.k li{margin:0 0 8px}
+.tab{overflow-x:auto;margin:6px 0 14px}
+table{width:100%;border-collapse:collapse;font-size:15px;min-width:560px}
+th,td{border-bottom:1px solid var(--lin);padding:8px 6px;text-align:left;vertical-align:top}
+th{font-size:13.5px;color:var(--mut);font-weight:700}
+.stopka{color:var(--mut);font-size:14px;margin-top:24px}
+@media (max-width:560px){table{font-size:13.5px;min-width:0}th,td{padding:6px 4px}.k{padding:14px}}
+@media print{body{background:#fff;color:#000;font-size:11.5pt}.nodruk{display:none}.k{border:1px solid #bbb}a{color:#000;text-decoration:none}}
+</style>
+</head>
+<body>
+<div class="w">
+  <p class="nodruk"><a href="/">← pompa.woleoze.pl</a></p>
+  <h1>Polityka prywatności</h1>
+  <p class="pod">„Pompa w Home Assistant” · obowiązuje od 11 listopada 2026 r.</p>
+
+  <section class="k"><h2>1. Administrator</h2>
+    <p>Administratorem danych osobowych jest <b>WOLEOZE.PL Sp. z o.o.</b>, ul. Biasowicka 8E, 44-264 Jankowice, KRS 0001048206, NIP 6423246378. Kontakt w sprawach danych: <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a>.</p>
+  </section>
+
+  <section class="k"><h2>2. Jakie dane, po co i na jakiej podstawie</h2>
+    <div class="tab"><table>
+      <tr><th>Sytuacja</th><th>Dane</th><th>Cel i podstawa (RODO)</th></tr>
+      <tr><td>Zamówienie i płatność</td><td>imię i nazwisko, e-mail, telefon, adres dostawy, nazwa firmy i NIP (jeśli podasz), dane płatności (przetwarza Stripe; my nie widzimy numeru karty)</td><td>zawarcie i wykonanie umowy (art. 6 ust. 1 lit. b); faktury i księgowość (art. 6 ust. 1 lit. c)</td></tr>
+      <tr><td>Licencja Pro</td><td>e-mail, imię, numer zamówienia, klucz licencji, identyfikatory instalacji Home Assistant (losowy albo skrót adresu, bez adresu IP domu), daty pobrań</td><td>wykonanie umowy (lit. b); ochrona licencji przed nadużyciem (prawnie uzasadniony interes, lit. f)</td></tr>
+      <tr><td>„Wyślij raport” w dodatku</td><td>wynik diagnostyki i stany encji pompy (temperatury, nastawy, liczniki); bez haseł i bez danych z reszty domu; wysyłasz go sam przyciskiem</td><td>pomoc i reklamacje (lit. b)</td></tr>
+      <tr><td>Automatyczne poprawki</td><td>klucz i identyfikator instalacji, raz na godzinę; możesz to wyłączyć w dodatku</td><td>wykonanie umowy, aktualizacje (lit. b)</td></tr>
+      <tr><td>Korespondencja e-mail</td><td>adres e-mail i treść wiadomości</td><td>odpowiedź i pomoc (lit. b albo lit. f)</td></tr>
+    </table></div>
+    <p>Podanie danych jest dobrowolne, ale bez nich nie zawrzemy i nie wykonamy umowy. Nie profilujemy i nie podejmujemy decyzji automatycznie w rozumieniu art. 22 RODO.</p>
+  </section>
+
+  <section class="k"><h2>3. Strona, kreator i ciasteczka</h2>
+    <ul>
+      <li>Strona pompa.woleoze.pl nie używa ciasteczek ani narzędzi analitycznych.</li>
+      <li>Kreator zapisuje w Twojej przeglądarce (localStorage) losowy identyfikator instalacji, potrzebny do licencji. Encje i ustawienia wpisane w kreatorze nie opuszczają przeglądarki; do serwera licencji trafia tylko klucz.</li>
+      <li>Karty Pro zapisują w przeglądarce kopię swojego kodu na 7 dni, żeby działały przy przerwie w łączności.</li>
+      <li>Serwer hostingu strony (GitHub Pages) zapisuje w logach techniczne dane połączeń, np. adres IP.</li>
+    </ul>
+  </section>
+
+  <section class="k"><h2>4. Komu powierzamy dane</h2>
+    <ul>
+      <li>Stripe: obsługa płatności;</li>
+      <li>Cloudflare: serwer licencji (klucze, identyfikatory instalacji, raporty);</li>
+      <li>Brevo: wysyłka e-maili z kluczem i potwierdzeniem zamówienia;</li>
+      <li>InPost albo kurier: dostawa Zestawu i odesłanie modułu;</li>
+      <li>GitHub: hosting strony;</li>
+      <li>dostawca poczty e-mail, biuro rachunkowe i, gdy to konieczne, doradcy prawni.</li>
+    </ul>
+    <p>Część tych firm przetwarza dane także poza Europejskim Obszarem Gospodarczym (USA). Podstawą przekazania jest decyzja Komisji Europejskiej o odpowiednim stopniu ochrony (EU-US Data Privacy Framework) albo standardowe klauzule umowne.</p>
+  </section>
+
+  <section class="k"><h2>5. Jak długo przechowujemy dane</h2>
+    <ul>
+      <li>dane zamówień i faktur: 5 lat od końca roku, w którym powstał obowiązek podatkowy;</li>
+      <li>dane Licencji Pro: przez okres korzystania z licencji, a potem do upływu terminów przedawnienia roszczeń;</li>
+      <li>raporty diagnostyki: 30 dni;</li>
+      <li>korespondencja: do 2 lat od zakończenia sprawy.</li>
+    </ul>
+  </section>
+
+  <section class="k"><h2>6. Twoje prawa</h2>
+    <p>Masz prawo dostępu do swoich danych, ich sprostowania, usunięcia, ograniczenia przetwarzania i przeniesienia, a wobec przetwarzania na podstawie prawnie uzasadnionego interesu także prawo sprzeciwu. Napisz na <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a>. Możesz też złożyć skargę do Prezesa Urzędu Ochrony Danych Osobowych (ul. Stawki 2, 00-193 Warszawa).</p>
+  </section>
+
+  <p class="stopka">Pompa w Home Assistant · <a href="/">pompa.woleoze.pl</a> · <a href="/regulamin/">Regulamin</a> · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a></p>
+</div>
+</body>
+</html>
