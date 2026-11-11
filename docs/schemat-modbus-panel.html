@@ -1,0 +1,78 @@
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><title>Modbus Rotenso/Midea – podłączenie do sterownika ściennego</title>
+<style>body{margin:0;background:#fff}svg{display:block}text{font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif}</style></head><body>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<rect width="1600" height="900" fill="#ffffff"/>
+<text x="40" y="52" font-size="27" font-weight="800" fill="#111">Modbus RTU z pompy Rotenso Aquami / Midea M-Thermal: moduł podłączony do STEROWNIKA ŚCIENNEGO, nie do płyty głównej</text>
+<text x="40" y="84" font-size="17" fill="#555">Sprawdzone na Rotenso AQM120X3 (Midea), sterownik KJRH-120H „Reni”, odczyt i zapis działają od 9.11.2026. Baud 9600, 8N1, Modbus RTU, adres = menu 17.2.</text>
+
+<!-- jednostka wewnętrzna -->
+<rect x="40" y="130" width="330" height="300" rx="16" fill="#f3f4f6" stroke="#9ca3af" stroke-width="2"/>
+<text x="205" y="165" text-anchor="middle" font-size="20" font-weight="700" fill="#111">POMPA (moduł hydrauliczny)</text>
+<text x="205" y="190" text-anchor="middle" font-size="15" fill="#555">płyta główna</text>
+<rect x="80" y="230" width="250" height="60" rx="8" fill="#fff" stroke="#9ca3af"/>
+<text x="205" y="255" text-anchor="middle" font-size="15" fill="#333">zaciski do sterownika ściennego</text>
+<text x="205" y="278" text-anchor="middle" font-size="18" font-weight="800" fill="#111" letter-spacing="6">E  Y  X  B  A</text>
+<rect x="80" y="320" width="250" height="60" rx="8" fill="#fee2e2" stroke="#ef4444"/>
+<text x="205" y="345" text-anchor="middle" font-size="15" fill="#991b1b">CN30 zaciski 9,10 „H1 H2” na płycie</text>
+<text x="205" y="368" text-anchor="middle" font-size="14" fill="#991b1b">tu NIE podłączaliśmy modułu</text>
+
+<!-- kabel 5 żył -->
+<path d="M370 260 H520" stroke="#111" stroke-width="5"/>
+<text x="445" y="245" text-anchor="middle" font-size="14" fill="#333">kabel 5 żył (fabryczny)</text>
+<text x="445" y="285" text-anchor="middle" font-size="13" fill="#777">E Y X B A – nie ruszać</text>
+
+<!-- sterownik ścienny -->
+<rect x="520" y="130" width="420" height="300" rx="16" fill="#eef2ff" stroke="#6366f1" stroke-width="2"/>
+<text x="730" y="165" text-anchor="middle" font-size="20" font-weight="700" fill="#111">STEROWNIK ŚCIENNY (tył)</text>
+<text x="730" y="190" text-anchor="middle" font-size="15" fill="#555">Midea KJRH-120H = Rotenso „Reni” (ekran w salonie)</text>
+<rect x="560" y="230" width="160" height="60" rx="8" fill="#fff" stroke="#9ca3af"/>
+<text x="640" y="255" text-anchor="middle" font-size="14" fill="#333">listwa do pompy</text>
+<text x="640" y="278" text-anchor="middle" font-size="18" font-weight="800" fill="#111" letter-spacing="5">E Y X B A</text>
+<rect x="760" y="230" width="140" height="60" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+<text x="830" y="255" text-anchor="middle" font-size="14" fill="#166534">osobne zaciski Modbus</text>
+<text x="830" y="279" text-anchor="middle" font-size="20" font-weight="800" fill="#14532d" letter-spacing="8">H1  H2</text>
+<text x="730" y="330" text-anchor="middle" font-size="15" fill="#333">Menu serwisanta (hasło 234):</text>
+<text x="730" y="355" text-anchor="middle" font-size="15" fill="#333">17.2 „ADRES HMI DLA BMS” = <tspan font-weight="800">1</tspan> (fabrycznie)</text>
+<text x="730" y="380" text-anchor="middle" font-size="15" fill="#333">HMI SET = <tspan font-weight="800">0 (główna)</tspan> – nie zmieniać na podrzędną</text>
+<text x="730" y="410" text-anchor="middle" font-size="13" fill="#777">po wyjściu z menu serwisanta pompa się wyłącza – włączyć ON</text>
+
+<!-- przewody RS485 -->
+<path d="M800 290 V520 H1040" stroke="#16a34a" stroke-width="5" fill="none"/>
+<path d="M860 290 V560 H1040" stroke="#2563eb" stroke-width="5" fill="none"/>
+<text x="905" y="505" font-size="16" font-weight="700" fill="#16a34a">H1  →  B−</text>
+<text x="905" y="585" font-size="16" font-weight="700" fill="#2563eb">H2  →  A+</text>
+<text x="560" y="612" font-size="14" fill="#555">skrętka 2 żyły (u nas ok. 1 m), bez masy, bez terminatora</text>
+<text x="560" y="634" font-size="14" fill="#555">brak odczytu? zamień A/B miejscami – to najczęstszy błąd</text>
+
+<!-- moduł -->
+<rect x="1040" y="440" width="500" height="200" rx="16" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+<text x="1290" y="475" text-anchor="middle" font-size="20" font-weight="700" fill="#111">Waveshare ESP32-S3-Relay-1CH(-U)</text>
+<text x="1290" y="500" text-anchor="middle" font-size="15" fill="#555">RS-485 izolowany na pokładzie, Wi-Fi, ESPHome</text>
+<rect x="1060" y="520" width="60" height="30" rx="6" fill="#16a34a"/><text x="1090" y="541" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">B−</text>
+<rect x="1060" y="560" width="60" height="30" rx="6" fill="#2563eb"/><text x="1090" y="581" text-anchor="middle" font-size="15" font-weight="800" fill="#fff">A+</text>
+<text x="1140" y="541" font-size="14" fill="#333">zielona listwa RS485 na płytce</text>
+<text x="1140" y="581" font-size="14" fill="#333">piny w ESPHome: TX 17, RX 18, DE/RE 21</text>
+<text x="1290" y="620" text-anchor="middle" font-size="13" fill="#9a3412">zasilanie tylko 5 V przez USB-C (zasilacz od telefonu); przekaźnik nieużywany</text>
+
+<!-- HA -->
+<path d="M1290 440 V360" stroke="#f97316" stroke-width="4" stroke-dasharray="10 8"/>
+<text x="1310" y="405" font-size="14" fill="#9a3412">Wi-Fi</text>
+<rect x="1140" y="130" width="300" height="230" rx="16" fill="#ecfeff" stroke="#06b6d4" stroke-width="2"/>
+<text x="1290" y="165" text-anchor="middle" font-size="20" font-weight="700" fill="#111">Home Assistant</text>
+<text x="1290" y="190" text-anchor="middle" font-size="15" fill="#555">integracja ESPHome</text>
+<text x="1160" y="225" font-size="14" fill="#333">• 114 encji: temperatury T1–T5, Th, Tp, Hz,</text>
+<text x="1160" y="248" font-size="14" fill="#333">  przepływ, zawór SV1, odszranianie, błędy</text>
+<text x="1160" y="271" font-size="14" fill="#333">• liczniki kWh prądu i ciepła</text>
+<text x="1160" y="294" font-size="14" fill="#333">• zapis nastaw: krzywa, histereza, dT5_ON…</text>
+<text x="1160" y="317" font-size="14" fill="#333">  (rejestry 200+ z listy Modbus producenta)</text>
+<text x="1160" y="340" font-size="13" fill="#777">uwaga: po zapisie nastawy serwisowej pompa wyłącza CWU</text>
+
+<!-- ramka ustawień -->
+<rect x="40" y="680" width="1500" height="180" rx="14" fill="#f9fafb" stroke="#d1d5db"/>
+<text x="60" y="712" font-size="18" font-weight="800" fill="#111">Ustawienia Modbus, które działają</text>
+<text x="60" y="742" font-size="15" fill="#333">UART 9600 bps, 8 bitów danych, bez parzystości, 1 bit stopu  •  Modbus RTU, funkcja 03 (holding registers)  •  adres slave = wartość z menu 17.2 (u nas 1)</text>
+<text x="60" y="768" font-size="15" fill="#333">Rejestry: 0–12 nastawy użytkownika (tryb, zadane), 100–140 stany i temperatury, 200+ parametry instalatora. Mapa: „Lista Modbus” w instrukcji instalacji Rotenso Aquami (str. 49–60) = ta sama co Midea M-Thermal.</text>
+<text x="60" y="794" font-size="15" fill="#333">Projekt odniesienia (ESPHome, ta sama rodzina pomp): github.com/Mosibi/Midea-heat-pump-ESPHome  •  Moduł: waveshare.com/wiki/ESP32-S3-Relay-1CH (wersja -U = gniazdo anteny zewnętrznej)</text>
+<text x="60" y="824" font-size="15" fill="#991b1b">Najczęstsze przyczyny „brak komunikacji”: 1) podłączenie do płyty głównej zamiast do sterownika ściennego, 2) HMI SET przestawione na podrzędną, 3) zamienione A/B, 4) zły adres (17.2), 5) parzystość ≠ NONE.</text>
+<text x="60" y="850" font-size="13" fill="#777">Rysunek poglądowy, nie zastępuje instrukcji. Prace przy zaciskach przy wyłączonym zasilaniu sterownika. Źródło: github.com/WoleOze/rotenso-midea-modbus-ha · woleoze.pl, 11.2026.</text>
+</svg></body></html>

@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pompa ciepła w Home Assistant</title>
+<meta name="description" content="Rotenso Aquami / Midea M-Thermal w Home Assistant: COP, prąd osobno na dom i ciepłą wodę, koszt obok pelletu i ekogroszku, starty sprężarki, nastawy z telefonu. Start za darmo, Pro 149 zł, konfiguracja za ciebie 249 zł.">
+<meta name="theme-color" content="#050a16">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:url" content="https://woleoze.github.io/rotenso-midea-modbus-ha/">
+<meta property="og:title" content="Twoja pompa grzeje. Ale czy wiesz, za ile i czy dobrze?">
+<meta property="og:description" content="Rotenso Aquami / Midea M-Thermal w Home Assistant: 114 odczytów co 5 s, COP, koszty, raport i nastawy. Bez chmury. Start za darmo.">
+<meta property="og:image" content="https://woleoze.github.io/rotenso-midea-modbus-ha/docs/zrzuty/pompa.png">
+<meta property="og:image:width" content="1400">
+<meta property="og:image:height" content="1760">
+<meta property="og:image:alt" content="Panel Pompa w Home Assistant: obieg czynnika na żywo, COP, doba pracy, krzywa grzewcza">
+<meta name="twitter:card" content="summary_large_image">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+:root{--bg:#050a16;--bg2:#081126;--panel:rgba(13,24,50,.78);--panel2:rgba(17,31,64,.9);--line:rgba(110,160,255,.18);--line2:rgba(110,160,255,.32);--txt:#eaf0ff;--mut:#97a8cc;--hp:#39c0ff;--hot:#ff5470;--warm:#ffb020;--ok:#2ee6a6;--vio:#b388ff;--r:18px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,"Segoe UI",Roboto,system-ui,-apple-system,sans-serif;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto}
+a{color:var(--hp)}
+.w{max-width:1140px;margin:0 auto;padding:0 16px}
+.tlo{position:fixed;inset:0;z-index:-1;background:
+ radial-gradient(900px 600px at 85% -10%,rgba(255,84,112,.16),transparent 60%),
+ radial-gradient(900px 700px at -10% 30%,rgba(57,192,255,.16),transparent 60%),
+ linear-gradient(rgba(80,130,255,.04) 1px,transparent 1px) 0 0/100% 34px,
+ linear-gradient(90deg,rgba(80,130,255,.04) 1px,transparent 1px) 0 0/34px 100%,var(--bg)}
+/* nawigacja */
+nav{position:sticky;top:0;z-index:20;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:rgba(5,10,22,.72);border-bottom:1px solid var(--line)}
+nav .w{display:flex;align-items:center;gap:16px;height:58px}
+.logo{font-weight:900;letter-spacing:.06em;text-decoration:none;color:var(--txt);white-space:nowrap}.logo span{color:var(--hp)}
+nav .sp{flex:1}nav a.n{color:var(--mut);text-decoration:none;font-size:14px}nav a.n:hover{color:var(--txt)}
+/* przyciski */
+.b{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 22px;border-radius:12px;font-weight:800;font-size:16px;text-decoration:none;border:1px solid var(--line2);transition:transform .15s,box-shadow .15s,background .15s;cursor:pointer;font-family:inherit;line-height:1.2;text-align:center}
+.b:hover{transform:translateY(-2px)}
+.b:focus-visible,.okno:focus-visible,.qb:focus-visible{outline:3px solid var(--warm);outline-offset:3px}
+.b1{background:linear-gradient(135deg,#39c0ff,#2ee6a6);color:#03121e;border:0;box-shadow:0 10px 30px rgba(57,192,255,.35)}
+.b1:hover{box-shadow:0 14px 40px rgba(46,230,166,.45)}
+.b2{background:var(--panel2);color:var(--txt)}
+.b2:hover{border-color:var(--hp)}
+.bm{padding:9px 14px;font-size:14px}
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+/* hero */
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:34px;align-items:center;padding:52px 0 36px}
+.tag{display:inline-flex;gap:8px;align-items:center;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin-bottom:16px}
+.kropka{width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 12px var(--ok);animation:puls 1.6s infinite;flex:none}
+@keyframes puls{50%{opacity:.35}}
+h1{font-size:clamp(34px,5.4vw,60px);line-height:1.04;margin:0 0 18px;font-weight:900;letter-spacing:-.015em}
+.g{background:linear-gradient(90deg,#39c0ff,#2ee6a6 55%,#ffb020);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:clamp(17px,1.9vw,19.5px);color:var(--mut);margin:0 0 26px;max-width:600px}
+.lead b{color:var(--txt)}
+.dowody{display:flex;flex-wrap:wrap;gap:8px 18px;margin:18px 0 0;padding:0;list-style:none;font-size:14.5px;color:var(--mut)}
+.dowody li::before{content:"✓";color:var(--ok);font-weight:900;margin-right:6px}
+/* animowany schemat */
+.scena{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:10px 10px 30px;box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 0 1px rgba(57,192,255,.05);position:relative}
+.scena::before{content:"";position:absolute;inset:-1px;border-radius:22px;padding:1px;background:linear-gradient(140deg,rgba(57,192,255,.5),transparent 35%,transparent 65%,rgba(255,84,112,.45));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.scena svg{width:100%;height:auto;display:block}
+.plyn{fill:none;stroke-linecap:round;stroke-dasharray:7 16;animation:plyn 1.2s linear infinite}
+.plynW{animation-duration:2s}
+@keyframes plyn{to{stroke-dashoffset:-46}}
+.wiat{transform-origin:118px 205px;animation:obr .9s linear infinite}
+@keyframes obr{to{transform:rotate(360deg)}}
+.blask{animation:blask 2.4s ease-in-out infinite}
+@keyframes blask{50%{opacity:.4}}
+.dym{animation:dym 3s ease-in-out infinite}
+@keyframes dym{0%{transform:translateY(0);opacity:0}30%{opacity:.6}100%{transform:translateY(-26px);opacity:0}}
+.etyk{font-size:13px;fill:#97a8cc}.wart{font-size:19px;font-weight:800;fill:#eaf0ff;transition:fill .4s}
+.wart.mig{fill:#2ee6a6}
+.ramkaHA{animation:ramka 2s ease-in-out infinite}
+@keyframes ramka{50%{stroke-opacity:.35}}
+.podpis{position:absolute;right:16px;bottom:9px;font-size:11.5px;color:var(--mut)}
+/* sekcje */
+section{padding:60px 0}
+.nag{text-align:center;max-width:780px;margin:0 auto 32px}
+.nadt{display:inline-block;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--hp);font-weight:800;margin-bottom:10px}
+h2{font-size:clamp(27px,3.7vw,42px);line-height:1.1;margin:0 0 12px;font-weight:900;letter-spacing:-.01em}
+.nag p{color:var(--mut);font-size:17px;margin:0}
+.mut{color:var(--mut)}
+.drobne{text-align:center;color:var(--mut);font-size:13.5px;margin:16px auto 0;max-width:820px}
+/* pas liczb */
+.pas{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.lk{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px 18px;position:relative;overflow:hidden;min-width:0}
+.lk::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--ak,var(--hp))}
+.lk .duza{font-size:clamp(34px,4vw,46px);font-weight:900;line-height:1;letter-spacing:-.02em;color:var(--ak,var(--hp));white-space:nowrap;font-variant-numeric:tabular-nums}
+.lk .duza small{font-size:.42em;color:var(--mut);font-weight:700;letter-spacing:0}
+.lk h3{margin:12px 0 4px;font-size:16px;line-height:1.3}
+.lk p{margin:0;color:var(--mut);font-size:13.5px}
+.przed{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--hot);text-decoration-thickness:2px}
+.zrodlo{margin-top:16px;color:var(--mut);font-size:13.5px;text-align:center}
+.zrodlo .kropka{display:inline-block;vertical-align:middle;margin:-2px 8px 0 0}
+.zrodlo b{color:var(--txt)}
+/* przed / po */
+.porown{position:relative;aspect-ratio:16/10;border-radius:20px;overflow:hidden;border:1px solid var(--line2);box-shadow:0 30px 80px rgba(0,0,0,.5);--p:50%;background:#0a1430;user-select:none;-webkit-user-select:none;touch-action:pan-y}
+.porown .po,.porown .pr{position:absolute;inset:0}
+.porown .po img{width:100%;height:100%;object-fit:cover;object-position:left top;display:block}
+.porown .pr{clip-path:inset(0 calc(100% - var(--p)) 0 0);background:
+ radial-gradient(circle at 25% 40%,rgba(255,255,255,.07),transparent 55%),
+ repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 2px,transparent 2px 5px),#1b1f27}
+.sciana{position:absolute;left:25%;top:44%;transform:translate(-50%,-50%);width:min(44%,330px);display:flex;flex-direction:column;align-items:center;gap:14px}
+.sterownik{width:100%;aspect-ratio:1.45;background:linear-gradient(160deg,#f2f2ef,#d9dad6);border-radius:14px;box-shadow:0 18px 40px rgba(0,0,0,.6),inset 0 -3px 0 rgba(0,0,0,.08);padding:9%;display:flex;flex-direction:column;gap:6%}
+.ekran{flex:1;background:linear-gradient(180deg,#7b8c86,#93a39c);border-radius:6px;box-shadow:inset 0 2px 6px rgba(0,0,0,.35);display:grid;grid-template-columns:1fr 1fr;align-items:center;justify-items:center;color:#1d2622;font-family:ui-monospace,Menlo,Consolas,monospace;padding:4% 6%}
+.ekran b{font-size:clamp(16px,2.6vw,30px);font-weight:700;line-height:1}
+.ekran small{display:block;font-size:clamp(8px,.9vw,11px);opacity:.75;text-align:center}
+.przyc{display:flex;justify-content:space-between;gap:6%}
+.przyc i{flex:1;height:clamp(7px,1vw,12px);border-radius:4px;background:#c6c7c2;box-shadow:0 1px 0 rgba(0,0,0,.18)}
+.minusy{list-style:none;margin:0;padding:0;display:grid;gap:5px;font-size:clamp(11.5px,1.25vw,15px);color:#c9cfdb}
+.minusy li::before{content:"✕";color:var(--hot);font-weight:900;margin-right:8px}
+.pytajniki{position:absolute;left:62%;top:50%;transform:translate(-50%,-50%);color:rgba(201,207,219,.35);font-size:clamp(13px,1.6vw,20px);font-weight:800;text-align:center;line-height:1.6;white-space:nowrap}
+.etk{position:absolute;top:14px;padding:6px 12px;border-radius:999px;font-size:12.5px;font-weight:900;letter-spacing:.1em;z-index:3;pointer-events:none}
+.etk.l{left:14px;background:rgba(255,84,112,.18);color:#ffb3c0;border:1px solid rgba(255,84,112,.45)}
+.etk.p{right:14px;background:rgba(46,230,166,.16);color:#9ff5d6;border:1px solid rgba(46,230,166,.45)}
+.uchwyt{position:absolute;top:0;bottom:0;left:var(--p);width:3px;margin-left:-1.5px;background:#fff;box-shadow:0 0 18px rgba(57,192,255,.9);z-index:2;pointer-events:none}
+.uchwyt::after{content:"◀ ▶";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:50px;height:50px;border-radius:50%;background:#fff;color:#03121e;display:grid;place-items:center;font-size:12px;font-weight:900;letter-spacing:-1px;box-shadow:0 6px 20px rgba(0,0,0,.5)}
+.porown input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;z-index:4}
+.porown input:focus-visible~.uchwyt::after{outline:3px solid var(--warm);outline-offset:3px}
+.dwie{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.dwie > div{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.dwie h3{margin:0 0 6px;font-size:18px}
+.dwie p{margin:0;color:var(--mut);font-size:15px}
+.dwie .zle h3{color:#ffb3c0}.dwie .dobre h3{color:#9ff5d6}
+/* karty funkcji */
+.siatka{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+.k{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;min-width:0;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
+.k:hover{border-color:var(--line2);transform:translateY(-3px)}
+.k h3{margin:10px 0 8px;font-size:19px}
+.k p{margin:0;color:var(--mut);font-size:15px}
+.ik{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:rgba(57,192,255,.12);border:1px solid var(--line)}
+.wer{position:absolute;top:18px;right:18px;font-size:11.5px;font-weight:900;letter-spacing:.08em;padding:3px 9px;border-radius:999px;border:1px solid var(--line2);color:var(--mut)}
+.wer.pro{color:#d6c2ff;border-color:rgba(179,136,255,.5);background:rgba(179,136,255,.1)}
+.wer.st{color:#9ff5d6;border-color:rgba(46,230,166,.45);background:rgba(46,230,166,.08)}
+/* jak to działa */
+.lancuch{display:grid;grid-template-columns:1fr 46px 1fr 46px 1fr 46px 1fr 46px 1fr;align-items:center}
+.ogn{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 10px;text-align:center;position:relative;z-index:1;animation:zapal 5s infinite;min-width:0}
+.ogn:nth-child(3){animation-delay:1s}.ogn:nth-child(5){animation-delay:2s}.ogn:nth-child(7){animation-delay:3s}.ogn:nth-child(9){animation-delay:4s}
+@keyframes zapal{0%,22%,100%{border-color:var(--line);box-shadow:none}8%{border-color:var(--ok);box-shadow:0 0 0 4px rgba(46,230,166,.12),0 0 30px rgba(46,230,166,.25)}}
+.ogn b{display:block;font-size:15px;margin-top:6px}.ogn small{color:var(--mut);font-size:12.5px;display:block}
+.ogn .e{font-size:30px;line-height:1}
+.lin{height:4px;position:relative;background:repeating-linear-gradient(90deg,rgba(57,192,255,.55) 0 8px,transparent 8px 16px);border-radius:2px}
+.lin::after{content:"";position:absolute;top:50%;left:0;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--ok);box-shadow:0 0 12px var(--ok),0 0 4px #fff;animation:jedz 1s linear infinite}
+@keyframes jedz{from{left:0}to{left:100%}}
+.jak-info{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+.jak-info div{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:14.5px;color:var(--mut)}
+.jak-info b{color:var(--txt)}
+/* galeria */
+.galeria{display:grid;gap:22px;grid-template-columns:1fr 1fr}
+figure{margin:0}
+.okno{background:#0a1430;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.45);cursor:ns-resize}
+.okno .pasek{display:flex;gap:6px;align-items:center;padding:9px 12px;border-bottom:1px solid var(--line);font-size:12px;color:var(--mut)}
+.okno .pasek i{width:10px;height:10px;border-radius:50%;background:#2a3a62}
+.okno .pasek span{margin-left:auto}
+.okno .wnetrze{height:340px;overflow:hidden;position:relative}
+.okno img{width:100%;height:auto;display:block;transition:transform 6s ease-in-out}
+.okno:hover img,.okno:focus img{transform:translateY(calc(-100% + 340px))}
+figcaption{font-size:13.5px;color:var(--mut);margin-top:9px;padding:0 4px}
+figcaption b{color:var(--txt)}
+/* cennik */
+.ceny{display:grid;gap:18px;grid-template-columns:repeat(3,1fr);align-items:stretch}
+.ce{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:12px;position:relative;min-width:0}
+.ce.top{border:2px solid var(--hp);background:linear-gradient(180deg,rgba(57,192,255,.10),rgba(13,24,50,.85) 40%);box-shadow:0 0 0 6px rgba(57,192,255,.07),0 24px 70px rgba(57,192,255,.18)}
+.wst{position:absolute;top:-13px;left:22px;background:linear-gradient(135deg,#39c0ff,#2ee6a6);color:#03121e;font-weight:900;font-size:12px;padding:4px 12px;border-radius:999px;letter-spacing:.03em}
+.ce h3{margin:0;font-size:21px}
+.ce .dla{margin:-6px 0 0;color:var(--mut);font-size:14.5px}
+.ce .c{font-size:48px;font-weight:900;line-height:1;letter-spacing:-.02em}.ce .c small{font-size:16px;color:var(--mut);font-weight:700;letter-spacing:0}
+.ce ul{margin:0;padding:0;list-style:none;font-size:15px;color:var(--mut)}
+.ce ul li{margin:7px 0;padding-left:24px;position:relative}
+.ce ul li::before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:900}
+.ce ul li b{color:var(--txt)}
+.ce .sp{flex:1}
+.gw{display:flex;gap:10px;align-items:flex-start;background:rgba(46,230,166,.09);border:1px solid rgba(46,230,166,.35);border-radius:12px;padding:10px 12px;color:#bff7e3;font-size:14px;font-weight:600}
+.gw::before{content:"🛡️";font-size:18px;line-height:1.2}
+.dop{font-size:13.5px;color:var(--mut);text-align:center;margin:0}
+/* tabela */
+.tab-w{margin-top:34px;background:var(--panel);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{padding:11px 14px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:14px;background:rgba(57,192,255,.06)}
+thead th span{display:block;color:var(--mut);font-weight:600;font-size:12.5px}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:rgba(57,192,255,.04)}
+td.t{color:var(--ok);font-weight:900;font-size:16px}
+td.n{color:#4a5a80}
+td small{display:block;color:var(--mut);font-size:11.5px;font-weight:600}
+th.wyr,td.wyr{background:rgba(57,192,255,.07)}
+/* quiz */
+.quiz{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+.pyt{display:grid;gap:12px}
+.py{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap}
+.py span{font-weight:700;font-size:16.5px}
+.py span small{display:block;color:var(--mut);font-weight:500;font-size:13px}
+.qg{display:flex;gap:8px}
+.qb{padding:9px 16px;border-radius:10px;border:1px solid var(--line2);background:var(--bg2);color:var(--txt);font-weight:800;font-size:14.5px;cursor:pointer;font-family:inherit;min-width:64px}
+.qb[aria-pressed="true"]{background:var(--hp);color:#03121e;border-color:var(--hp)}
+.qb:hover{border-color:var(--hp)}
+.py.off{opacity:.4}
+.wynik{background:linear-gradient(160deg,rgba(57,192,255,.12),rgba(13,24,50,.9));border:1px solid var(--line2);border-radius:20px;padding:24px;min-height:100%;display:flex;flex-direction:column;gap:12px}
+.wynik .nadt{margin:0}
+.wynik h3{margin:0;font-size:24px;line-height:1.2}
+.wynik p{margin:0;color:var(--mut)}
+/* partner */
+.partner{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;background:linear-gradient(135deg,rgba(46,230,166,.13),rgba(57,192,255,.07) 60%,rgba(13,24,50,.6));border:1px solid rgba(46,230,166,.3);border-radius:24px;padding:30px;position:relative;overflow:hidden}
+.partner::after{content:"";position:absolute;right:-80px;top:-80px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(46,230,166,.18),transparent 70%);pointer-events:none}
+.plogo{font-size:clamp(40px,6vw,60px);font-weight:900;line-height:1;letter-spacing:-.02em;white-space:nowrap}
+.plogo span{color:var(--ok)}
+.plogo small{display:block;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);font-weight:800;margin-top:10px}
+.partner h3{margin:0 0 8px;font-size:22px}
+.partner p{margin:0 0 16px;color:var(--mut)}
+.partner .liczba{color:var(--ok);font-weight:900}
+/* faq */
+.faq{max-width:840px;margin:0 auto}
+details{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;transition:border-color .2s}
+details[open]{border-color:var(--line2)}
+summary{cursor:pointer;font-weight:800;padding:16px 46px 16px 18px;list-style:none;position:relative;font-size:16.5px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:22px;color:var(--hp);font-weight:700}
+details[open] summary::after{content:"−"}
+details .od{padding:0 18px 16px;color:var(--mut)}
+details .od p{margin:0 0 10px}details .od p:last-child{margin:0}
+details .od b{color:var(--txt)}
+/* końcowe cta */
+.koniec{text-align:center;background:radial-gradient(600px 300px at 50% 0,rgba(57,192,255,.2),transparent 70%),var(--panel);border:1px solid var(--line2);border-radius:26px;padding:48px 22px}
+.koniec h2{font-size:clamp(28px,4.4vw,48px)}
+.koniec p{color:var(--mut);max-width:620px;margin:0 auto 24px;font-size:17px}
+.koniec .btns{justify-content:center}
+/* stopka */
+footer{padding:34px 0 50px;color:var(--mut);font-size:14px;border-top:1px solid var(--line);margin-top:30px}
+.stl{display:flex;flex-wrap:wrap;gap:8px 22px;margin-bottom:14px}
+.stl a{color:var(--txt);text-decoration:none;font-weight:700}
+.stl a:hover{color:var(--hp)}
+.stl a small{color:var(--mut);font-weight:500}
+footer p{margin:6px 0}
+/* pasek CTA na telefonie */
+.pasekCTA{position:fixed;left:0;right:0;bottom:0;z-index:30;display:none;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(5,10,22,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line2);transform:translateY(110%);transition:transform .3s}
+.pasekCTA.wid{transform:none}
+.pasekCTA .b{flex:1;padding:12px 8px;font-size:14.5px}
+/* wejście przy przewijaniu */
+.js .pokaz{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+.js .pokaz.wid{opacity:1;transform:none}
+.js .zl{opacity:0;transform:translateX(-30px);transition:opacity .7s,transform .7s}
+.js .zp{opacity:0;transform:translateX(30px);transition:opacity .7s .15s,transform .7s .15s}
+.js .wid .zl,.js .wid .zp{opacity:1;transform:none}
+.kulki circle{filter:drop-shadow(0 0 3px currentColor)}
+/* responsywność */
+@media (max-width:1000px){
+ .pas{grid-template-columns:1fr 1fr}
+ .ceny{grid-template-columns:1fr;max-width:560px;margin:0 auto}
+ .lancuch{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+ .ogn{display:flex;align-items:center;gap:14px;text-align:left;padding:12px 16px}
+ .ogn b{margin-top:0}
+ .lin{height:24px;width:4px;margin:0 auto;background:repeating-linear-gradient(180deg,rgba(57,192,255,.55) 0 8px,transparent 8px 16px)}
+ .lin::after{left:50%;top:0;margin:-5px 0 0 -5px;animation-name:jedzP}
+ @keyframes jedzP{from{top:0}to{top:100%}}
+ .jak-info{grid-template-columns:1fr}
+ .quiz{grid-template-columns:1fr}
+}
+@media (max-width:920px){.hero{grid-template-columns:1fr;padding-top:36px}nav a.n{display:none}.partner{grid-template-columns:1fr}}
+@media (max-width:720px){
+ .pasekCTA{display:flex}
+ body{padding-bottom:76px}
+ .porown{aspect-ratio:4/5}
+ .porown .po img{object-position:left top}
+ .sciana{left:25%;width:42%}
+ .pytajniki{display:none}
+ .dwie{grid-template-columns:1fr}
+ .galeria{grid-template-columns:1fr}
+ .okno .wnetrze{height:300px}
+ .okno:hover img,.okno:focus img{transform:translateY(calc(-100% + 300px))}
+ section{padding:46px 0}
+}
+@media (max-width:560px){
+ .hero .btns .b,.koniec .b{width:100%}
+ .pas{grid-template-columns:1fr}
+ .lk .duza{font-size:40px}
+ th,td{padding:9px 6px;font-size:13px}
+ thead th{font-size:12.5px}
+ td small{font-size:10.5px}
+ .ce{padding:22px 18px}
+ .partner{padding:24px 18px}
+ .py{padding:14px}
+ .koniec{padding:36px 16px}
+ .k{display:grid;grid-template-columns:46px 1fr;gap:0 14px;align-items:center;padding:18px}
+ .k .ik{align-self:center}
+ .k h3{margin:0 56px 4px 0;font-size:18px}
+ .k p{grid-column:1/-1;margin-top:10px}
+ .wer{top:16px;right:14px}
+ th:not(:first-child),td:not(:first-child){width:62px}
+ thead th span,td small{white-space:nowrap}
+ .stl{flex-direction:column}
+}
+@media (max-width:400px){.sciana{width:46%;left:26%}.minusy{font-size:11px}}
+@media (prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ *,*::before,*::after{animation:none!important;transition:none!important}
+ .js .pokaz,.js .zl,.js .zp{opacity:1;transform:none}
+ .kulki{display:none}
+ .lin::after{display:none}
+}
+</style>
+</head>
+<body>
+<div class="tlo"></div>
+<nav><div class="w">
+  <a class="logo" href="#">POMPA<span>·HA</span></a><div class="sp"></div>
+  <a class="n" href="#wyniki">Wyniki</a><a class="n" href="#przed-po">Przed / po</a><a class="n" href="#jak">Jak to działa</a><a class="n" href="#ceny">Ceny</a><a class="n" href="#pytania">Pytania</a>
+  <a class="b b1 bm" href="#ceny">Zacznij za darmo</a>
+</div></nav>
+
+<div class="w">
+<header class="hero" id="hero">
+  <div>
+    <div class="tag"><span class="kropka"></span>Rotenso Aquami · Midea M-Thermal · Home Assistant</div>
+    <h1>Twoja pompa grzeje. Ale czy wiesz, <span class="g">za ile i czy dobrze?</span></h1>
+    <p class="lead">Sterownik na ścianie pokazuje kilka liczb. Tu widzisz całą pompę: <b>COP</b>, <b>prąd osobno na dom i ciepłą wodę</b>, <b>koszt obok pelletu i ekogroszku</b>, starty sprężarki i nastawy instalatora. 114 odczytów co 5 sekund, w twoim Home Assistant.</p>
+    <div class="btns">
+      <a class="b b1" href="#ceny">Zacznij za darmo</a>
+      <a class="b b2" href="https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00">Skonfiguruj za mnie · 249 zł</a>
+    </div>
+    <ul class="dowody">
+      <li>bez chmury</li>
+      <li>działa w 15 min z integracją Midea</li>
+      <li>zwrot 100% przy konfiguracji</li>
+    </ul>
+  </div>
+
+  <div class="scena pokaz">
+    <svg viewBox="0 0 560 400" role="img" aria-label="Animacja: pompa ciepła grzeje bufor i dom, dane płyną do Home Assistant">
+      <defs>
+        <linearGradient id="gBuf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5470"/><stop offset="1" stop-color="#b388ff"/></linearGradient>
+        <linearGradient id="gDom" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2a52"/><stop offset="1" stop-color="#0e1838"/></linearGradient>
+        <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <path id="rZas" d="M206 175 H290"/>
+        <path id="rPow" d="M290 245 H206"/>
+        <path id="rDom" d="M356 175 H400"/>
+        <path id="rDane" d="M118 140 C118 60 300 40 430 40"/>
+      </defs>
+      <!-- jednostka zewnętrzna -->
+      <rect x="30" y="140" width="176" height="130" rx="14" fill="#0f1b3a" stroke="rgba(110,160,255,.3)"/>
+      <circle cx="118" cy="205" r="46" fill="#0a1430" stroke="rgba(110,160,255,.35)" stroke-width="2"/>
+      <g class="wiat"><ellipse cx="118" cy="180" rx="10" ry="23" fill="rgba(57,192,255,.6)"/><ellipse cx="118" cy="180" rx="10" ry="23" fill="rgba(57,192,255,.6)" transform="rotate(120 118 205)"/><ellipse cx="118" cy="180" rx="10" ry="23" fill="rgba(57,192,255,.6)" transform="rotate(240 118 205)"/><circle cx="118" cy="205" r="7" fill="#97a8cc"/></g>
+      <text x="118" y="292" text-anchor="middle" class="etyk">pompa · 6°C na dworze</text>
+      <g class="dym" style="transform-origin:118px 130px"><circle cx="100" cy="128" r="6" fill="rgba(151,168,204,.25)"/><circle cx="122" cy="122" r="8" fill="rgba(151,168,204,.2)"/></g>
+      <!-- rury -->
+      <use href="#rZas" stroke="rgba(255,84,112,.25)" stroke-width="8" fill="none"/>
+      <path class="plyn" d="M206 175 H290" stroke="#ff5470" stroke-width="6"/>
+      <use href="#rPow" stroke="rgba(57,192,255,.25)" stroke-width="8" fill="none"/>
+      <path class="plyn" d="M290 245 H206" stroke="#39c0ff" stroke-width="6"/>
+      <text x="248" y="163" text-anchor="middle" class="etyk" style="font-size:11px;fill:#ff8fa3">36°C</text>
+      <text x="248" y="266" text-anchor="middle" class="etyk" style="font-size:11px;fill:#8fd8ff">33°C</text>
+      <!-- bufor -->
+      <rect x="290" y="140" width="66" height="130" rx="30" fill="url(#gBuf)" class="blask" filter="url(#glow)"/>
+      <text x="323" y="200" text-anchor="middle" class="wart" style="font-size:16px">38°</text>
+      <text x="323" y="292" text-anchor="middle" class="etyk">bufor</text>
+      <!-- dom -->
+      <path d="M392 150 L470 92 L548 150 Z" fill="#132248" stroke="rgba(110,160,255,.35)"/>
+      <rect x="400" y="150" width="140" height="120" rx="6" fill="url(#gDom)" stroke="rgba(110,160,255,.3)"/>
+      <use href="#rDom" stroke="rgba(255,176,32,.25)" stroke-width="7" fill="none"/>
+      <path class="plyn plynW" d="M356 175 H400" stroke="#ffb020" stroke-width="5"/>
+      <g class="blask"><rect x="414" y="200" width="44" height="40" rx="5" fill="rgba(255,176,32,.25)" stroke="#ffb020"/><path d="M420 208 v24 M428 208 v24 M436 208 v24 M444 208 v24 M452 208 v24" stroke="#ffb020" stroke-width="2.5"/></g>
+      <rect x="476" y="196" width="48" height="46" rx="4" fill="rgba(57,192,255,.15)" stroke="rgba(110,160,255,.4)"/>
+      <text x="470" y="292" text-anchor="middle" class="etyk">dom · 21,8°C</text>
+      <!-- dane do HA -->
+      <use href="#rDane" stroke="rgba(46,230,166,.22)" stroke-width="3" fill="none"/>
+      <path class="plyn" d="M118 140 C118 60 300 40 430 40" stroke="#2ee6a6" stroke-width="3" style="stroke-dasharray:4 12"/>
+      <!-- płynące kropki -->
+      <g class="kulki">
+        <circle r="4.5" fill="#ffd0d8" color="#ff5470"><animateMotion dur="1.6s" repeatCount="indefinite"><mpath href="#rZas"/></animateMotion></circle>
+        <circle r="4.5" fill="#ffd0d8" color="#ff5470"><animateMotion dur="1.6s" begin="-.8s" repeatCount="indefinite"><mpath href="#rZas"/></animateMotion></circle>
+        <circle r="4.5" fill="#d3f1ff" color="#39c0ff"><animateMotion dur="1.6s" repeatCount="indefinite"><mpath href="#rPow"/></animateMotion></circle>
+        <circle r="4.5" fill="#d3f1ff" color="#39c0ff"><animateMotion dur="1.6s" begin="-.8s" repeatCount="indefinite"><mpath href="#rPow"/></animateMotion></circle>
+        <circle r="3.5" fill="#ffe7b0" color="#ffb020"><animateMotion dur="1.4s" repeatCount="indefinite"><mpath href="#rDom"/></animateMotion></circle>
+        <circle r="3.5" fill="#c8ffeb" color="#2ee6a6"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#rDane"/></animateMotion></circle>
+        <circle r="3.5" fill="#c8ffeb" color="#2ee6a6"><animateMotion dur="2.4s" begin="-.8s" repeatCount="indefinite"><mpath href="#rDane"/></animateMotion></circle>
+        <circle r="3.5" fill="#c8ffeb" color="#2ee6a6"><animateMotion dur="2.4s" begin="-1.6s" repeatCount="indefinite"><mpath href="#rDane"/></animateMotion></circle>
+      </g>
+      <rect x="430" y="16" width="114" height="48" rx="10" fill="#0a1430" stroke="#2ee6a6" class="ramkaHA"/>
+      <text x="487" y="35" text-anchor="middle" class="etyk" style="fill:#2ee6a6">Home Assistant</text>
+      <text x="487" y="55" text-anchor="middle" class="wart" style="font-size:15px" id="copAn">COP 3,2</text>
+      <!-- wskaźniki -->
+      <g transform="translate(30,320)">
+        <rect width="150" height="58" rx="12" fill="#0a1430" stroke="rgba(110,160,255,.25)"/>
+        <text x="14" y="22" class="etyk">sprężarka</text><text x="14" y="46" class="wart" id="hzAn">31 Hz</text>
+      </g>
+      <g transform="translate(200,320)">
+        <rect width="150" height="58" rx="12" fill="#0a1430" stroke="rgba(110,160,255,.25)"/>
+        <text x="14" y="22" class="etyk">ciepło do wody</text><text x="14" y="46" class="wart" id="kwAn">6,4 kW</text>
+      </g>
+      <g transform="translate(370,320)">
+        <rect width="160" height="58" rx="12" fill="#0a1430" stroke="rgba(110,160,255,.25)"/>
+        <text x="14" y="22" class="etyk">prąd teraz</text><text x="14" y="46" class="wart" id="pwAn">2,0 kW</text>
+      </g>
+    </svg>
+    <div class="podpis">animacja na wartościach z naszej instalacji</div>
+  </div>
+</header>
+
+<!-- PAS LICZB -->
+<section id="wyniki" style="padding-top:20px">
+  <div class="nag pokaz"><span class="nadt">Co pokazały dane u nas</span><h2>Panel pokazał problem. Nastawy go poprawiły.</h2><p>Jedna instalacja: 12 kW, dom ok. 200 m², bufor, grzejniki i podłogówka. Zmiany zrobione funkcjami wersji Pro.</p></div>
+  <div class="pas">
+    <div class="lk pokaz" style="--ak:var(--ok)">
+      <div class="duza" data-licz data-od="0" data-do="43" data-wz="−{0}%">−43%</div>
+      <h3>prądu na ciepłą wodę</h3>
+      <p><span class="przed">6,3</span> → 3,6 kWh na dobę. Harmonogram tanich godzin i dT5_ON 7 → 4.</p>
+    </div>
+    <div class="lk pokaz" style="--ak:var(--hp)">
+      <div class="duza" data-licz data-od="18,23" data-do="3,7" data-wz="{0}–{1}">3–7</div>
+      <h3>startów sprężarki na dobę</h3>
+      <p>Było <span class="przed">18–23</span>. Histereza 2 → 5 K, biegi po 1–4 h. Mniej startów, mniejsze zużycie sprężarki.</p>
+    </div>
+    <div class="lk pokaz" style="--ak:var(--warm)">
+      <div class="duza" data-licz data-od="0" data-do="800" data-wz="~{0} <small>zł/rok</small>">~800 <small>zł/rok</small></div>
+      <h3>mniej za ciepłą wodę</h3>
+      <p>Przeliczone z 2,7 kWh na dobę mniej, taryfa G12w. To wynik u nas, nie obietnica.</p>
+    </div>
+    <div class="lk pokaz" style="--ak:var(--vio)">
+      <div class="duza" data-licz data-od="0" data-do="54" data-wz="−{0}%">−54%</div>
+      <h3>taniej niż pellet</h3>
+      <p>SCOP 2,94 za sezon 11.2025–10.2026. Od ekogroszku taniej o 9%. Ceny z listopada 2026.</p>
+    </div>
+  </div>
+  <div class="zrodlo pokaz"><span class="kropka"></span><span><b>u nas, 9–11.11.2026</b> · dane z Home Assistant. U ciebie liczby będą inne. Panel pokaże ci twoje.</span></div>
+</section>
+
+<!-- PRZED / PO -->
+<section id="przed-po">
+  <div class="nag pokaz"><span class="nadt">Przed / po</span><h2>Ta sama pompa. Zupełnie inny widok.</h2><p>Przesuń suwak. Po lewej to, co masz dziś na ścianie. Po prawej panel Pompa w Home Assistant.</p></div>
+  <div class="porown pokaz" id="porown">
+    <div class="po"><img src="docs/zrzuty/pompa.png" alt="Panel Pompa w Home Assistant: obieg czynnika R32 na żywo, COP teraz, doba pracy, krzywa grzewcza, nastawy instalatora" loading="lazy" width="1400" height="1760"></div>
+    <div class="pr" aria-hidden="true">
+      <div class="sciana">
+        <div class="sterownik"><div class="ekran"><div><b>36°</b><small>woda</small></div><div><b>42°</b><small>CWU</small></div></div><div class="przyc"><i></i><i></i><i></i><i></i></div></div>
+        <ul class="minusy"><li>kilka liczb</li><li>brak historii</li><li>brak kosztów</li><li>nastawy u serwisanta</li></ul>
+      </div>
+      <div class="pytajniki">COP? &nbsp;starty?<br>ile kWh na CWU?<br>ile to kosztuje?</div>
+    </div>
+    <span class="etk l">PRZED</span><span class="etk p">PO</span>
+    <input type="range" min="0" max="100" value="50" aria-label="Porównanie: przesuń, żeby zobaczyć więcej panelu na ścianie albo panelu w Home Assistant">
+    <div class="uchwyt"></div>
+  </div>
+  <div class="dwie pokaz">
+    <div class="zle zl"><h3>Panel na ścianie</h3><p>Kilka liczb, brak historii, brak kosztów. Nie wiesz, ile razy sprężarka ruszyła w nocy ani ile prądu zjadła ciepła woda.</p></div>
+    <div class="dobre zp"><h3>Panel Pompa w HA</h3><p>Obieg czynnika na żywo, COP teraz, doba pracy ze startami, krzywa grzewcza i nastawy obok fabrycznych. Wszystko klikalne, z historią. Zrzut z naszej instalacji, wykres doby na przykładowych danych.</p></div>
+  </div>
+</section>
+
+<!-- CO DOSTAJESZ -->
+<section id="co">
+  <div class="nag pokaz"><span class="nadt">Co dostajesz</span><h2>Wszystko, czego nie pokaże panel w salonie</h2><p>Część działa w darmowym Starcie. Resztę dokładasz w Pro, gdy zobaczysz, że warto.</p></div>
+  <div class="siatka">
+    <div class="k pokaz"><span class="wer st">START</span><div class="ik">🌀</div><h3>Obieg na żywo</h3><p>Sprężarka, wentylator, ciśnienia, temperatury czynnika i wody, zawór CWU, odszranianie. Widzisz, co pompa robi w tej sekundzie.</p></div>
+    <div class="k pokaz"><span class="wer pro">PRO</span><div class="ik">⚡</div><h3>Prąd i COP osobno</h3><p>Ile kWh poszło na ogrzewanie domu, a ile na ciepłą wodę. COP dla każdego z osobna: dziś, w tygodniu, w miesiącu.</p></div>
+    <div class="k pokaz"><span class="wer pro">PRO</span><div class="ik">💰</div><h3>Koszty a inne paliwa</h3><p>Prąd pompy godzina po godzinie w twojej taryfie, obok tego samego ciepła z ekogroszku, pelletu, gazu i oleju.</p></div>
+    <div class="k pokaz"><span class="wer pro">PRO</span><div class="ik">🛠️</div><h3>Nastawy z telefonu</h3><p>Krzywa grzewcza, histereza, dogrzewanie CWU, moc grzałki. Zmieniasz bez wchodzenia w menu serwisanta.</p></div>
+    <div class="k pokaz"><span class="wer pro">PRO</span><div class="ik">🔔</div><h3>Alarmy, które mają sens</h3><p>Błąd pompy, za mały przepływ, grzałka przy cieple. Na telefon tylko prawdziwe anomalie, progi ustawiasz sam.</p></div>
+    <div class="k pokaz"><span class="wer pro">PRO</span><div class="ik">📊</div><h3>Raport dzień po dniu</h3><p>Starty sprężarki, godziny pracy, odszraniania, temperatura na dworze. Tydzień i miesiąc w jednej tabeli.</p></div>
+  </div>
+</section>
+
+<!-- JAK TO DZIAŁA -->
+<section id="jak">
+  <div class="nag pokaz"><span class="nadt">Jak to działa</span><h2>Dwie żyły, mały moduł, gotowa konfiguracja</h2><p>Dane płyną z pompy do twojego Home Assistant. Żadnej chmury po drodze.</p></div>
+  <div class="lancuch pokaz">
+    <div class="ogn"><div class="e">♨️</div><b>Pompa</b><small>płyta Midea M-Thermal</small></div>
+    <div class="lin"></div>
+    <div class="ogn"><div class="e">🔌</div><b>Sterownik ścienny</b><small>zaciski H1 / H2</small></div>
+    <div class="lin"></div>
+    <div class="ogn"><div class="e">📡</div><b>Moduł RS-485</b><small>ESP32, ok. 95 zł</small></div>
+    <div class="lin"></div>
+    <div class="ogn"><div class="e">🏠</div><b>Home Assistant</b><small>lokalnie, w twoim domu</small></div>
+    <div class="lin"></div>
+    <div class="ogn"><div class="e">📱</div><b>Telefon i tablet</b><small>panel, alarmy, nastawy</small></div>
+  </div>
+  <div class="jak-info pokaz">
+    <div><b>Bez sprzętu na start.</b> Karta Start działa na integracji Midea, z której pewnie już korzystasz.</div>
+    <div><b>Moduł, gdy chcesz więcej.</b> ESP32 z RS-485 do sterownika ściennego: 114 odczytów co 5 s.</div>
+    <div><b>Odczyt nic nie zmienia.</b> Start tylko czyta. Zapis nastaw jest w Pro, po jednej wartości.</div>
+  </div>
+  <p style="text-align:center;margin-top:20px"><a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/podlaczenie.md">Schemat podłączenia krok po kroku →</a></p>
+</section>
+
+<!-- GALERIA -->
+<section id="demo">
+  <div class="nag pokaz"><span class="nadt">Panele</span><h2>Tak wygląda twój panel</h2><p>Najedź na okno (na telefonie dotknij), żeby przewinąć zrzut.</p></div>
+  <div class="galeria">
+    <figure class="pokaz"><div class="okno" tabindex="0"><div class="pasek"><i></i><i></i><i></i><span>Start</span></div><div class="wnetrze"><img src="docs/zrzuty/start.png" alt="Karta Start na integracji Midea, przykładowe dane" loading="lazy" width="1400" height="1700"></div></div><figcaption><b>Karta Start</b> · na integracji Midea, bez sprzętu. Przykładowe dane.</figcaption></figure>
+    <figure class="pokaz"><div class="okno" tabindex="0"><div class="pasek"><i></i><i></i><i></i><span>Pompa</span></div><div class="wnetrze"><img src="docs/zrzuty/pompa.png" alt="Panel Pompa: obieg czynnika, COP, doba pracy, nastawy" loading="lazy" width="1400" height="1760"></div></div><figcaption><b>Panel Pompa</b> · odczyty z naszej instalacji, wykres doby na przykładowych danych.</figcaption></figure>
+    <figure class="pokaz"><div class="okno" tabindex="0"><div class="pasek"><i></i><i></i><i></i><span>Koszty · Pro</span></div><div class="wnetrze"><img src="docs/zrzuty/koszty.png" alt="Panel Koszty: pompa a ekogroszek, pellet, gaz" loading="lazy" width="1400" height="1180"></div></div><figcaption><b>Panel Koszty</b> (Pro) · zrzut z naszej instalacji.</figcaption></figure>
+    <figure class="pokaz"><div class="okno" tabindex="0"><div class="pasek"><i></i><i></i><i></i><span>Raport · Pro</span></div><div class="wnetrze"><img src="docs/zrzuty/raport.png" alt="Panel Raport: dzień, tydzień, miesiąc, alarmy" loading="lazy" width="1400" height="1000"></div></div><figcaption><b>Panel Raport</b> (Pro) · zrzut z naszej instalacji.</figcaption></figure>
+  </div>
+</section>
+
+<!-- CENY -->
+<section id="ceny">
+  <div class="nag pokaz"><span class="nadt">Trzy drogi</span><h2>Zacznij za darmo. Dokup, gdy zobaczysz, że działa.</h2><p>Start działa w pełni i bez limitu czasu. Sprawdzisz na swojej pompie, czy wszystko gada, zanim wydasz złotówkę.</p></div>
+  <div class="ceny">
+    <div class="ce pokaz">
+      <h3>Start</h3><p class="dla">Sprawdzasz, czy to dla ciebie.</p>
+      <div class="c">0 <small>zł</small></div>
+      <ul>
+        <li><b>karta na integracji Midea</b>, bez żadnego sprzętu</li>
+        <li><b>moduł ESP do odczytu</b>: 114 odczytów z pompy co 5 s</li>
+        <li>panel Pompa w podglądzie: obieg, COP teraz, doba pracy, krzywa, błędy</li>
+        <li>schemat podłączenia, FAQ</li>
+        <li>bez limitu czasu</li>
+      </ul>
+      <div class="sp"></div>
+      <a class="b b2" href="https://github.com/WoleOze/rotenso-midea-modbus-ha">Pobierz za darmo</a>
+    </div>
+    <div class="ce pokaz">
+      <h3>Pro</h3><p class="dla">Robisz sam, chcesz pełny obraz.</p>
+      <div class="c">149 <small>zł · jednorazowo</small></div>
+      <ul>
+        <li>wszystko ze Startu</li>
+        <li><b>zmiana nastaw instalatora z HA</b>: krzywa, histereza, CWU, grzałka</li>
+        <li>prąd i COP osobno: dom i ciepła woda</li>
+        <li>panel Koszty: pompa a ekogroszek, pellet, gaz</li>
+        <li>panel Raport i alarmy z progami</li>
+        <li>harmonogram CWU na tanie godziny</li>
+        <li>kreator konfiguracji</li>
+        <li><b>dostęp do prywatnego repo z aktualizacjami</b></li>
+      </ul>
+      <div class="sp"></div>
+      <a class="b b2" href="https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03" data-stripe="pro">Kupuję Pro · 149 zł</a>
+      <p class="dop">Dostęp w ciągu 24 h po płatności.</p>
+    </div>
+    <div class="ce top pokaz">
+      <span class="wst">polecane: zero grzebania</span>
+      <h3>Pro + konfiguracja za ciebie</h3><p class="dla">Ja to podpinam, ty patrzysz na wyniki.</p>
+      <div class="c">249 <small>zł · jednorazowo</small></div>
+      <ul>
+        <li>wszystko z Pro</li>
+        <li><b>zdalnie podpinam</b> moduł, panele, alarmy i harmonogram (do 3 h pracy)</li>
+        <li>dobieram progi alarmów do twojej instalacji</li>
+        <li>razem sprawdzamy odczyt i zapis jednej nastawy</li>
+        <li>wgranie modułu wysłanego paczkomatem: <a href="https://buy.stripe.com/7sY4gz4yo5cs33u42D3Je01">+39 zł</a></li>
+      </ul>
+      <div class="gw">Zwrot 100%, jeśli moduł nie złapie komunikacji z twoją pompą.</div>
+      <div class="sp"></div>
+      <a class="b b1" href="https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00">Zamawiam konfigurację · 249 zł</a>
+      <p class="dop">Odezwę się mailem w ciągu 24 h w dni robocze.</p>
+    </div>
+  </div>
+
+  <div class="tab-w pokaz">
+    <table>
+      <thead><tr><th>Co dostajesz</th><th>Start<span>0 zł</span></th><th>Pro<span>149 zł</span></th><th class="wyr">Pro + konf.<span>249 zł</span></th></tr></thead>
+      <tbody>
+        <tr><td>Karta na integracji Midea, bez sprzętu</td><td class="t">✓</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
+        <tr><td>Moduł ESPHome: 114 odczytów co 5 s</td><td class="t">✓<small>odczyt</small></td><td class="t">✓<small>+ zapis</small></td><td class="t wyr">✓</td></tr>
+        <tr><td>Panel Pompa: obieg, COP, doba pracy, krzywa</td><td class="t">✓<small>podgląd</small></td><td class="t">✓</td><td class="t wyr">✓</td></tr>
+        <tr><td>Schemat podłączenia, FAQ</td><td class="t">✓</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
+        <tr><td>Zmiana nastaw instalatora z HA</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
+        <tr><td>Prąd i COP osobno: dom i ciepła woda</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
+        <tr><td>Panel Koszty: pompa a inne paliwa</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
+        <tr><td>Panel Raport, alarmy z progami</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
+        <tr><td>Harmonogram CWU na tanie godziny</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
+        <tr><td>Kreator, prywatne repo z aktualizacjami</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
+        <tr><td>Zdalna konfiguracja, test odczytu i zapisu</td><td class="n">—</td><td class="n">—</td><td class="t wyr">✓</td></tr>
+        <tr><td>Zwrot 100%, gdy moduł nie złapie komunikacji</td><td class="n">—</td><td class="n">—</td><td class="t wyr">✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="drobne">Uczciwie: to nie magia. Oszczędność zależy od twojej instalacji i nastaw. Panel pokazuje, co się dzieje, i pozwala to poprawić. Płatność kartą lub BLIK przez Stripe. Pro: dostęp do <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha-pro">prywatnego repo</a> po zakupie. Sprzedawca: osoba prywatna (działalność nierejestrowana). Zasady zwrotu i odstąpienia: <a href="#zwrot">w pytaniach niżej</a>.</p>
+</section>
+
+<!-- CZY TO DLA MNIE -->
+<section id="dla-mnie">
+  <div class="nag pokaz"><span class="nadt">Czy to dla mnie?</span><h2>Trzy pytania. Dziesięć sekund.</h2><p>Powiem ci uczciwie, od czego zacząć. Także wtedy, gdy odpowiedź brzmi „jeszcze nie”.</p></div>
+  <div class="quiz pokaz">
+    <div class="pyt">
+      <div class="py" data-py="ha"><span>Masz Home Assistant?<small>na Raspberry Pi, Home Assistant Green, mini PC</small></span><div class="qg"><button class="qb" type="button" data-v="tak" aria-pressed="false">Tak</button><button class="qb" type="button" data-v="nie" aria-pressed="false">Nie</button></div></div>
+      <div class="py" data-py="pompa"><span>Pompa Midea M-Thermal / Rotenso?<small>„nie wiem” = zaznacz Nie</small></span><div class="qg"><button class="qb" type="button" data-v="tak" aria-pressed="false">Tak</button><button class="qb" type="button" data-v="nie" aria-pressed="false">Nie</button></div></div>
+      <div class="py" data-py="sam"><span>Chcesz grzebać sam?<small>kopiowanie plików, ESPHome, YAML</small></span><div class="qg"><button class="qb" type="button" data-v="tak" aria-pressed="false">Tak</button><button class="qb" type="button" data-v="nie" aria-pressed="false">Nie</button></div></div>
+    </div>
+    <div class="wynik" id="wynik" aria-live="polite">
+      <span class="nadt">Twoja droga</span>
+      <h3>Odpowiedz na trzy pytania</h3>
+      <p>Na podstawie trzech odpowiedzi polecę jedną z dróg: Start, Pro albo konfigurację za ciebie.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNER -->
+<section id="partner">
+  <div class="partner pokaz">
+    <div class="plogo">wole<span>OZE</span><small>partner technologiczny</small></div>
+    <div>
+      <h3>Dane o cenach paliw i prądu z woleoze.pl</h3>
+      <p>Ceny paliw, sprawności kotłów i kalkulatory w panelu Koszty pochodzą z woleoze.pl. Szukasz firmy do montażu albo serwisu pompy? Katalog ma <span class="liczba">2427 firm</span> montujących pompy ciepła (stan 11.11.2026).</p>
+      <div class="btns"><a class="b b2 bm" href="https://woleoze.pl/kalkulator-pompy-ciepla/">🧮 Kalkulator pompy ciepła</a><a class="b b2 bm" href="https://woleoze.pl/firmy/pompy-ciepla/">📒 Katalog 2427 firm</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="pytania">
+  <div class="nag pokaz"><span class="nadt">Pytania</span><h2>Zanim zapłacisz</h2><p>Najczęstsze wątpliwości. Krótko i wprost.</p></div>
+  <div class="faq">
+    <details><summary>149 zł za panel? Po co, skoro Start jest za darmo?</summary><div class="od"><p>Start pokazuje, co pompa robi. Pro pozwala to zmienić i policzyć: nastawy z telefonu, prąd i COP osobno na dom i ciepłą wodę, koszt obok innych paliw, harmonogram CWU na tanie godziny.</p><p>U nas sam harmonogram CWU obciął ok. 2,7 kWh na dobę. U ciebie wynik będzie inny. Dlatego najpierw sprawdź Start za darmo, a Pro kup, gdy zobaczysz, że jest co poprawiać.</p></div></details>
+    <details><summary>Czy to bezpieczne dla pompy?</summary><div class="od"><p><b>Start tylko czyta.</b> Moduł nie ma żadnej encji do zapisu, więc niczego w pompie nie zmieni.</p><p><b>Pro zapisuje nastawy</b> tak, jak zmiana w menu serwisanta: po jednej wartości. Karta pokazuje wartości fabryczne obok obecnych, więc zawsze wiesz, do czego wrócić. Po zapisie nastawy serwisowej pompa potrafi wyłączyć ciepłą wodę: pakiet to wykrywa i przypomina.</p><p>Nie podawaj zasilania na H1/H2. Moduł zasilaj tylko z 5 V przez USB-C.</p></div></details>
+    <details><summary>A jak nie zadziała z moją pompą?</summary><div class="od"><p>Testowane na Rotenso Aquami AQM120X3 ze sterownikiem KJRH-120H. Pompy na płycie Midea M-Thermal mają tę samą listę Modbus, więc powinny działać.</p><p><b>Start:</b> nic nie tracisz, jest za darmo. <b>Konfiguracja:</b> jeśli moduł nie złapie komunikacji z pompą, oddaję 100%. <b>Pro samodzielnie:</b> najpierw uruchom Start i sprawdź, czy moduł czyta pompę. Wtedy wiesz, że Pro zadziała.</p><p>Nie wiesz, czy twoja pompa to ta rodzina? Zapytaj w <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/discussions">Discussions</a>, zanim zapłacisz.</p></div></details>
+    <details><summary>Czy muszę umieć YAML?</summary><div class="od"><p>Do karty Start nie. Kopiujesz plik, dodajesz zasób i wklejasz gotowy widok: pięć kroków opisanych w README.</p><p>Moduł ESPHome to jeden gotowy plik: wpisujesz hasło do Wi-Fi i wgrywasz. W Pro kreator pyta o twoje encje (licznik prądu, taryfa, powiadomienia) i sam generuje pliki.</p><p>Nie chcesz tego dotykać? Wybierz konfigurację za ciebie: łączę się zdalnie i robię wszystko.</p></div></details>
+    <details><summary>Co jeśli zmienię pompę?</summary><div class="od"><p>Jeśli nowa pompa też jest na płycie Midea M-Thermal ze sterownikiem z zaciskami H1/H2, przepinasz moduł i działa dalej.</p><p>Jeśli to inna marka, rejestry będą inne i ten pakiet nie pomoże. Moduł ESP32 to zwykła płytka: użyjesz jej w innym projekcie ESPHome.</p></div></details>
+    <details><summary>Czego potrzebuję?</summary><div class="od"><p>Home Assistant (np. Raspberry Pi albo Home Assistant Green) i integracji Midea do karty Start. Do pełnego odczytu: moduł ESP32 z RS-485 za ok. 95 zł i dwie żyły do sterownika ściennego.</p></div></details>
+    <details><summary>Czy moje dane idą do chmury?</summary><div class="od"><p>Moduł Modbus gada z pompą po kablu i wysyła dane tylko do twojego Home Assistant w domowej sieci. Nie ma tu żadnego konta ani serwera po naszej stronie.</p><p>Karta Start korzysta z integracji Midea, czyli tego samego połączenia, którego używa aplikacja producenta.</p></div></details>
+    <details id="zwrot"><summary>Zwrot i odstąpienie: jak to jest?</summary><div class="od"><p><b>Konfiguracja za ciebie (usługa):</b> masz 14 dni na odstąpienie od umowy, dopóki nie zaczniemy pracy. Gdy na twoją prośbę zaczniemy i skończymy konfigurację, prawo do odstąpienia wygasa. Niezależnie od tego: jeśli moduł nie złapie komunikacji z pompą, oddaję 100%.</p><p><b>Pro (treść cyfrowa):</b> przy zakupie zgadzasz się, żebym od razu dał ci dostęp do prywatnego repo. Z chwilą udostępnienia plików tracisz prawo do odstąpienia, bo plików nie da się „oddać”. Dlatego najpierw sprawdź za darmo Start.</p><p>Sprzedawca: osoba prywatna (działalność nierejestrowana). Fakturę wystawię na życzenie.</p></div></details>
+  </div>
+</section>
+
+<!-- KOŃCOWE CTA -->
+<section id="koniec">
+  <div class="koniec pokaz">
+    <span class="nadt">Bez ryzyka</span>
+    <h2>Sprawdź za darmo <span class="g">dziś wieczorem</span></h2>
+    <p>Karta Start działa na integracji Midea, bez żadnego sprzętu. Kilka plików i zobaczysz swoją pompę w Home Assistant. Spodoba ci się, dokładasz Pro albo zlecasz konfigurację.</p>
+    <div class="btns">
+      <a class="b b1" href="https://github.com/WoleOze/rotenso-midea-modbus-ha">Pobierz Start za darmo</a>
+      <a class="b b2" href="https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00">Skonfiguruj za mnie · 249 zł</a>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer><div class="w">
+  <div class="stl">
+    <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha">GitHub <small>· publiczne repo, Start</small></a>
+    <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha-pro">Pro <small>· prywatne repo, dostęp po zakupie</small></a>
+    <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/faq.md">FAQ techniczne</a>
+    <a href="https://buycoffee.to/woleoze">☕ Postaw kawę</a>
+    <a href="https://woleoze.pl/pompa-ciepla/">Partner technologiczny: woleoze.pl</a>
+  </div>
+  <p>Projekt niezależny, niezwiązany z Rotenso ani Midea. Nazwy producentów służą wyłącznie do wskazania zgodności.</p>
+  <p>Sprzedawca: osoba prywatna (działalność nierejestrowana). Płatności obsługuje Stripe.</p>
+</div></footer>
+
+<div class="pasekCTA" id="pasekCTA" aria-hidden="true">
+  <a class="b b1" href="#ceny" tabindex="-1">Zacznij za darmo</a>
+  <a class="b b2" href="https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00" tabindex="-1">Konfiguracja 249 zł</a>
+</div>
+
+<script>
+(function(){
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmt=(v,dz)=>v.toFixed(dz).replace('.',',');
+
+// liczniki: HTML zawiera wartość końcową; animujemy tylko bez reduced-motion
+const licz=[...document.querySelectorAll('[data-licz]')];
+if(!RM&&'IntersectionObserver' in window){
+  const pokazL=(el,k)=>{const od=el.dataset.od.split(',').map(Number),dd=el.dataset.do.split(',').map(Number),dz=+(el.dataset.dz||0);
+    let s=el.dataset.wz;dd.forEach((d,i)=>{s=s.replace('{'+i+'}',fmt(od[i]+(d-od[i])*k,dz))});el.innerHTML=s};
+  licz.forEach(el=>pokazL(el,0));
+  const io=new IntersectionObserver(w=>w.forEach(e=>{if(!e.isIntersecting)return;const el=e.target;io.unobserve(el);const t0=performance.now();
+    const krok=t=>{const k=Math.min(1,(t-t0)/1500);pokazL(el,1-Math.pow(1-k,3));if(k<1)requestAnimationFrame(krok)};requestAnimationFrame(krok)}),{threshold:.5});
+  licz.forEach(el=>io.observe(el));
+}
+
+// pojawianie przy przewijaniu
+const pok=document.querySelectorAll('.pokaz');
+if(RM||!('IntersectionObserver' in window))pok.forEach(x=>x.classList.add('wid'));
+else{const io2=new IntersectionObserver(w=>w.forEach(e=>{if(e.isIntersecting){e.target.classList.add('wid');io2.unobserve(e.target)}}),{threshold:.1,rootMargin:'0px 0px -40px 0px'});pok.forEach(x=>io2.observe(x))}
+
+// SMIL: zatrzymaj płynące kropki przy reduced-motion
+if(RM)document.querySelectorAll('svg').forEach(s=>s.pauseAnimations&&s.pauseAnimations());
+
+// „żywe” wartości w animacji (wahania wokół odczytów z instalacji)
+if(!RM){const r=(a,b)=>a+Math.random()*(b-a);
+  const ust=(id,t)=>{const el=document.getElementById(id);if(el.textContent===t)return;el.textContent=t;el.classList.add('mig');setTimeout(()=>el.classList.remove('mig'),600)};
+  setInterval(()=>{const hz=Math.round(r(30,34)),kw=r(6.1,6.7),pw=r(1.9,2.1);
+    ust('hzAn',hz+' Hz');ust('kwAn',fmt(kw,1)+' kW');ust('pwAn',fmt(pw,1)+' kW');ust('copAn','COP '+fmt(kw/pw,1))},2200)}
+
+// suwak przed / po
+const por=document.getElementById('porown'),suw=por.querySelector('input');let ruszony=false;
+const ustP=v=>por.style.setProperty('--p',v+'%');
+suw.addEventListener('input',()=>{ruszony=true;ustP(suw.value)});
+if(!RM&&'IntersectionObserver' in window){const io3=new IntersectionObserver(w=>{if(!w[0].isIntersecting)return;io3.disconnect();
+  const kl=[[0,50],[700,70],[1500,30],[2200,50]],t0=performance.now();
+  const krok=t=>{if(ruszony)return;const d=t-t0;let i=0;while(i<kl.length-2&&d>kl[i+1][0])i++;const [ta,va]=kl[i],[tb,vb]=kl[i+1];
+    const k=Math.min(1,Math.max(0,(d-ta)/(tb-ta))),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2,v=va+(vb-va)*e;ustP(v);suw.value=Math.round(v);if(d<kl[kl.length-1][0])requestAnimationFrame(krok)};
+  setTimeout(()=>requestAnimationFrame(krok),500)},{threshold:.6});io3.observe(por)}
+
+// quiz „czy to dla mnie”
+const st={},wynik=document.getElementById('wynik');
+const GH='https://github.com/WoleOze/rotenso-midea-modbus-ha',KONF='https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00',PRO='https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03';
+const R={
+  brakHA:['Najpierw Home Assistant','Bez Home Assistant ten pakiet nie ma na czym działać. Postaw HA (np. Raspberry Pi albo Home Assistant Green), dodaj integrację Midea i wróć tu. Start czeka za darmo.',[['Jak zainstalować Home Assistant →','https://www.home-assistant.io/installation/','b1']]],
+  innaPompa:['Start, ale najpierw zapytaj','Pakiet działa na płycie Midea M-Thermal (Rotenso Aquami i bliźniacze marki ze sterownikiem KJRH-120H). Nie wiesz, czy to twoja? Zapytaj w Discussions, zanim cokolwiek kupisz. Start i tak sprawdzisz za darmo.',[['Zapytaj w Discussions','https://github.com/WoleOze/rotenso-midea-modbus-ha/discussions','b1'],['Start za darmo',GH,'b2']]],
+  start:['Start za darmo, potem Pro','Lubisz sam podpinać i sprawdzać. Zacznij od karty Start, uruchom moduł do odczytu. Gdy zobaczysz, że wszystko gada, dokup Pro za 149 zł: nastawy, koszty, raport, harmonogram CWU.',[['Pobierz Start za darmo',GH,'b1'],['Pro · 149 zł',PRO,'b2']]],
+  konf:['Pro + konfiguracja za ciebie','Masz HA i pasującą pompę, a nie chcesz tracić wieczorów na ESPHome i YAML. Łączę się zdalnie i podpinam wszystko. Jeśli moduł nie złapie komunikacji, oddaję 100%.',[['Zamawiam konfigurację · 249 zł',KONF,'b1'],['Najpierw Start za darmo',GH,'b2']]]
+};
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function pokazW(k){const [h,p,bt]=R[k];wynik.innerHTML='<span class="nadt">Twoja droga</span><h3>'+esc(h)+'</h3><p>'+esc(p)+'</p><div class="btns">'+bt.map(b=>'<a class="b '+b[2]+'" href="'+b[1]+'">'+esc(b[0])+'</a>').join('')+'</div>';const r=wynik.getBoundingClientRect();if(r.top>innerHeight-120||r.bottom<0)wynik.scrollIntoView({block:'center',behavior:RM?'auto':'smooth'})}
+function oblicz(){
+  document.querySelectorAll('.py').forEach(p=>p.classList.toggle('off',st.ha==='nie'&&p.dataset.py!=='ha'));
+  if(st.ha==='nie')return pokazW('brakHA');
+  if(st.pompa==='nie')return pokazW('innaPompa');
+  if(st.ha==='tak'&&st.pompa==='tak'&&st.sam)return pokazW(st.sam==='tak'?'start':'konf');
+  const zostalo=['ha','pompa','sam'].filter(k=>!st[k]).length;
+  wynik.innerHTML='<span class="nadt">Twoja droga</span><h3>Jeszcze '+zostalo+(zostalo===1?' pytanie':' pytania')+'</h3><p>Na podstawie trzech odpowiedzi polecę jedną z dróg: Start, Pro albo konfigurację za ciebie.</p>';
+}
+document.querySelectorAll('.py').forEach(p=>p.querySelectorAll('.qb').forEach(b=>b.addEventListener('click',()=>{
+  st[p.dataset.py]=b.dataset.v;p.querySelectorAll('.qb').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));oblicz()})));
+
+// przyklejony pasek CTA na telefonie: po przewinięciu hero, chowa się przy końcowym CTA
+const pas=document.getElementById('pasekCTA'),hero=document.getElementById('hero'),kon=document.getElementById('koniec');
+let czeka=false;const odsw=()=>{czeka=false;const w=hero.getBoundingClientRect().bottom<0&&kon.getBoundingClientRect().top>innerHeight-40;
+  if(pas.classList.contains('wid')===w)return;pas.classList.toggle('wid',w);pas.setAttribute('aria-hidden',w?'false':'true');pas.querySelectorAll('a').forEach(a=>a.tabIndex=w?0:-1)};
+addEventListener('scroll',()=>{if(!czeka){czeka=true;requestAnimationFrame(odsw)}},{passive:true});addEventListener('resize',odsw);odsw();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+_zrodla/
+KONTRAKT.md
+esphome/secrets.yaml
+esphome/.esphome/
+.DS_Store
+*.bak*

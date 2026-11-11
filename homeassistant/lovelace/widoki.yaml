@@ -1,0 +1,36 @@
+# Dwa widoki pulpitu (Lovelace) z kartami Rotenso, wersja Start. Każdy widok w trybie „panel” = jedna karta na całą szerokość.
+#
+# Instalacja:
+# 1. Skopiuj pliki homeassistant/www/rotenso/*.js do /config/www/rotenso/ (katalog www utwórz, jeśli go nie ma; po utworzeniu
+#    katalogu www zrestartuj Home Assistanta – dopiero wtedy /local/ zaczyna działać).
+# 2. Dodaj zasoby: Ustawienia → Pulpity → (menu ⋮ w prawym górnym rogu) → Zasoby → „Dodaj zasób”, typ „Moduł JavaScript”:
+#      /local/rotenso/start.js?v=1
+#      /local/rotenso/pompa.js?v=1      (tylko jeśli masz moduł Modbus)
+#    (po każdej podmianie pliku podnieś ?v=, np. ?v=2 – inaczej przeglądarka pokaże starą wersję). Jeśli nie widzisz pozycji
+#    „Zasoby”, włącz tryb zaawansowany w swoim profilu użytkownika.
+# 3. Otwórz pulpit → ⋮ → Edytuj pulpit → ⋮ → Edytor kodu (surowa konfiguracja) i wklej poniższą listę `views:` (albo dopisz
+#    widoki do istniejącej). Bez modułu Modbus usuń widok „Pompa”.
+# 4. Karta Start działa na integracji midea_ac_lan i sama znajduje pompę. Jeśli masz kilka urządzeń Midea, wpisz
+#    `urzadzenie:` = liczba z nazw encji (np. sensor.<twoje_id>_outdoor_temperature). `woleoze: false` wyłącza stopkę
+#    „dane i kalkulatory: woleoze.pl” i kafel o wersji Pro.
+views:
+  - title: Start
+    path: start
+    icon: mdi:heat-pump-outline
+    panel: true
+    cards:
+      - type: custom:rotenso-start
+        woleoze: true
+        # urzadzenie: "<twoje_id>"
+        # encje:
+        #   temp_zew: sensor.moj_czujnik_zewnetrzny
+  - title: Pompa
+    path: pompa
+    icon: mdi:heat-pump
+    panel: true
+    cards:
+      - type: custom:rotenso-pompa
+        woleoze: true
+        # encje:
+        #   prad_moc: sensor.moj_licznik_moc
+        #   temp_zew: sensor.moj_czujnik_zewnetrzny

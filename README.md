@@ -1,0 +1,180 @@
+# Rotenso Aquami / Midea M-Thermal w Home Assistant
+
+Podgląd pompy ciepła **Rotenso Aquami** (i innych pomp na płycie **Midea M-Thermal**) w Home Assistant. Zaczynasz od karty na integracji Midea, bez żadnego sprzętu. Jeśli chcesz zobaczyć więcej, dokładasz moduł ESP32 z RS-485 podpięty do sterownika ściennego: 114 odczytów co 5 s, bez chmury.
+
+Sprawdzone na **Rotenso Aquami AQM120X3** (12 kW, 3 fazy, R32) ze sterownikiem ściennym **KJRH-120H** („Reni”). Działa od 9.11.2026.
+
+[English summary below](#english-summary)
+
+![Karta Start (przykładowe dane)](docs/zrzuty/start.png)
+*Karta Start na integracji Midea. Przykładowe dane.*
+
+## Trzy wersje
+
+**Start** jest za darmo, działa w pełni i bez limitu czasu. Sprawdzisz na swojej pompie, czy wszystko gada, zanim wydasz złotówkę.
+
+| | **Start** | **Pro** | **Pro + konfiguracja** |
+|---|---|---|---|
+| Cena | **0 zł** | **149 zł** | **249 zł** |
+| Karta na integracji Midea, bez dodatkowego sprzętu: stan, temperatury, prąd, ciepło, COP, przełączniki | ✓ | ✓ | ✓ |
+| Moduł ESPHome: 114 odczytów z pompy co 5 s | ✓ (tylko odczyt) | ✓ | ✓ |
+| Panel Pompa: obieg na żywo, COP teraz, doba pracy, krzywa, nastawy, liczniki, błędy | ✓ (podgląd) | ✓ | ✓ |
+| Schemat podłączenia, FAQ | ✓ | ✓ | ✓ |
+| Zmiana nastaw instalatora z HA (krzywa, histereza, CWU, grzałka) | | ✓ | ✓ |
+| Prąd i COP osobno: dom i ciepła woda | | ✓ | ✓ |
+| Panel Koszty: pompa a ekogroszek, pellet, gaz | | ✓ | ✓ |
+| Panel Raport: dzień / tydzień / miesiąc, alarmy z progami | | ✓ | ✓ |
+| Harmonogram CWU na tanie godziny | | ✓ | ✓ |
+| Kreator konfiguracji i aktualizacje | | ✓ | ✓ |
+| Zdalnie podpinam moduł, panele, alarmy, harmonogram; test odczytu i zapisu nastawy | | | ✓ |
+| Zwrot 100%, jeśli moduł nie złapie komunikacji z pompą | | | ✓ |
+| | [Instalacja niżej](#instalacja-start-w-5-krokach) | [Kupuję Pro →](https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03) | [Zamawiam konfigurację →](https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00) |
+
+Uczciwie: to nie magia. Panel pokazuje, co się dzieje w pompie. Oszczędności zależą od twojej instalacji i nastaw, nie od samego panelu.
+
+## Co jest w tym repo (Start)
+
+| Element | Co robi |
+|---|---|
+| Karta **Start** (`rotenso-start`, `homeassistant/www/rotenso/start.js`) | działa na integracji **midea_ac_lan**, bez dodatkowego sprzętu. Stan pompy (grzeje dom / ładuje CWU / postój / błąd), temperatura na dworze, bojler i zadana CWU, zadana strefy 1, grzałki IBH/TBH. Prąd i ciepło z liczników Midea dziś i w tym miesiącu, COP, wykres 14 dni. Przełączniki strefy 1, CWU, ECO i trybu cichego (te same, które daje integracja). Sama znajduje pompę. |
+| `esphome/pompa-modbus.yaml` | moduł Modbus **tylko do odczytu**: temperatury obiegu (T1–T5, Th, Tp, T2, T2B), częstotliwość sprężarki, przepływ, ciśnienie, zawór SV1, odszranianie, grzałki, kody błędów, liczniki kWh, nastawy użytkownika i instalatora, moc elektryczna szacowana z U×I. Niczego do pompy nie zapisuje. |
+| Karta **Pompa** (`rotenso-pompa`, `homeassistant/www/rotenso/pompa.js`) | w trybie podglądu: obieg R32 na żywo, COP teraz, doba pracy (starty sprężarki, pasy CWU/dom/odszranianie), krzywa grzewcza z histerezą, nastawy instalatora a fabryczne, liczniki, błędy. Wszystko klikalne (historia HA). |
+| `homeassistant/lovelace/widoki.yaml` | dwa widoki: Start i Pompa. |
+| `docs/` | podłączenie krok po kroku ze schematem, FAQ. |
+
+![Panel Pompa w wersji Start](docs/zrzuty/pompa.png)
+*Panel Pompa (podgląd) na odczytach z naszej instalacji; wykres doby na przykładowych danych.*
+
+## Instalacja Start w 5 krokach
+
+Karta Start nie wymaga żadnego sprzętu. Wystarczy pompa podłączona do Wi-Fi przez moduł Midea.
+
+1. **Integracja Midea.** Zainstaluj [midea_ac_lan](https://github.com/wuwentao/midea_ac_lan) (HACS) i dodaj pompę. Encje dostaną nazwy typu `sensor.<twoje_id>_outdoor_temperature`, gdzie `<twoje_id>` to numer urządzenia.
+2. **Plik karty.** Skopiuj `homeassistant/www/rotenso/start.js` do `/config/www/rotenso/` (katalog `www` utwórz, jeśli go nie ma, i zrestartuj HA).
+3. **Zasób.** Ustawienia → Pulpity → ⋮ → Zasoby → „Dodaj zasób”: `/local/rotenso/start.js?v=1`, typ „Moduł JavaScript”.
+4. **Widok.** Wklej widok „Start” z `homeassistant/lovelace/widoki.yaml` do pulpitu (Edytuj pulpit → Edytor kodu). Karta sama znajdzie pompę; przy kilku urządzeniach Midea wpisz `urzadzenie: <twoje_id>`.
+5. **Sprawdź.** Na karcie powinien być stan pompy i temperatury. Liczniki potrzebują kilku godzin statystyk HA, wykres 14 dni zapełnia się z czasem.
+
+Liczniki Midea mają rozdzielczość 1 kWh, a po restarcie HA dane z chmury Midea potrafią milczeć do 50 min. Dokładne dane co 5 s daje moduł Modbus.
+
+### Potem, jeśli chcesz: moduł Modbus
+
+1. **Sprzęt** (niżej) i podłączenie do H1/H2 sterownika ściennego.
+2. **ESPHome.** Skopiuj `esphome/secrets.yaml.example` do `secrets.yaml`, uzupełnij Wi-Fi i klucz API, wgraj `esphome/pompa-modbus.yaml`.
+3. **Sterownik ścienny.** Menu serwisanta: `17.2 ADRES HMI DLA BMS` = 1, `HMI SET` = 0 (główna). Po wyjściu z menu pompa się wyłącza, włącz ją z powrotem.
+4. **Karta Pompa.** Skopiuj `pompa.js` obok `start.js`, dodaj zasób `/local/rotenso/pompa.js?v=1` i widok „Pompa” z `widoki.yaml`. Sprawdź, czy „Moduł Modbus: online”.
+
+Szczegóły i pułapki: [docs/podlaczenie.md](docs/podlaczenie.md).
+
+## Sprzęt (moduł Modbus)
+
+- **Waveshare ESP32-S3-Relay-1CH** (albo `-U` z gniazdem anteny): ESP32-S3 z izolowanym RS-485 na płytce, ok. 95 zł. Przekaźnik nieużywany. Każdy ESP32 z konwerterem RS-485 też zadziała, trzeba tylko zmienić piny w yaml.
+- Zasilanie 5 V przez USB-C.
+- Skrętka 2 żyły do zacisków **H1/H2 z tyłu sterownika ściennego**: **H2 → A+, H1 → B−**.
+
+![Schemat podłączenia](docs/schemat-modbus-panel.png)
+
+**Najważniejsze:** Modbus obsługuje sterownik ścienny (HMI), nie płyta główna w jednostce. Podłączenie do CN30 na płycie daje brak komunikacji. Pytania: [docs/faq.md](docs/faq.md).
+
+## Skąd prąd i ciepło
+
+- **Karta Start:** z liczników integracji Midea (rozdzielczość 1 kWh). Na dobę wystarczy, na godzinę nie.
+- **Moduł Modbus, ciepło:** z czujników pompy (przepływ × ΔT). Przepływ pompa wylicza, nie mierzy, więc licz się z błędem ±15%.
+- **Moduł Modbus, prąd:** najlepiej z własnego licznika na zasilaniu pompy. Bez licznika karta używa szacunku z prądu i napięcia jednostki zewnętrznej (`moc_elektryczna_szacowana`, ±0,4 kW). COP z szacunku traktuj orientacyjnie.
+
+## Pro
+
+**Pro kupujesz za 149 zł; po płatności w ciągu 24 h dostajesz dostęp do prywatnego repo z plikami i aktualizacjami:** [github.com/WoleOze/rotenso-midea-modbus-ha-pro](https://github.com/WoleOze/rotenso-midea-modbus-ha-pro) (dostęp po zakupie).
+
+Co dokłada Pro:
+
+- **zmiana nastaw instalatora z Home Assistanta**: zadana CWU, histereza grzania (3.5), dT5_ON (1.6), krzywa grzewcza (3.9), moc grzałki (7.8); moduł ESPHome z zapisem,
+- **prąd i COP osobno dla domu i ciepłej wody** (podział po zaworze SV1), dzień / tydzień / miesiąc,
+- **harmonogram CWU na tanie godziny** G12w (wyższa zadana w tanich, niższa w drogich, weekendy i święta),
+- **panel Koszty**: prąd pompy godzina po godzinie w twojej taryfie obok tego samego ciepła z ekogroszku, węgla, pelletu, drewna, gazu, LPG, oleju i grzałki,
+- **panel Raport**: alarmy teraz, dziennik dzień / tydzień / miesiąc, raport dobowy do pliku, powiadomienia na telefon tylko przy prawdziwej anomalii, progi do ustawienia,
+- **kreator konfiguracji**: wpisujesz swoje encje (licznik prądu, taryfa, powiadomienia), dostajesz gotowe pliki,
+- **aktualizacje** w prywatnym repo.
+
+[Kupuję Pro: 149 zł →](https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03)
+
+Płatność kartą lub BLIK przez Stripe. Sprzedawca: osoba prywatna (działalność nierejestrowana).
+
+## Co już dało u nas (dane z HA, 9–11.11.2026)
+
+Te zmiany zrobiliśmy funkcjami wersji Pro (zapis nastaw, harmonogram CWU), a efekt widać w panelach.
+
+- Histereza grzania 2 → 5 K (parametr 3.5): starty sprężarki z 18–23 na 3–7 na dobę, biegi po 1–4 h.
+- Harmonogram CWU na tanie godziny + dT5_ON 7 → 4: prąd na CWU z 6,3 na 3,6 kWh/dobę.
+- Krzywa grzewcza 34 → 30 °C w ciepłym punkcie: woda zasilania o 1–2 K niżej przy 4–7 °C na dworze. Efekt na rachunku liczony po tygodniu.
+- Sezon 11.2025–10.2026: 10 878 kWh prądu, 31 942 kWh ciepła, SCOP 2,94, 64% prądu w taniej strefie. Pompa tańsza od ekogroszku o 9% i od pelletu o 54% przy cenach z listopada 2026.
+
+Liczby z instalacji 12 kW w domu ok. 200 m² z buforem i grzejnikami. U ciebie będzie inaczej, ale karty pokażą ci twoje.
+
+## Bezpieczeństwo
+
+- Wersja Start tylko czyta z pompy. Moduł nie ma żadnej encji do zapisu.
+- Przełączniki na karcie Start (strefa 1, CWU, ECO, cichy) to zwykłe przełączniki integracji Midea, działają tak samo jak w aplikacji producenta.
+- Nie podawaj zasilania na H1/H2 i nie łącz ich z masą modułu. Moduł zasilaj tylko z 5 V przez USB-C.
+
+## Zanim kupisz pompę
+
+Jeśli trafiłeś tu przed zakupem: ta instalacja działa dobrze, bo ma bufor, dobrze dobraną moc i taryfę dwustrefową. Dobór i montaż robi firma, a różnice między firmami są większe niż między pompami. Lista firm montujących pompy ciepła z opiniami i sprawdzeniem w rejestrach: [woleoze.pl/firmy/pompy-ciepla](https://woleoze.pl/firmy/pompy-ciepla/) (2427 firm, stan 11.11.2026).
+
+## Ograniczenia
+
+- Testowane na jednym modelu. Rejestry są z listy Modbus Rotenso (instrukcja instalacji, str. 49–60), wspólnej dla Midea M-Thermal, więc inne modele powinny działać, ale sprawdź listę Modbus w instrukcji swojej pompy.
+- Chłodzenie, strefa 2 i solary: rejestry są w yaml, karty ich nie pokazują.
+- Przykładowy ekran całego domu (bufor, solary, pompki obiegowe, prąd) jest w `docs/zrzuty/centrum-przyklad.png`. Nie publikujemy go jako gotowca, bo jest szyty pod jedną kotłownię.
+
+## Nie chcesz grzebać w YAML? Skonfiguruję to za ciebie
+
+ESPHome, karty i rejestry to wieczór albo dwa dla kogoś, kto robi to pierwszy raz. Mogę zrobić to zdalnie za ciebie.
+
+**Co dostajesz:** wszystko z Pro. Moduł gada z pompą, w Home Assistant masz panele Start, Pompa, Koszty i Raport, podział prądu i COP na dom i CWU, alarmy z progami dobranymi do twojej instalacji i harmonogram CWU na tanie godziny. Na koniec sprawdzamy razem odczyty i jeden zapis nastawy.
+
+**Dlaczego warto:** u nas sam harmonogram CWU obciął zużycie o 2,7 kWh dziennie, to ok. 800 zł rocznie przy G12w (dane z HA, 9–11.11.2026). U ciebie wynik będzie inny, ale pokażą go te same karty.
+
+| Usługa | Cena | |
+|---|---|---|
+| **Pro + zdalna konfiguracja** (do 3 h pracy) | **249 zł** | [Zamawiam konfigurację →](https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00) |
+| Wgranie modułu: zamawiasz moduł z dostawą do mojego paczkomatu, ja wgrywam i odsyłam | + 39 zł | [Dopłata za wgranie →](https://buy.stripe.com/7sY4gz4yo5cs33u42D3Je01) |
+| Poprawki po konfiguracji (30 min; 2 szt. = 1 h) | 50 zł | [Poprawki →](https://buy.stripe.com/eVqbJ1aWM7kA6fG8iT3Je02) |
+
+**Gwarancja:** jeśli moduł nie złapie komunikacji z twoją pompą, oddaję 100%.
+
+**Jak to wygląda:** płacisz (karta, BLIK) i w formularzu podajesz model pompy → w ciągu 24 h w dni robocze piszę do ciebie mailem i ustalamy termin → łączymy się zdalnie z twoim Home Assistant.
+
+**To nie dla ciebie, jeśli:** nie masz jeszcze Home Assistant (najpierw postaw HA, np. na Raspberry Pi albo Home Assistant Green) albo twoja pompa nie jest na płycie Midea M-Thermal. Nie wiesz? Zapytaj w [Discussions](https://github.com/WoleOze/rotenso-midea-modbus-ha/discussions), zanim zapłacisz.
+
+Usługę świadczę jako osoba prywatna (działalność nierejestrowana). Masz 14 dni na odstąpienie od umowy, dopóki nie zaczniemy pracy; po wykonaniu usługi za twoją zgodą prawo do odstąpienia wygasa. Fakturę wystawię na życzenie.
+
+## Partner technologiczny: woleOZE
+
+Ceny paliw, sprawności kotłów i kalkulatory pochodzą z [woleoze.pl](https://woleoze.pl/pompa-ciepla/).
+
+- Ile kosztuje ogrzewanie pompą u ciebie: [kalkulator pompy ciepła](https://woleoze.pl/kalkulator-pompy-ciepla/).
+- Czy G12w się opłaca przy pompie: [kalkulator G11 / G12](https://woleoze.pl/kalkulator-g11-g12/).
+- Firma do montażu albo serwisu: [katalog 2427 firm montujących pompy ciepła](https://woleoze.pl/firmy/pompy-ciepla/) (stan 11.11.2026).
+
+## Wsparcie
+
+Wersja Start jest darmowa i taka zostanie. Jeśli zaoszczędziła ci godzin grzebania w rejestrach, możesz postawić kawę:
+
+<a href="https://buycoffee.to/woleoze" target="_blank"><img src="https://buycoffee.to/static/img/share/share-button-primary--pl.png" width="260" alt="Postaw kawę dla WoleOze na buycoffee.to"></a>
+
+<img src="docs/buycoffee-qr.png" width="140" alt="Kod QR: buycoffee.to/woleoze">
+
+## Podziękowania i źródła
+
+- [Mosibi/Midea-heat-pump-ESPHome](https://github.com/Mosibi/Midea-heat-pump-ESPHome): projekt odniesienia dla tej rodziny pomp.
+- [wuwentao/midea_ac_lan](https://github.com/wuwentao/midea_ac_lan): integracja Midea, na której działa karta Start.
+- Instrukcja instalacji Rotenso Aquami (lista Modbus): dokument producenta, nie kopiujemy go.
+
+Licencja: [Licencja Start](LICENSE) (darmowe użycie w jednym domu, bez odsprzedaży). Wersje opublikowane przed 11.11.2026 15:00 zostają na MIT. Zgłoszenia i inne modele pomp: Issues.
+
+---
+
+## English summary
+
+Home Assistant cards for **Rotenso Aquami / Midea M-Thermal** heat pumps. **Start (free):** a Lovelace card on top of the `midea_ac_lan` integration (no extra hardware: status, temperatures, energy and heat from Midea counters, COP, 14-day chart, zone/DHW/ECO/silent switches), plus a **read-only** ESPHome Modbus RTU config (ESP32-S3 with RS-485, wired to the **wall controller's H1/H2 terminals**, not the main board; 114 readings every 5 s) and a live preview card (refrigerant loop, COP, 24 h run chart, heating curve, installer settings). **Pro (149 PLN, private repo):** writes to installer settings, space heating / DHW split of energy and COP, DHW schedule for cheap tariff hours, cost comparison with other fuels, reports and alarms, setup wizard and updates. Polish UI. Wiring and pitfalls: `docs/podlaczenie.md`. License: "Licencja Start" (free use in one home, no resale); versions published before 11.11.2026 15:00 remain MIT.
