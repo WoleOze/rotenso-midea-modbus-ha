@@ -30,7 +30,7 @@ import urllib.parse
 import urllib.request
 import zipfile
 
-WERSJA = "1.0.0"
+WERSJA = "1.1.0"
 SERWER = os.environ.get("POMPA_SERWER", "https://rotenso-licencje.strefa-tradingu.workers.dev")
 PRO_JS = os.environ.get(
     "POMPA_PRO_JS",
@@ -53,6 +53,29 @@ MAPA_ZIP = {  # nazwa w ZIP z serwera → ścieżka względem /config
     "cwu_harmonogram.yaml": f"{KAT_PAK}/pompa_ha_cwu_harmonogram.yaml",
     "dopisz.py": "raporty/dopisz.py",
 }
+SZABLONY_DO_PLIKOW = {  # szablon z /v1/szablony → plik; wypełniany ustawieniami klienta (kreator w dodatku)
+    "co_cwu_cop": f"{KAT_PAK}/pompa_ha_co_cwu_cop.yaml",
+    "raport": f"{KAT_PAK}/pompa_ha_raport.yaml",
+    "cwu_harmonogram": f"{KAT_PAK}/pompa_ha_cwu_harmonogram.yaml",
+}
+USTAWIENIA_DOMYSLNE = {
+    "prad_moc": "sensor.pompa_modbus_moc_elektryczna_szacowana",
+    "prad_licznik": "sensor.pompa_modbus_licznik_pradu_pompy",
+    "cieplo_licznik": "sensor.pompa_modbus_licznik_ciepla_pompy",
+    "temp_zew": "sensor.pompa_modbus_t4_temperatura_zewnetrzna",
+    "cwu_zadana_zapis": "number.pompa_modbus_zadana_cwu_zapis",
+    "workday": "binary_sensor.workday_sensor",
+    "notify": "persistent_notification",
+    "taryfa_tania": 0.7303,
+    "taryfa_droga": 1.0729,
+    "okno1_od": "13:00",
+    "okno1_do": "15:00",
+    "okno2_od": "22:00",
+    "okno2_do": "06:00",
+    "weekend_tani": True,
+    "woleoze": True,
+}
+ENCJE_KART = ("prad_moc", "prad_licznik", "cieplo_licznik", "temp_zew", "cwu_zadana_zapis", "workday")
 SZABLON_BRAMKI = "pompa_bramka_lan.szablon.yaml"
 PLIK_BRAMKI = f"{KAT_PAK}/pompa_ha_bramka.yaml"
 LINIA_PAKIETOW = "packages: !include_dir_named packages"
@@ -357,14 +380,97 @@ def powiadom(tytul, tresc):
         pass
 
 
+# --- ustawienia klienta (kreator w dodatku) ------------------------------------------
+RE_ENCJA = re.compile(r"^(sensor|binary_sensor|number|input_number)\.[a-z0-9_]+$")
+RE_CZAS = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
+
+
+def ustawienia():
+    u = dict(USTAWIENIA_DOMYSLNE)
+    u.update({k: v for k, v in (stan.get("ustawienia") or {}).items() if k in USTAWIENIA_DOMYSLNE})
+    return u
+
+
+def sprawdz_ustawienia(u):
+    oczek = {"prad_moc": "sensor.", "prad_licznik": "sensor.", "cieplo_licznik": "sensor.", "temp_zew": "sensor.",
+             "cwu_zadana_zapis": "number.", "workday": "binary_sensor."}
+    for k, pref in oczek.items():
+        if not RE_ENCJA.match(str(u[k])) or not str(u[k]).startswith(pref):
+            raise Blad(f"Ustawienie „{k}”: oczekuję encji {pref}… (jest: {u[k]}).")
+    if not re.match(r"^[a-z0-9_]+$", str(u["notify"])):
+        raise Blad("Powiadomienia: nazwa usługi bez „notify.”, np. mobile_app_telefon.")
+    for k in ("okno1_od", "okno1_do", "okno2_od", "okno2_do"):
+        if not RE_CZAS.match(str(u[k])):
+            raise Blad("Okna taryfy: godziny w formacie GG:MM.")
+    for k in ("taryfa_tania", "taryfa_droga"):
+        try:
+            v = float(u[k])
+        except (TypeError, ValueError):
+            v = -1
+        if not 0 < v < 10:
+            raise Blad("Ceny taryfy: zł/kWh brutto, np. 0.73.")
+        u[k] = round(v, 4)
+    u["weekend_tani"] = bool(u["weekend_tani"])
+    u["woleoze"] = bool(u["woleoze"])
+    return u
+
+
+def wypelnij(tekst, u):
+    mapa = {
+        "PRAD_MOC": u["prad_moc"],
+        "NOTIFY": u["notify"],
+        "CWU_ZADANA_ZAPIS": u["cwu_zadana_zapis"].split(".", 1)[1],
+        "WORKDAY": u["workday"].split(".", 1)[1],
+        "OKNO1_OD": u["okno1_od"], "OKNO1_DO": u["okno1_do"], "OKNO2_OD": u["okno2_od"], "OKNO2_DO": u["okno2_do"],
+        "WEEKEND_TANI": "true" if u["weekend_tani"] else "false",
+    }
+    wynik = re.sub(r"__([A-Z0-9_]+?)__", lambda m: str(mapa.get(m.group(1), m.group(0))), tekst)
+    zostalo = re.findall(r"__[A-Z0-9_]+__", wynik)
+    if zostalo:
+        raise Blad("Szablon ma nieznane pola: " + ", ".join(sorted(set(zostalo))) + ". Napisz na pompa@woleoze.pl.")
+    return wynik
+
+
+def propozycje():
+    """Listy encji z HA klienta do wyboru w ustawieniach (zamiast wpisywania ręcznie)."""
+    st, stany = ha("GET", "/states")
+    stany = stany if isinstance(stany, list) else []
+    def lista(f):
+        return sorted(({"id": s["entity_id"], "nazwa": s.get("attributes", {}).get("friendly_name") or s["entity_id"]}
+                       for s in stany if f(s)), key=lambda x: x["id"])
+    jedn = lambda s: s.get("attributes", {}).get("unit_of_measurement")
+    wyn = {
+        "prad_moc": lista(lambda s: s["entity_id"].startswith("sensor.") and jedn(s) in ("W", "kW")),
+        "prad_licznik": lista(lambda s: s["entity_id"].startswith("sensor.") and jedn(s) in ("kWh", "Wh")),
+        "cieplo_licznik": lista(lambda s: s["entity_id"].startswith("sensor.") and jedn(s) in ("kWh", "Wh", "MWh", "GJ")),
+        "temp_zew": lista(lambda s: s["entity_id"].startswith("sensor.") and jedn(s) == "°C"),
+        "cwu_zadana_zapis": lista(lambda s: s["entity_id"].startswith("number.")),
+        "workday": lista(lambda s: s["entity_id"].startswith("binary_sensor.") and "workday" in s["entity_id"]),
+    }
+    st, uslugi = ha("GET", "/services")
+    notify = []
+    for d in uslugi if isinstance(uslugi, list) else []:
+        if d.get("domain") == "notify":
+            notify = sorted(n for n in (d.get("services") or {}) if n not in ("send_message",))
+    wyn["notify"] = [{"id": n, "nazwa": n} for n in notify] or [{"id": "persistent_notification", "nazwa": "persistent_notification"}]
+    return wyn
+
+
 # --- Lovelace -------------------------------------------------------------------------
 def widoki(klucz):
-    karta = lambda k: {"type": "custom:rotenso-pro", "karta": k, "klucz": klucz, "inst": stan["inst"], "woleoze": True}
+    u = ustawienia()
+    encje = {k: u[k] for k in ENCJE_KART}
+
+    def karta(k, dodatki=None):
+        return {"type": "custom:rotenso-pro", "karta": k, "klucz": klucz, "inst": stan["inst"],
+                "woleoze": bool(u["woleoze"]), "encje": {**encje, **(dodatki or {})}}
+
+    taryfa = {"taryfa_tania": u["taryfa_tania"], "taryfa_droga": u["taryfa_droga"]}
     return {
         "title": "Pompa",
         "views": [
             {"title": "Pompa", "path": "pompa", "icon": "mdi:heat-pump", "panel": True, "cards": [karta("pompa")]},
-            {"title": "Koszty", "path": "koszty", "icon": "mdi:cash-multiple", "panel": True, "cards": [karta("koszty")]},
+            {"title": "Koszty", "path": "koszty", "icon": "mdi:cash-multiple", "panel": True, "cards": [karta("koszty", taryfa)]},
             {"title": "Raport", "path": "raport", "icon": "mdi:file-chart", "panel": True, "cards": [karta("raport")]},
         ],
     }
@@ -462,6 +568,17 @@ def instaluj(klucz, tryb_lan_host=None):
                 sc = os.path.join(CFG, cel)
                 kopia.zabezpiecz(sc)
                 zapisz_plik(sc, z.read(nazwa))
+        u = sprawdz_ustawienia(ustawienia())
+        st_sz, odp_sz = serwer("GET", "/v1/szablony?" + q(klucz=klucz))
+        szablony = (odp_sz or {}).get("szablony") or {} if st_sz == 200 else {}
+        if all(n in szablony for n in SZABLONY_DO_PLIKOW):
+            for n, cel in SZABLONY_DO_PLIKOW.items():
+                sc = os.path.join(CFG, cel)
+                kopia.zabezpiecz(sc)
+                zapisz_plik(sc, wypelnij(szablony[n], u))
+            krok("Pakiety dopasowane do twoich ustawień (licznik, powiadomienia, taryfa).")
+        else:
+            krok("Ustawienia domyślne (serwer nie wydał szablonów).")
         host = tryb_lan_host or stan.get("bramka_host")
         if host:
             if SZABLON_BRAMKI not in nazwy:
@@ -823,6 +940,8 @@ class Obsluga(http.server.BaseHTTPRequestHandler):
                 return self._odp(200, stan_publiczny())
             if akcja == "diagnostyka":
                 return self._odp(200, diagnostyka())
+            if akcja == "ustawienia":
+                return self._odp(200, {"ustawienia": ustawienia(), "domyslne": USTAWIENIA_DOMYSLNE, "propozycje": propozycje()})
         except Blad as e:
             return self._odp(400, {"blad": str(e)})
         except Exception as e:
@@ -848,6 +967,16 @@ class Obsluga(http.server.BaseHTTPRequestHandler):
                 return self._odp(200, wyslij_raport())
             if akcja == "poprawki":
                 return self._odp(200, sprawdz_poprawki(recznie=True))
+            if akcja == "ustawienia":
+                nowe = ustawienia()
+                nowe.update({k: v for k, v in dane.items() if k in USTAWIENIA_DOMYSLNE})
+                nowe = sprawdz_ustawienia(nowe)
+                stan["ustawienia"] = {k: v for k, v in nowe.items() if v != USTAWIENIA_DOMYSLNE[k]}
+                zapisz_stan()
+                log("Zapisano ustawienia: " + (", ".join(sorted(stan["ustawienia"])) or "domyślne"))
+                if stan.get("klucz"):
+                    return self._odp(200, {"ok": True, "kroki": instaluj(stan["klucz"])})
+                return self._odp(200, {"ok": True, "kroki": ["Zapisano. Zastosuję je przy instalacji klucza."]})
             if akcja == "auto":
                 stan["auto_poprawki"] = bool(dane.get("wl"))
                 zapisz_stan()

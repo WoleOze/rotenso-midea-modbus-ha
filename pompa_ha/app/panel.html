@@ -35,6 +35,11 @@ label.p input{width:20px;height:20px}
 .drobne{font-size:12.5px;color:var(--mut)}
 a{color:var(--ak)}
 .bramka{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--lin)}
+.siatka{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.siatka label{display:block;font-size:13.5px;font-weight:600;margin-bottom:4px}
+.siatka select,.siatka input[type=number],.siatka input[type=time]{width:100%;font:14px system-ui,sans-serif;padding:9px 10px;border-radius:10px;border:1px solid var(--lin);background:var(--bg);color:var(--txt)}
+.siatka .okna{display:flex;gap:6px;align-items:center}
+.siatka .pod{font-size:12px;color:var(--mut);margin-top:3px}
 </style>
 </head>
 <body>
@@ -50,6 +55,14 @@ a{color:var(--ak)}
       <button class="g" id="bInst">Zainstaluj</button>
     </div>
     <div class="wynik" id="wInst"></div>
+  </section>
+
+  <section class="k">
+    <h2>Ustawienia (opcjonalnie)</h2>
+    <p>Masz tylko moduł pompy? Zostaw domyślne. Masz własny licznik prądu albo chcesz powiadomień na telefon? Wybierz z listy, a dodatek sam dopasuje pakiety i karty.</p>
+    <div class="siatka" id="ust">Ładuję…</div>
+    <div class="rz"><button class="g" id="bUst">Zapisz i zastosuj</button></div>
+    <div class="wynik" id="wUst"></div>
   </section>
 
   <section class="k">
@@ -164,7 +177,43 @@ $('bOdin').onclick = () => zajety($('bOdin'), async () => {
   try { await api('odinstaluj', {}); alert('Odinstalowano. Home Assistant się zrestartuje.'); } catch (e) { alert(e.message); }
   odswiezStan();
 });
-odswiezStan(); odswiezDiag();
+const POLA = [
+  ['prad_moc', 'Moc elektryczna pompy (W)', 'domyślnie szacowana z modułu (±400 W)'],
+  ['prad_licznik', 'Licznik prądu pompy (kWh)', 'do panelu Koszty'],
+  ['cieplo_licznik', 'Licznik ciepła (kWh)', 'domyślnie według pompy'],
+  ['temp_zew', 'Temperatura zewnętrzna', 'domyślnie czujnik T4 pompy'],
+  ['cwu_zadana_zapis', 'Zadana CWU (zapis)', 'encja z modułu pompy'],
+  ['workday', 'Dzień roboczy', 'integracja Workday (opcjonalnie)'],
+  ['notify', 'Powiadomienia o anomaliach', 'mobile_app_… = telefon; persistent_notification = tylko w HA'],
+];
+let USTD = null;
+async function wczytajUst() {
+  try {
+    const r = await api('ustawienia'); USTD = r;
+    const u = r.ustawienia, p = r.propozycje, d = r.domyslne;
+    const sel = (k) => {
+      const lista = (p[k] || []).slice();
+      if (!lista.some((x) => x.id === u[k])) lista.unshift({ id: u[k], nazwa: u[k] });
+      return '<select data-k="' + k + '">' + lista.map((x) => '<option value="' + esc(x.id) + '"' + (x.id === u[k] ? ' selected' : '') + '>' +
+        esc(x.id === d[k] ? '(domyślne) ' + x.nazwa : x.nazwa) + (x.nazwa !== x.id ? ' · ' + esc(x.id) : '') + '</option>').join('') + '</select>';
+    };
+    $('ust').innerHTML = POLA.map(([k, t, pod]) => '<div><label>' + t + '</label>' + sel(k) + '<div class="pod">' + pod + '</div></div>').join('') +
+      '<div><label>Taryfa: cena tania / droga (zł/kWh brutto)</label><div class="okna"><input type="number" step="0.0001" data-k="taryfa_tania" value="' + u.taryfa_tania + '"><input type="number" step="0.0001" data-k="taryfa_droga" value="' + u.taryfa_droga + '"></div><div class="pod">domyślnie G12w Tauron 2026</div></div>' +
+      '<div><label>Tanie okno 1</label><div class="okna"><input type="time" data-k="okno1_od" value="' + u.okno1_od + '">–<input type="time" data-k="okno1_do" value="' + u.okno1_do + '"></div></div>' +
+      '<div><label>Tanie okno 2</label><div class="okna"><input type="time" data-k="okno2_od" value="' + u.okno2_od + '">–<input type="time" data-k="okno2_do" value="' + u.okno2_do + '"></div><div class="pod">może przechodzić przez północ</div></div>' +
+      '<div><label class="p"><input type="checkbox" data-k="weekend_tani"' + (u.weekend_tani ? ' checked' : '') + '> Weekend i dni wolne całe tanie</label>' +
+      '<label class="p" style="margin-top:8px"><input type="checkbox" data-k="woleoze"' + (u.woleoze ? ' checked' : '') + '> Stopka „dane: woleoze.pl” na kartach</label></div>';
+  } catch (e) { $('ust').textContent = 'Nie mogę wczytać ustawień: ' + e.message; }
+}
+$('bUst').onclick = () => zajety($('bUst'), async () => {
+  const dane = {};
+  $('ust').querySelectorAll('[data-k]').forEach((el) => { dane[el.dataset.k] = el.type === 'checkbox' ? el.checked : el.value; });
+  pokaz($('wUst'), 'Zapisuję i stosuję… (do minuty)');
+  try { const r = await api('ustawienia', dane); pokaz($('wUst'), r.kroki.join('\n'), 'o'); }
+  catch (e) { pokaz($('wUst'), e.message, 'b'); }
+  odswiezStan();
+});
+odswiezStan(); odswiezDiag(); wczytajUst();
 </script>
 </body>
 </html>
