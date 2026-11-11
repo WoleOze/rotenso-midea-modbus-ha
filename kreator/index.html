@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kreator konfiguracji – Rotenso / Midea przez Modbus w Home Assistant</title>
+<meta name="description" content="Wpisz swoje encje i taryfę – dostaniesz gotowe pakiety YAML, widoki pulpitu i listę kroków instalacji. Bez wysyłania czegokolwiek na serwer.">
+<style>
+  :root{--bg:#0d1117;--panel:#141b25;--line:#243041;--txt:#dde5f1;--mut:#8b9ab3;--acc:#5cb8ff;--ok:#3ecf8e;--bad:#ff6b7a;--warn:#f0b35a;--code:#0a0f16}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,system-ui,sans-serif}
+  main{max-width:960px;margin:0 auto;padding:28px 16px 60px}
+  h1{font-size:26px;margin:0 0 6px;letter-spacing:-.01em}
+  h2{font-size:17px;margin:0 0 14px;color:var(--acc);text-transform:uppercase;letter-spacing:.08em}
+  p{margin:0 0 10px}.lead{color:var(--mut);margin-bottom:22px}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
+  .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+  label{display:block;font-size:13px;color:var(--mut);margin-bottom:4px}
+  label b{color:var(--txt);font-weight:600}
+  input[type=text],input[type=number],input[type=time]{width:100%;background:var(--code);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:9px 10px;font:14px ui-monospace,SFMono-Regular,Menlo,monospace}
+  input:focus{outline:none;border-color:var(--acc)}
+  input.zle{border-color:var(--bad)}
+  .pod{font-size:12px;color:var(--mut);margin-top:4px}
+  .chk{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--txt);padding-top:6px}
+  .chk input{width:18px;height:18px;accent-color:var(--acc)}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .row input[type=time]{width:120px}
+  .bledy{color:var(--bad);font-size:14px;margin:10px 0 0;min-height:1em}
+  button{cursor:pointer;border:1px solid var(--line);background:#1b2534;color:var(--txt);border-radius:9px;padding:9px 16px;font:600 14px inherit}
+  button:hover{border-color:var(--acc)}
+  button.glowny{background:var(--acc);color:#061018;border-color:var(--acc)}
+  .blok{margin-top:16px}
+  .blok .naglowek{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+  .blok .naglowek h3{margin:0;font-size:15px}
+  .blok .naglowek small{color:var(--mut)}
+  pre{margin:0;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow:auto;max-height:420px;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:#c9d6e8;white-space:pre}
+  ol.kroki{padding-left:22px;margin:0}ol.kroki li{margin-bottom:8px}ol.kroki code{background:var(--code);padding:1px 6px;border-radius:5px;font-size:13px}
+  .uwaga{border-left:3px solid var(--warn);padding:8px 12px;background:rgba(240,179,90,.08);border-radius:6px;font-size:14px;margin-top:10px}
+  .cta{margin-top:26px;text-align:center;font-size:15px}
+  .cta a{color:var(--acc);text-decoration:none;border-bottom:1px solid rgba(92,184,255,.4)}
+  .cta a:hover{border-bottom-color:var(--acc)}
+  .skopiowano{color:var(--ok)}
+  footer{margin-top:30px;color:var(--mut);font-size:13px;text-align:center}
+  footer a{color:var(--mut)}
+  #wynik:empty{display:none}
+  .promo{background:linear-gradient(135deg,rgba(92,184,255,.14),rgba(62,207,142,.12));border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 18px;line-height:1.6}
+  .promo a{color:var(--acc);font-weight:700;text-decoration:none}
+  .promo a:hover{text-decoration:underline}
+  .reklamy{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:22px 0 8px}
+  .reklamy a{display:block;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;color:var(--txt);text-decoration:none}
+  .reklamy a:hover{border-color:var(--acc)}
+  .reklamy b{display:block;font-size:15.5px;margin-bottom:4px}
+  .reklamy span{color:var(--mut);font-size:13.5px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Kreator konfiguracji: Rotenso / Midea M‑Thermal przez Modbus</h1>
+  <p class="lead">Wpisz encje ze swojego Home Assistanta i parametry taryfy. Kreator złoży z tego trzy pakiety YAML, widoki pulpitu z kartami
+    i listę kroków instalacji. Pakiety Pro pobierają się z serwera licencji po wpisaniu klucza z maila. Twoje encje i ustawienia zostają w przeglądarce. Zostaw wartości domyślne,
+    jeśli używasz tylko modułu ESPHome z tego repozytorium.</p>
+
+  <div class="promo"><b>Masz Home Assistant OS</b> (Raspberry Pi, Home Assistant Green, mini PC)? Nie musisz nic kopiować:
+    dodatek „Pompa w HA” sam zapisze pakiety, karty i pulpit po wpisaniu klucza. <a href="https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FWoleOze%2Frotenso-midea-modbus-ha" target="_blank" rel="noopener">Dodaj dodatek do mojego HA →</a><br>
+    Nie masz klucza? <a href="https://pompa.woleoze.pl/#ceny">Pro 149 zł · zestaw gotowy do podpięcia od 499 zł →</a></div>
+
+  <form id="f" autocomplete="off" onsubmit="return false">
+    <section>
+      <h2>Klucz Pro</h2>
+      <div class="grid">
+        <div><label><b>Klucz z maila po zakupie</b></label><input type="text" name="klucz" placeholder="RPRO-XXXX-XXXX-XXXX-XXXX" spellcheck="false"><div class="pod">bez klucza kreator nie pobierze pakietów Pro</div></div>
+      </div>
+    </section>
+    <section>
+      <h2>Encje</h2>
+      <div class="grid">
+        <div><label><b>Moc elektryczna pompy</b> (W)</label><input type="text" name="prad_moc" value="sensor.pompa_modbus_moc_elektryczna_szacowana"><div class="pod">domyślnie moc szacowana z U×I (±400 W); jeśli masz licznik z pomiarem mocy czynnej – wpisz jego encję</div></div>
+        <div><label><b>Licznik prądu pompy</b> (kWh, rosnący)</label><input type="text" name="prad_licznik" value="sensor.pompa_modbus_licznik_pradu_pompy"><div class="pod">do karty „Koszty”</div></div>
+        <div><label><b>Licznik ciepła</b> (kWh)</label><input type="text" name="cieplo_licznik" value="sensor.pompa_modbus_licznik_ciepla_pompy"><div class="pod">ciepło według pompy albo własny ciepłomierz</div></div>
+        <div><label><b>Temperatura zewnętrzna</b></label><input type="text" name="temp_zew" value="sensor.pompa_modbus_t4_temperatura_zewnetrzna"><div class="pod">czujnik T4 pompy albo własny</div></div>
+        <div><label><b>Number zadanej CWU</b> (zapis)</label><input type="text" name="cwu_zadana_zapis" value="number.pompa_modbus_zadana_cwu_zapis"><div class="pod">encja <code>number</code> z ESPHome (rejestr 4)</div></div>
+        <div><label><b>Dzień roboczy</b> (integracja Workday)</label><input type="text" name="workday" value="binary_sensor.workday_sensor"><div class="pod">Ustawienia → Integracje → Workday, kraj PL</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Taryfa</h2>
+      <div class="grid">
+        <div><label><b>Cena tania</b> (zł/kWh brutto)</label><input type="number" step="0.0001" min="0" name="taryfa_tania" value="0.7303"><div class="pod">domyślnie G12w Tauron, 2026</div></div>
+        <div><label><b>Cena droga</b> (zł/kWh brutto)</label><input type="number" step="0.0001" min="0" name="taryfa_droga" value="1.0729"></div>
+        <div><label><b>Tanie okno 1</b></label><div class="row"><input type="time" name="okno1_od" value="13:00"> – <input type="time" name="okno1_do" value="15:00"></div></div>
+        <div><label><b>Tanie okno 2</b></label><div class="row"><input type="time" name="okno2_od" value="22:00"> – <input type="time" name="okno2_do" value="06:00"></div><div class="pod">okno może przechodzić przez północ</div></div>
+        <div><label class="chk"><input type="checkbox" name="weekend_tani" checked> Weekend i dni wolne całe tanie</label></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Powiadomienia i stopka</h2>
+      <div class="grid">
+        <div><label><b>Usługa powiadomień</b> (notify.…)</label><input type="text" name="notify" value="persistent_notification"><div class="pod">np. <code>mobile_app_moj_telefon</code> → powiadomienia na telefon; <code>persistent_notification</code> = tylko w HA</div></div>
+        <div><label class="chk"><input type="checkbox" name="woleoze" checked> Stopka „dane i kalkulatory: woleoze.pl” na kartach</label></div>
+      </div>
+    </section>
+
+    <div class="row">
+      <button type="button" class="glowny" id="generuj">Generuj konfigurację</button>
+      <span class="bledy" id="bledy"></span>
+    </div>
+  </form>
+
+  <div id="wynik"></div>
+
+  <div class="reklamy">
+    <a href="https://pompa.woleoze.pl/#ceny"><b>Zestaw gotowy do podpięcia · od 499 zł</b><span>Moduł z programem i kluczem Pro. Podpinasz dwie żyły, Home Assistant sam go wykrywa.</span></a>
+    <a href="https://pompa.woleoze.pl/#ceny"><b>Wgranie i konfiguracja · 299 zł</b><span>Masz swój moduł? Wyślij paczkomatem, wraca wgrany i przetestowany.</span></a>
+    <a href="https://woleoze.pl/kalkulator-pompy-ciepla/" target="_blank" rel="noopener"><b>woleOZE: kalkulator pompy ciepła</b><span>Ile zaoszczędzisz na pompie i jaka moc ma sens dla twojego domu.</span></a>
+    <a href="https://woleoze.pl/firmy/pompy-ciepla/" target="_blank" rel="noopener"><b>woleOZE: firmy od pomp ciepła</b><span>Katalog firm montujących i serwisujących pompy ciepła.</span></a>
+  </div>
+  <p class="cta" id="cta" hidden></p>
+
+  <footer><a href="https://pompa.woleoze.pl">pompa.woleoze.pl</a> · repozytorium Start: <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha" target="_blank" rel="noopener">github.com/WoleOze/rotenso-midea-modbus-ha</a> · partner technologiczny: <a href="https://woleoze.pl" target="_blank" rel="noopener">woleoze.pl</a></footer>
+</main>
+
+<!-- Szablony pakietów: treść wstawia skrypt _zrodla/buduj-kreator.py z homeassistant/packages/*.szablon.yaml. Nie edytuj ręcznie. -->
+<script type="text/x-yaml" id="szablon-co_cwu_cop"></script>
+<script type="text/x-yaml" id="szablon-raport"></script>
+<script type="text/x-yaml" id="szablon-cwu_harmonogram"></script>
+
+<script>
+(function () {
+  'use strict';
+  const RE_ENCJA = /^(sensor|binary_sensor|number|switch|climate|input_number)\.[a-z0-9_]+$/;
+  const RE_NOTIFY = /^[a-z0-9_]+$/;
+  const RE_CZAS = /^([01]\d|2[0-3]):[0-5]\d$/;
+  const f = document.getElementById('f');
+  const wynik = document.getElementById('wynik');
+  const bledy = document.getElementById('bledy');
+  const cta = document.getElementById('cta');
+  const SERWER = 'https://rotenso-licencje.strefa-tradingu.workers.dev';
+  const SZ = {};
+  let kluczSZ = '';
+  const szablon = (n) => SZ[n] || '';
+
+  const POLA_ENCJI = [
+    ['prad_moc', 'moc elektryczna', 'sensor.'],
+    ['prad_licznik', 'licznik prądu', 'sensor.'],
+    ['cieplo_licznik', 'licznik ciepła', 'sensor.'],
+    ['temp_zew', 'temperatura zewnętrzna', 'sensor.'],
+    ['cwu_zadana_zapis', 'number zadanej CWU', 'number.'],
+    ['workday', 'dzień roboczy', 'binary_sensor.'],
+  ];
+
+  function czytaj() {
+    const d = {};
+    for (const el of f.elements) {
+      if (!el.name) continue;
+      d[el.name] = el.type === 'checkbox' ? el.checked : el.value.trim();
+    }
+    return d;
+  }
+
+  function sprawdz(d) {
+    const b = [];
+    for (const el of f.elements) el.classList && el.classList.remove('zle');
+    for (const [k, opis, prefiks] of POLA_ENCJI) {
+      if (!RE_ENCJA.test(d[k])) { b.push(`${opis}: encja musi mieć postać domena.nazwa (małe litery, cyfry, _)`); f.elements[k].classList.add('zle'); }
+      else if (!d[k].startsWith(prefiks)) { b.push(`${opis}: oczekiwana domena ${prefiks.slice(0, -1)}`); f.elements[k].classList.add('zle'); }
+    }
+    if (!RE_NOTIFY.test(d.notify)) { b.push('usługa powiadomień: tylko małe litery, cyfry i _ (bez „notify.”)'); f.elements.notify.classList.add('zle'); }
+    for (const k of ['okno1_od', 'okno1_do', 'okno2_od', 'okno2_do']) if (!RE_CZAS.test(d[k])) { b.push('okna taryfy: podaj godziny HH:MM'); f.elements[k].classList.add('zle'); break; }
+    for (const k of ['taryfa_tania', 'taryfa_droga']) { const v = Number(d[k]); if (!(v > 0 && v < 10)) { b.push('ceny taryfy: liczba zł/kWh większa od zera'); f.elements[k].classList.add('zle'); } }
+    return b;
+  }
+
+  function podmien(tekst, mapa) {
+    return tekst.replace(/__([A-Z0-9_]+?)__/g, (c, k) => (k in mapa ? mapa[k] : c));
+  }
+
+  function pakiety(d) {
+    const mapa = {
+      PRAD_MOC: d.prad_moc,
+      NOTIFY: d.notify,
+      CWU_ZADANA_ZAPIS: d.cwu_zadana_zapis.replace(/^number\./, ''),
+      WORKDAY: d.workday.replace(/^binary_sensor\./, ''),
+      OKNO1_OD: d.okno1_od, OKNO1_DO: d.okno1_do, OKNO2_OD: d.okno2_od, OKNO2_DO: d.okno2_do,
+      WEEKEND_TANI: d.weekend_tani ? 'true' : 'false',
+    };
+    return {
+      'co_cwu_cop.yaml': podmien(szablon('co_cwu_cop'), mapa),
+      'raport.yaml': podmien(szablon('raport'), mapa),
+      'cwu_harmonogram.yaml': podmien(szablon('cwu_harmonogram'), mapa),
+    };
+  }
+
+  function widoki(d) {
+    const cena = (v) => Number(v).toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
+    const encje = (lista) => lista.map(([k, v]) => `          ${k}: ${v}`).join('\n');
+    const wspolne = [['prad_moc', d.prad_moc], ['prad_licznik', d.prad_licznik], ['cieplo_licznik', d.cieplo_licznik], ['temp_zew', d.temp_zew], ['cwu_zadana_zapis', d.cwu_zadana_zapis], ['workday', d.workday]];
+    const taryfa = [['taryfa_tania', cena(d.taryfa_tania)], ['taryfa_droga', cena(d.taryfa_droga)]];
+    const karta = (typ, lista) => `      - type: custom:rotenso-pro\n        karta: ${typ.replace('rotenso-', '')}\n        klucz: ${d.klucz}\n        woleoze: ${d.woleoze}\n        encje:\n${encje(lista)}`;
+    return `# Widoki pulpitu (Lovelace) z kartami Rotenso – wygenerowane kreatorem.
+# Zasób (Ustawienia → Pulpity → ⋮ → Zasoby, typ „Moduł JavaScript”): /local/rotenso/pro.js?v=1 – plik pro.js z repozytorium Start (homeassistant/www/rotenso/).
+# Karty Pro pobierają się same z serwera licencji (klucz w konfiguracji karty). Linki między widokami działają na każdym pulpicie.
+views:
+  - title: Pompa
+    path: pompa
+    icon: mdi:heat-pump
+    panel: true
+    cards:
+${karta('rotenso-pompa', wspolne)}
+  - title: Koszty
+    path: koszty
+    icon: mdi:cash-multiple
+    panel: true
+    cards:
+${karta('rotenso-koszty', wspolne.concat(taryfa))}
+  - title: Raport
+    path: raport
+    icon: mdi:file-chart
+    panel: true
+    cards:
+${karta('rotenso-raport', wspolne)}
+`;
+  }
+
+  function kroki(d) {
+    const esp = d.prad_moc === 'sensor.pompa_modbus_moc_elektryczna_szacowana';
+    const k = [
+      'Program modułu: plik <code>esphome/pompa-modbus.yaml</code> z ZIP-a z maila (link „pakiety”) wgraj na moduł Waveshare ESP32-S3-Relay-1CH i dodaj urządzenie „Pompa Modbus” w HA. Masz zestaw albo usługę wgrania? Ten krok masz za sobą.',
+      'Sprawdź, że w <code>configuration.yaml</code> jest <code>homeassistant: packages: !include_dir_named packages</code>. Jeśli nie – dopisz i zrestartuj HA.',
+      'Zapisz trzy pakiety z tej strony jako <code>/config/packages/co_cwu_cop.yaml</code>, <code>/config/packages/raport.yaml</code>, <code>/config/packages/cwu_harmonogram.yaml</code>.',
+      'Plik <code>dopisz.py</code> z ZIP-a z maila skopiuj do <code>/config/raporty/dopisz.py</code> (raport dobowy i dziennik alarmów zapisują się do <code>/config/www/raporty/*.jsonl</code>).',
+      d.workday === 'binary_sensor.workday_sensor'
+        ? 'Dodaj integrację <b>Workday</b> (Ustawienia → Integracje, kraj Polska) – powstanie <code>binary_sensor.workday_sensor</code> używany przez harmonogram CWU w dni wolne.'
+        : `Upewnij się, że encja dnia roboczego <code>${d.workday}</code> istnieje (integracja Workday).`,
+      esp ? 'Moc elektryczna pochodzi z ESPHome (szacowana z U×I, błąd ok. ±400 W). Jeśli kiedyś dołożysz licznik prądu pompy, wróć tu i podaj jego encję mocy.'
+          : `Moc elektryczna: <code>${d.prad_moc}</code> – sprawdź, że podaje W (nie kW) i jest dostępna, gdy pompa stoi (inaczej COP się nie policzy).`,
+      'Skopiuj <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/homeassistant/www/rotenso/pro.js" target="_blank" rel="noopener">pro.js</a> do <code>/config/www/rotenso/</code>, dodaj zasób <code>/local/rotenso/pro.js?v=1</code> (typ „Moduł JavaScript”) i wklej widoki z tej strony w edytorze kodu pulpitu.',
+      'Sprawdź konfigurację (Ustawienia → System → Sprawdź konfigurację) i zrestartuj Home Assistanta.',
+      `Po restarcie: na karcie <b>Pompa</b> → „Ciepła woda” zobaczysz okna ${d.okno1_od}–${d.okno1_do} i ${d.okno2_od}–${d.okno2_do} oraz zadane 50/42 °C (wpisane raz przy pierwszym starcie) – zmień wedle uznania i <b>włącz harmonogram</b> przełącznikiem (domyślnie wyłączony). Progi alarmów (przepływ, grzałka, bojler rano, offline) zmienia się na karcie <b>Raport</b> → „Progi alarmów”.`,
+      d.notify === 'persistent_notification'
+        ? 'Powiadomienia o anomaliach trafiają do dzwonka w Home Assistancie. Żeby dostawać je na telefon, wróć tu i wpisz <code>mobile_app_…</code> (nazwa z aplikacji HA Companion).'
+        : `Powiadomienia idą na <code>notify.${d.notify}</code> – wyślij testowe z Narzędzia deweloperskie → Akcje, żeby sprawdzić nazwę.`,
+    ];
+    return `<ol class="kroki">${k.map((x) => `<li>${x}</li>`).join('')}</ol>
+      <div class="uwaga">Po zapisie zadanej CWU (harmonogram) pompa może wyłączyć grzanie CWU – automatyzacja sprawdza to po 20 s i wyśle powiadomienie „CWU wyłączone po zapisie”. Wtedy włącz CWU na sterowniku ściennym. To samo dzieje się po zapisie nastaw serwisowych (dT1SH, dT5_ON…).</div>`;
+  }
+
+  function blok(tytul, podtytul, tresc, jezyk) {
+    const id = 'b' + Math.random().toString(36).slice(2, 8);
+    const pre = jezyk === 'html' ? tresc : `<pre id="${id}"></pre>`;
+    return `<div class="blok"><div class="naglowek"><h3>${tytul}</h3><small>${podtytul}</small>${jezyk === 'html' ? '' : `<button type="button" data-kopiuj="${id}">Kopiuj</button>`}</div>${pre}</div>`;
+  }
+
+  async function generuj() {
+    const d = czytaj();
+    const b = sprawdz(d);
+    bledy.textContent = b.join(' · ');
+    if (b.length) { wynik.innerHTML = ''; cta.hidden = true; return; }
+    d.klucz = (d.klucz || '').toUpperCase();
+    if (!/^RPRO-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(d.klucz)) {
+      bledy.textContent = 'Wpisz klucz Pro z maila (RPRO-…), żeby pobrać pakiety.'; f.elements.klucz.classList.add('zle'); wynik.innerHTML = ''; return;
+    }
+    if (kluczSZ !== d.klucz) {
+      bledy.textContent = 'Pobieram pakiety…';
+      try {
+        const r = await fetch(SERWER + '/v1/szablony?klucz=' + encodeURIComponent(d.klucz));
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.blad || ('HTTP ' + r.status));
+        for (const k of Object.keys(SZ)) delete SZ[k];
+        Object.assign(SZ, j.szablony || {});
+        kluczSZ = d.klucz;
+        bledy.textContent = '';
+      } catch (e) {
+        bledy.textContent = 'Nie pobrałem pakietów: ' + e.message + '. Sprawdź klucz i internet.'; wynik.innerHTML = ''; return;
+      }
+    }
+    const p = pakiety(d);
+    const czesci = [];
+    const teksty = {};
+    const dodaj = (tytul, pod, tresc) => { const h = blok(tytul, pod, '', 'yaml'); czesci.push(h); teksty[h.match(/id="(b[a-z0-9]+)"/)[1]] = tresc; };
+    dodaj('Pakiet 1: co_cwu_cop.yaml', '/config/packages/co_cwu_cop.yaml', p['co_cwu_cop.yaml']);
+    dodaj('Pakiet 2: raport.yaml', '/config/packages/raport.yaml', p['raport.yaml']);
+    dodaj('Pakiet 3: cwu_harmonogram.yaml', '/config/packages/cwu_harmonogram.yaml', p['cwu_harmonogram.yaml']);
+    dodaj('Widoki pulpitu (karty)', 'edytor kodu pulpitu', widoki(d));
+    wynik.innerHTML = `<section><h2>Wynik</h2>${czesci.join('')}${blok('Kroki instalacji', 'po kolei', kroki(d), 'html')}</section>`;
+    for (const [id, t] of Object.entries(teksty)) document.getElementById(id).textContent = t;
+    cta.hidden = false;
+  }
+
+  wynik.addEventListener('click', async (e) => {
+    const b = e.target.closest('button[data-kopiuj]');
+    if (!b) return;
+    const t = document.getElementById(b.dataset.kopiuj).textContent;
+    let ok = false;
+    try { await navigator.clipboard.writeText(t); ok = true; } catch (err) {
+      const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select();
+      try { ok = document.execCommand('copy'); } catch (e2) { ok = false; }
+      ta.remove();
+    }
+    b.textContent = ok ? 'Skopiowano' : 'Zaznacz i skopiuj ręcznie'; b.classList.toggle('skopiowano', ok);
+    setTimeout(() => { b.textContent = 'Kopiuj'; b.classList.remove('skopiowano'); }, 1800);
+  });
+
+  document.getElementById('generuj').addEventListener('click', generuj);
+  f.addEventListener('input', () => { if (wynik.innerHTML) generuj(); });
+})();
+</script>
+</body>
+</html>
