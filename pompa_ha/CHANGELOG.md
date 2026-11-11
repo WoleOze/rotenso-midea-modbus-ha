@@ -1,5 +1,8 @@
 # Zmiany
 
+## 1.3.1
+- Klucz kupiony z wyborem „wykonanie po 14 dniach” pokazuje w instalatorze jasny komunikat i datę z maila, zamiast „Nie znam tego klucza”.
+
 ## 1.3.0
 - Instalacja klucza zapisuje też program modułu z zapisem nastaw (`esphome/pompa-modbus-pro.yaml`) dla osób z własnym modułem.
 - Diagnostyka wykrywa program Start bez zapisu nastaw i mówi, co kliknąć.

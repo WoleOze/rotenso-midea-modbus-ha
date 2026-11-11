@@ -128,6 +128,7 @@ class RotensoPro extends HTMLElement {
   _bladLicencji(info) {
     const st = info && info.status;
     if (st === 'wycofany') return this._blad('Licencja wycofana', 'Ta licencja została wycofana (np. po zwrocie płatności).');
+    if (st === 'czeka') return this._blad('Klucz zadziała później', (info.blad ? 'Ten ' + String(info.blad).replace(/[<>&]/g, '') : 'Ten klucz jeszcze nie działa') + '. Przy zakupie wybrałeś wykonanie po 14 dniach od zakupu.');
     if (st === 'limit_instalacji') return this._blad('Za dużo instalacji', 'Ten klucz działa już na 3 instalacjach Home Assistant. Napisz na pompa@woleoze.pl, odblokujemy.');
     if (st === 'zablokowany_naduzycie') return this._blad('Klucz zablokowany', 'Ten klucz działa na zbyt wielu instalacjach. Napisz do nas, pomożemy.');
     return this._blad('Klucz nieważny', 'Nie rozpoznaję tego klucza. Sprawdź, czy wpisany jest dokładnie tak jak w mailu.');

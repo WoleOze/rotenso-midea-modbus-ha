@@ -30,7 +30,7 @@ import urllib.parse
 import urllib.request
 import zipfile
 
-WERSJA = "1.3.0"
+WERSJA = "1.3.1"
 SERWER = os.environ.get("POMPA_SERWER", "https://rotenso-licencje.strefa-tradingu.workers.dev")
 PRO_JS = os.environ.get(
     "POMPA_PRO_JS",
@@ -554,6 +554,7 @@ def instaluj(klucz, tryb_lan_host=None):
     if st != "aktywny":
         raise Blad({"wycofany": "Ten klucz został wycofany (np. po zwrocie).",
                     "zablokowany_naduzycie": "Ten klucz jest zablokowany: działa na zbyt wielu instalacjach. Napisz na pompa@woleoze.pl.",
+                    "czeka": "Ten klucz jeszcze nie działa: przy zakupie wybrano wykonanie po 14 dniach od zakupu. Datę startu masz w mailu z kluczem.",
                     }.get(st, "Nie znam tego klucza. Sprawdź, czy jest wpisany dokładnie jak w mailu."))
     krok("Klucz aktywny.")
 
