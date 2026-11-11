@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pompa w HA – instalator</title>
+<style>
+:root{--bg:#f4f6fb;--karta:#fff;--txt:#1a2238;--mut:#5d6b8a;--lin:#dfe5f2;--ak:#1e88e5;--ok:#1aa36f;--zle:#d6334b;--warn:#b7791f}
+@media (prefers-color-scheme:dark){:root{--bg:#111827;--karta:#1b2333;--txt:#e6ecfa;--mut:#9aa8c7;--lin:#2b3650;--ak:#4aa8ff;--ok:#38d39f;--zle:#ff6b81;--warn:#f6c560}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.w{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:4px 0 2px}
+.pod{color:var(--mut);font-size:13.5px;margin:0 0 14px}
+.k{background:var(--karta);border:1px solid var(--lin);border-radius:14px;padding:16px;margin:0 0 14px}
+.k h2{font-size:17px;margin:0 0 8px}
+.k p{margin:0 0 10px;color:var(--mut)}
+input[type=text]{width:100%;font:600 17px/1.2 ui-monospace,Menlo,monospace;letter-spacing:.5px;padding:11px 12px;border-radius:10px;border:1px solid var(--lin);background:var(--bg);color:var(--txt)}
+button{font:600 14.5px/1 system-ui,sans-serif;padding:11px 15px;border-radius:10px;border:1px solid var(--lin);background:var(--karta);color:var(--txt);cursor:pointer;min-height:44px}
+button.g{background:var(--ak);border-color:var(--ak);color:#fff}
+button:disabled{opacity:.55;cursor:wait}
+.rz{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+ul.d{list-style:none;margin:0;padding:0}
+ul.d li{padding:9px 0;border-top:1px solid var(--lin)}
+ul.d li:first-child{border-top:0}
+.ok::before{content:"✓ ";color:var(--ok);font-weight:800}
+.zl::before{content:"✗ ";color:var(--zle);font-weight:800}
+.podp{display:block;color:var(--mut);font-size:13.5px;margin-top:3px}
+.wynik{margin-top:10px;font-size:14px;white-space:pre-wrap}
+.wynik.b{color:var(--zle)}
+.wynik.o{color:var(--ok)}
+.log{font:12.5px/1.45 ui-monospace,Menlo,monospace;color:var(--mut);max-height:220px;overflow:auto;white-space:pre-wrap}
+label.p{display:flex;gap:10px;align-items:center;cursor:pointer}
+label.p input{width:20px;height:20px}
+.drobne{font-size:12.5px;color:var(--mut)}
+a{color:var(--ak)}
+.bramka{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--lin)}
+</style>
+</head>
+<body>
+<div class="w">
+  <h1>Pompa w HA</h1>
+  <p class="pod" id="naglowek">Ładuję…</p>
+
+  <section class="k">
+    <h2>1. Klucz i instalacja</h2>
+    <p>Wklej klucz z maila po zakupie. Dodatek sam zapisze pakiety, karty i pulpit „Pompa”, sprawdzi konfigurację i zrestartuje Home Assistant.</p>
+    <input type="text" id="klucz" placeholder="RPRO-XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
+    <div class="rz">
+      <button class="g" id="bInst">Zainstaluj</button>
+    </div>
+    <div class="wynik" id="wInst"></div>
+  </section>
+
+  <section class="k">
+    <h2>2. Diagnostyka</h2>
+    <ul class="d" id="diag"><li>Sprawdzam…</li></ul>
+    <div class="rz">
+      <button id="bDiag">Sprawdź ponownie</button>
+      <button id="bRap">Wyślij raport do wsparcia</button>
+    </div>
+    <div class="wynik" id="wRap"></div>
+    <p class="drobne" style="margin-top:10px">Raport zawiera wynik diagnostyki i stany encji pompy. Bez haseł i bez danych z reszty domu.</p>
+  </section>
+
+  <section class="k">
+    <h2>Bramka LAN (zestaw z kablem sieciowym)</h2>
+    <p>Masz bramkę USR-DR404 podłączoną kablem do routera? Dodatek znajdzie ją w sieci.</p>
+    <div class="rz"><button id="bSzukaj">Szukaj bramki LAN</button></div>
+    <div id="bramki"></div>
+    <div class="wynik" id="wBr"></div>
+  </section>
+
+  <section class="k">
+    <h2>Poprawki od wsparcia</h2>
+    <label class="p"><input type="checkbox" id="auto"> Pobieraj poprawki automatycznie (co godzinę)</label>
+    <p class="drobne" style="margin-top:8px">Poprawki zmieniają tylko pliki „Pompa w HA”. Nikt nie łączy się z twoim Home Assistant: to dodatek pyta serwer, tak jak aktualizacje w telefonie.</p>
+    <div class="rz"><button id="bPop">Sprawdź poprawki teraz</button></div>
+    <div class="wynik" id="wPop"></div>
+  </section>
+
+  <section class="k">
+    <h2>Dziennik</h2>
+    <div class="log" id="log"></div>
+    <div class="rz"><button id="bOdin">Odinstaluj „Pompa w HA”</button></div>
+  </section>
+
+  <p class="drobne">Pomoc tylko mailowo: <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="https://pompa.woleoze.pl" target="_blank" rel="noopener">pompa.woleoze.pl</a></p>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+async function api(sc, body) {
+  const r = await fetch('api/' + sc, body === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  let j = {}; try { j = await r.json(); } catch (e) {}
+  if (!r.ok) throw new Error(j.blad || ('HTTP ' + r.status));
+  return j;
+}
+function pokaz(el, tekst, typ) { el.textContent = tekst; el.className = 'wynik ' + (typ || ''); }
+async function zajety(btn, fn) { btn.disabled = true; try { await fn(); } finally { btn.disabled = false; } }
+
+async function odswiezStan() {
+  try {
+    const s = await api('stan');
+    $('naglowek').textContent = 'Wersja ' + s.wersja + (s.klucz ? ' · klucz ' + s.klucz : ' · brak klucza') +
+      (s.zainstalowano ? ' · zainstalowano ' + s.zainstalowano.replace('T', ' ') : '') + (s.bramka_host ? ' · bramka LAN ' + s.bramka_host : '');
+    $('bInst').textContent = s.klucz ? 'Zainstaluj ponownie' : 'Zainstaluj';
+    $('auto').checked = !!s.auto_poprawki;
+    $('log').textContent = (s.dziennik || []).slice().reverse().join('\n');
+  } catch (e) { $('naglowek').textContent = 'Błąd: ' + e.message; }
+}
+async function odswiezDiag() {
+  $('diag').innerHTML = '<li>Sprawdzam…</li>';
+  try {
+    const d = await api('diagnostyka');
+    const li = [];
+    d.ok.forEach((t) => li.push('<li class="ok">' + esc(t) + '</li>'));
+    d.problemy.forEach((t, i) => li.push('<li class="zl">' + esc(t) + (d.podpowiedzi[i] ? '<span class="podp">' + esc(d.podpowiedzi[i]) + '</span>' : '') + '</li>'));
+    $('diag').innerHTML = li.join('') || '<li>Brak danych.</li>';
+  } catch (e) { $('diag').innerHTML = '<li class="zl">' + esc(e.message) + '</li>'; }
+}
+function esc(t) { return String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]); }
+
+$('bInst').onclick = () => zajety($('bInst'), async () => {
+  pokaz($('wInst'), 'Instaluję… (do minuty)');
+  try {
+    const r = await api('instaluj', { klucz: $('klucz').value });
+    pokaz($('wInst'), r.kroki.join('\n'), 'o');
+    $('klucz').value = '';
+  } catch (e) { pokaz($('wInst'), e.message, 'b'); }
+  odswiezStan();
+});
+$('bDiag').onclick = () => zajety($('bDiag'), odswiezDiag);
+$('bRap').onclick = () => zajety($('bRap'), async () => {
+  try { await api('raport', {}); pokaz($('wRap'), 'Raport wysłany. Odpowiedź przyjdzie mailem.', 'o'); }
+  catch (e) { pokaz($('wRap'), e.message, 'b'); }
+  odswiezStan();
+});
+$('bPop').onclick = () => zajety($('bPop'), async () => {
+  try {
+    const r = await api('poprawki', {});
+    pokaz($('wPop'), r.poprawki ? 'Zastosowano poprawek: ' + r.poprawki + '. Home Assistant może się zrestartować.' : 'Brak nowych poprawek.', 'o');
+  } catch (e) { pokaz($('wPop'), e.message, 'b'); }
+  odswiezStan();
+});
+$('auto').onchange = async () => { try { await api('auto', { wl: $('auto').checked }); } catch (e) { alert(e.message); } };
+$('bSzukaj').onclick = () => zajety($('bSzukaj'), async () => {
+  $('bramki').innerHTML = ''; pokaz($('wBr'), 'Szukam w sieci domowej… (do 30 s)');
+  try {
+    const r = await api('bramka/szukaj', {});
+    if (!r.bramki.length) { pokaz($('wBr'), 'Nie znalazłem bramki w sieci ' + r.sieci.join(', ') + '. Sprawdź kabel sieciowy i zasilanie bramki.', 'b'); return; }
+    pokaz($('wBr'), '');
+    $('bramki').innerHTML = r.bramki.map((b) => '<div class="bramka"><span><b>' + esc(b.host) + '</b> – ' +
+      (b.pompa_odpowiada ? 'pompa odpowiada' : 'bramka jest, pompa nie odpowiada (' + esc(b.odczyt) + ')') +
+      '</span><button data-h="' + esc(b.host) + '"' + (b.pompa_odpowiada ? ' class="g"' : '') + '>Użyj</button></div>').join('');
+    $('bramki').querySelectorAll('button').forEach((btn) => btn.onclick = () => zajety(btn, async () => {
+      try { const x = await api('bramka/uzyj', { host: btn.dataset.h }); pokaz($('wBr'), x.kroki.join('\n'), 'o'); }
+      catch (e) { pokaz($('wBr'), e.message, 'b'); }
+      odswiezStan();
+    }));
+  } catch (e) { pokaz($('wBr'), e.message, 'b'); }
+});
+$('bOdin').onclick = () => zajety($('bOdin'), async () => {
+  if (!confirm('Usunąć pakiety, karty i pulpit „Pompa”? Kopia zostanie w folderze pompa_ha_kopia.')) return;
+  try { await api('odinstaluj', {}); alert('Odinstalowano. Home Assistant się zrestartuje.'); } catch (e) { alert(e.message); }
+  odswiezStan();
+});
+odswiezStan(); odswiezDiag();
+</script>
+</body>
+</html>

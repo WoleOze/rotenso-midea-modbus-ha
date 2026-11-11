@@ -1,0 +1,892 @@
+#!/usr/bin/env python3
+"""Pompa w HA – dodatek Home Assistant: instalator z kluczem, diagnostyka, raport, poprawki.
+
+Zasady:
+- tylko biblioteka standardowa Pythona;
+- nikt nie łączy się do klienta: dodatek sam pyta serwer licencji (model „pull”);
+- zmieniamy wyłącznie własne pliki (packages/pompa_ha/, www/rotenso/, raporty/dopisz.py)
+  i jedną linię `packages:` w configuration.yaml (z kopią i kontrolą konfiguracji);
+- każda zmiana przechodzi przez check_config, a przy błędzie wraca kopia.
+"""
+import base64
+import concurrent.futures
+import datetime
+import http.server
+import io
+import ipaddress
+import json
+import os
+import re
+import secrets
+import shutil
+import socket
+import ssl
+import struct
+import threading
+import time
+import traceback
+import urllib.error
+import urllib.parse
+import urllib.request
+import zipfile
+
+WERSJA = "1.0.0"
+SERWER = os.environ.get("POMPA_SERWER", "https://rotenso-licencje.strefa-tradingu.workers.dev")
+PRO_JS = os.environ.get(
+    "POMPA_PRO_JS",
+    "https://raw.githubusercontent.com/WoleOze/rotenso-midea-modbus-ha/main/homeassistant/www/rotenso/pro.js",
+)
+TOKEN = os.environ.get("SUPERVISOR_TOKEN") or os.environ.get("HA_TOKEN", "")
+HA_API = os.environ.get("HA_API", "http://supervisor/core/api")
+HA_WS = os.environ.get("HA_WS", "ws://supervisor/core/websocket")
+SUP_API = os.environ.get("SUP_API", "http://supervisor")
+CFG = os.environ.get("HA_CONFIG", "/homeassistant")
+DANE = os.environ.get("DANE", "/data")
+PORT = int(os.environ.get("PORT", "8099"))
+
+PULPIT = "pompa-ha"
+KAT_PAK = "packages/pompa_ha"
+DOZWOLONE = ("packages/pompa_ha/", "www/rotenso/", "raporty/dopisz.py")
+MAPA_ZIP = {  # nazwa w ZIP z serwera → ścieżka względem /config
+    "co_cwu_cop.yaml": f"{KAT_PAK}/pompa_ha_co_cwu_cop.yaml",
+    "raport.yaml": f"{KAT_PAK}/pompa_ha_raport.yaml",
+    "cwu_harmonogram.yaml": f"{KAT_PAK}/pompa_ha_cwu_harmonogram.yaml",
+    "dopisz.py": "raporty/dopisz.py",
+}
+SZABLON_BRAMKI = "pompa_bramka_lan.szablon.yaml"
+PLIK_BRAMKI = f"{KAT_PAK}/pompa_ha_bramka.yaml"
+LINIA_PAKIETOW = "packages: !include_dir_named packages"
+
+blokada = threading.Lock()
+
+
+class Blad(Exception):
+    """Błąd z komunikatem dla klienta (po polsku, z podpowiedzią)."""
+
+
+# --- stan dodatku ----------------------------------------------------------------
+def _sciezka_stanu():
+    return os.path.join(DANE, "stan.json")
+
+
+def wczytaj_stan():
+    try:
+        with open(_sciezka_stanu(), encoding="utf-8") as f:
+            s = json.load(f)
+    except Exception:
+        s = {}
+    s.setdefault("inst", "a." + secrets.token_hex(5))
+    s.setdefault("auto_poprawki", True)
+    s.setdefault("ostatnia_poprawka", 0)
+    s.setdefault("dziennik", [])
+    return s
+
+
+def zapisz_stan():
+    os.makedirs(DANE, exist_ok=True)
+    tmp = _sciezka_stanu() + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(stan, f, ensure_ascii=False, indent=1)
+    os.replace(tmp, _sciezka_stanu())
+
+
+stan = {}
+
+
+def log(msg):
+    linia = f"{datetime.datetime.now().strftime('%d.%m %H:%M:%S')} {msg}"
+    print("[pompa]", linia, flush=True)
+    stan.setdefault("dziennik", []).append(linia)
+    stan["dziennik"] = stan["dziennik"][-80:]
+    try:
+        zapisz_stan()
+    except Exception:
+        pass
+
+
+# --- HTTP ---------------------------------------------------------------------------
+def zapytanie(metoda, url, body=None, naglowki=None, timeout=30, surowe=False):
+    dane = None
+    h = dict(naglowki or {})
+    if body is not None:
+        if isinstance(body, (bytes, bytearray)):
+            dane = bytes(body)
+        else:
+            dane = json.dumps(body).encode()
+            h["Content-Type"] = "application/json"
+    req = urllib.request.Request(url, data=dane, method=metoda, headers=h)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            b = r.read()
+            return r.status, (b if surowe else (json.loads(b) if b.strip() else None))
+    except urllib.error.HTTPError as e:
+        b = e.read()
+        try:
+            return e.code, json.loads(b)
+        except Exception:
+            return e.code, {"blad": b.decode("utf-8", "replace")[:300]}
+
+
+def ha(metoda, sciezka, body=None, timeout=60):
+    return zapytanie(metoda, HA_API + sciezka, body, {"Authorization": f"Bearer {TOKEN}"}, timeout)
+
+
+def serwer(metoda, sciezka, body=None, surowe=False, timeout=30):
+    return zapytanie(metoda, SERWER + sciezka, body, {"User-Agent": f"pompa-ha/{WERSJA}"}, timeout, surowe)
+
+
+def q(**kw):
+    return urllib.parse.urlencode(kw)
+
+
+# --- minimalny klient WebSocket (bez bibliotek) ------------------------------------
+class WS:
+    def __init__(self, url=HA_WS, token=TOKEN):
+        u = urllib.parse.urlparse(url)
+        port = u.port or (443 if u.scheme == "wss" else 80)
+        s = socket.create_connection((u.hostname, port), timeout=30)
+        if u.scheme == "wss":
+            s = ssl.create_default_context().wrap_socket(s, server_hostname=u.hostname)
+        self.s = s
+        klucz = base64.b64encode(os.urandom(16)).decode()
+        zad = (
+            f"GET {u.path or '/'} HTTP/1.1\r\nHost: {u.hostname}:{port}\r\nUpgrade: websocket\r\n"
+            f"Connection: Upgrade\r\nSec-WebSocket-Key: {klucz}\r\nSec-WebSocket-Version: 13\r\n\r\n"
+        )
+        s.sendall(zad.encode())
+        bufor = b""
+        while b"\r\n\r\n" not in bufor:
+            kaw = s.recv(4096)
+            if not kaw:
+                raise ConnectionError("WebSocket: brak odpowiedzi")
+            bufor += kaw
+        glowa, self.buf = bufor.split(b"\r\n\r\n", 1)
+        if b" 101 " not in glowa.split(b"\r\n")[0] + b" ":
+            raise ConnectionError("WebSocket: " + glowa.split(b"\r\n")[0].decode(errors="replace"))
+        self.nr = 0
+        m = self.odbierz()
+        if m.get("type") == "auth_required":
+            self.wyslij({"type": "auth", "access_token": token})
+            m = self.odbierz()
+        if m.get("type") != "auth_ok":
+            raise ConnectionError("WebSocket: brak autoryzacji")
+
+    def _czytaj(self, n):
+        while len(self.buf) < n:
+            kaw = self.s.recv(65536)
+            if not kaw:
+                raise ConnectionError("WebSocket zamknięty")
+            self.buf += kaw
+        d, self.buf = self.buf[:n], self.buf[n:]
+        return d
+
+    def _ramka(self, op, p):
+        h = bytearray([0x80 | op])
+        n = len(p)
+        if n < 126:
+            h.append(0x80 | n)
+        elif n < 65536:
+            h.append(0x80 | 126)
+            h += struct.pack(">H", n)
+        else:
+            h.append(0x80 | 127)
+            h += struct.pack(">Q", n)
+        maska = os.urandom(4)
+        h += maska
+        zam = bytearray(p)
+        for i in range(n):
+            zam[i] ^= maska[i & 3]
+        self.s.sendall(bytes(h) + bytes(zam))
+
+    def wyslij(self, obj):
+        self._ramka(0x1, json.dumps(obj).encode())
+
+    def odbierz(self):
+        dane = b""
+        while True:
+            b1, b2 = self._czytaj(2)
+            op, fin = b1 & 0x0F, b1 & 0x80
+            n = b2 & 0x7F
+            if n == 126:
+                n = struct.unpack(">H", self._czytaj(2))[0]
+            elif n == 127:
+                n = struct.unpack(">Q", self._czytaj(8))[0]
+            maska = self._czytaj(4) if b2 & 0x80 else None
+            p = bytearray(self._czytaj(n))
+            if maska:
+                for i in range(n):
+                    p[i] ^= maska[i & 3]
+            if op == 0x9:
+                self._ramka(0xA, bytes(p))
+                continue
+            if op == 0x8:
+                raise ConnectionError("WebSocket zamknięty przez HA")
+            if op in (0x0, 0x1, 0x2):
+                dane += bytes(p)
+                if fin:
+                    return json.loads(dane)
+
+    def wywolaj(self, typ, **kw):
+        self.nr += 1
+        nr = self.nr
+        self.wyslij({"id": nr, "type": typ, **kw})
+        while True:
+            m = self.odbierz()
+            if m.get("id") == nr and m.get("type") == "result":
+                if not m.get("success"):
+                    e = m.get("error") or {}
+                    raise RuntimeError(f"{typ}: {e.get('message') or e}")
+                return m.get("result")
+
+    def zamknij(self):
+        try:
+            self.s.close()
+        except Exception:
+            pass
+
+
+# --- pliki ------------------------------------------------------------------------
+def bezpieczna(wzgl):
+    w = os.path.normpath(str(wzgl).lstrip("/")).replace("\\", "/")
+    if w.startswith("..") or os.path.isabs(w):
+        raise Blad(f"Niedozwolona ścieżka: {wzgl}")
+    if not any(w == d or w.startswith(d) for d in DOZWOLONE):
+        raise Blad(f"Poza plikami „Pompa w HA”: {wzgl}")
+    return os.path.join(CFG, w)
+
+
+def zapisz_plik(sciezka, tresc):
+    os.makedirs(os.path.dirname(sciezka), exist_ok=True)
+    tmp = sciezka + ".pompa-tmp"
+    with open(tmp, "wb") as f:
+        f.write(tresc if isinstance(tresc, bytes) else tresc.encode("utf-8"))
+    os.replace(tmp, sciezka)
+
+
+class Kopia:
+    """Kopia plików przed zmianą + przywracanie przy błędzie."""
+
+    def __init__(self, opis):
+        znacznik = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        self.kat = os.path.join(CFG, "pompa_ha_kopia", f"{znacznik}-{opis}")
+        self.zapisane = []  # (oryginał, kopia albo None gdy pliku nie było)
+
+    def zabezpiecz(self, sciezka):
+        if any(o == sciezka for o, _ in self.zapisane):
+            return
+        if os.path.exists(sciezka):
+            cel = os.path.join(self.kat, os.path.relpath(sciezka, CFG))
+            os.makedirs(os.path.dirname(cel), exist_ok=True)
+            shutil.copy2(sciezka, cel)
+            self.zapisane.append((sciezka, cel))
+        else:
+            self.zapisane.append((sciezka, None))
+
+    def przywroc(self):
+        for oryg, kop in reversed(self.zapisane):
+            try:
+                if kop:
+                    shutil.copy2(kop, oryg)
+                elif os.path.exists(oryg):
+                    os.remove(oryg)
+            except Exception as e:
+                print("[pompa] przywracanie", oryg, e, flush=True)
+
+
+# --- configuration.yaml -------------------------------------------------------------
+def zapewnij_pakiety(kopia):
+    """Dopisuje `packages: !include_dir_named packages` pod `homeassistant:`. Zwraca opis zmiany."""
+    p = os.path.join(CFG, "configuration.yaml")
+    with open(p, encoding="utf-8") as f:
+        t = f.read()
+    if re.search(r"^[ \t]+packages:[ \t]*!include_dir_named[ \t]+\.?/?packages/?[ \t]*(#.*)?$", t, re.M):
+        return "configuration.yaml: pakiety już włączone"
+    if re.search(r"^[ \t]+packages:", t, re.M):
+        raise Blad(
+            "Twój configuration.yaml ma już inną sekcję `packages:`. Dopisz ręcznie folder "
+            "`packages/pompa_ha/` do swoich pakietów albo napisz na pompa@woleoze.pl."
+        )
+    m = re.search(r"^homeassistant:[ \t]*(#.*)?$", t, re.M)
+    if re.search(r"^homeassistant:[ \t]*!", t, re.M):
+        raise Blad("Sekcja `homeassistant:` jest w osobnym pliku (!include). Dopisz `" + LINIA_PAKIETOW + "` ręcznie.")
+    kopia.zabezpiecz(p)
+    if m:
+        reszta = t[m.end():]
+        wciecie = "  "
+        for linia in reszta.split("\n")[1:]:
+            if not linia.strip() or linia.lstrip().startswith("#"):
+                continue
+            if linia[0] not in " \t":
+                break  # koniec sekcji homeassistant:
+            wciecie = linia[: len(linia) - len(linia.lstrip())]
+            break
+        nowy = t[: m.end()] + f"\n{wciecie}{LINIA_PAKIETOW}" + reszta
+    else:
+        nowy = t.rstrip("\n") + f"\n\nhomeassistant:\n  {LINIA_PAKIETOW}\n"
+    zapisz_plik(p, nowy)
+    return "configuration.yaml: dopisano jedną linię z pakietami (kopia w pompa_ha_kopia/)"
+
+
+def sprawdz_konfiguracje():
+    st, odp = ha("POST", "/config/core/check_config", timeout=180)
+    if st == 404:
+        return True, "kontrola konfiguracji niedostępna (pominięto)"
+    if st != 200 or not isinstance(odp, dict):
+        return False, f"kontrola konfiguracji: HTTP {st} {odp}"
+    if odp.get("result") == "valid":
+        return True, "konfiguracja poprawna"
+    return False, str(odp.get("errors") or odp)[:1500]
+
+
+def restart_ha(opoznienie=3):
+    def _r():
+        time.sleep(opoznienie)
+        log("Restart Home Assistant…")
+        try:
+            ha("POST", "/services/homeassistant/restart", {}, timeout=20)
+        except Exception:
+            pass  # połączenie zrywa się przy restarcie – to normalne
+
+    threading.Thread(target=_r, daemon=True).start()
+
+
+def powiadom(tytul, tresc):
+    try:
+        ha("POST", "/services/persistent_notification/create", {"title": tytul, "message": tresc, "notification_id": "pompa_ha"})
+    except Exception:
+        pass
+
+
+# --- Lovelace -------------------------------------------------------------------------
+def widoki(klucz):
+    karta = lambda k: {"type": "custom:rotenso-pro", "karta": k, "klucz": klucz, "inst": stan["inst"], "woleoze": True}
+    return {
+        "title": "Pompa",
+        "views": [
+            {"title": "Pompa", "path": "pompa", "icon": "mdi:heat-pump", "panel": True, "cards": [karta("pompa")]},
+            {"title": "Koszty", "path": "koszty", "icon": "mdi:cash-multiple", "panel": True, "cards": [karta("koszty")]},
+            {"title": "Raport", "path": "raport", "icon": "mdi:file-chart", "panel": True, "cards": [karta("raport")]},
+        ],
+    }
+
+
+def ustaw_lovelace(klucz):
+    ws = WS()
+    try:
+        zasob = f"/local/rotenso/pro.js?v={WERSJA}-{int(time.time()) % 100000}"
+        try:
+            zasoby = ws.wywolaj("lovelace/resources") or []
+        except RuntimeError as e:
+            raise Blad(f"Nie mogę odczytać zasobów pulpitów ({e}). Pulpity w trybie YAML? Dodaj zasób ręcznie: /local/rotenso/pro.js")
+        nasz = [z for z in zasoby if "/local/rotenso/pro.js" in str(z.get("url", ""))]
+        if nasz:
+            ws.wywolaj("lovelace/resources/update", resource_id=nasz[0]["id"], res_type="module", url=zasob)
+        else:
+            ws.wywolaj("lovelace/resources/create", res_type="module", url=zasob)
+        pulpity = ws.wywolaj("lovelace/dashboards/list") or []
+        if not any(d.get("url_path") == PULPIT for d in pulpity):
+            ws.wywolaj(
+                "lovelace/dashboards/create",
+                url_path=PULPIT,
+                title="Pompa",
+                icon="mdi:heat-pump",
+                show_in_sidebar=True,
+                require_admin=False,
+                mode="storage",
+            )
+        ws.wywolaj("lovelace/config/save", url_path=PULPIT, config=widoki(klucz))
+    finally:
+        ws.zamknij()
+
+
+# --- instalacja -----------------------------------------------------------------------
+RE_KLUCZ = re.compile(r"^RPRO-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$")
+
+
+def stan_klucza(klucz):
+    st, odp = serwer("GET", "/v1/stan?" + q(klucz=klucz))
+    return (odp or {}).get("status") if st in (200, 404) else None
+
+
+def pobierz_pakiety(klucz):
+    st, zipb = serwer("GET", "/v1/pakiety?" + q(klucz=klucz), surowe=True, timeout=60)
+    if st != 200:
+        raise Blad(f"Serwer licencji nie wydał pakietów (HTTP {st}).")
+    return zipfile.ZipFile(io.BytesIO(zipb))
+
+
+def przenies_reczne_pakiety(kopia):
+    """Pakiety Pro wgrane kiedyś ręcznie do packages/ (z naszym znakiem wodnym) → do kopii, żeby nie dublować encji."""
+    przen = []
+    for n in ("co_cwu_cop.yaml", "raport.yaml", "cwu_harmonogram.yaml"):
+        p = os.path.join(CFG, "packages", n)
+        if os.path.isfile(p):
+            with open(p, encoding="utf-8", errors="replace") as f:
+                if "rotenso-pro" in f.read(400):
+                    kopia.zabezpiecz(p)
+                    os.remove(p)
+                    przen.append(n)
+    return przen
+
+
+def instaluj(klucz, tryb_lan_host=None):
+    klucz = (klucz or "").strip().upper()
+    if not RE_KLUCZ.match(klucz):
+        raise Blad("To nie wygląda na klucz. Skopiuj go z maila w całości: RPRO-XXXX-XXXX-XXXX-XXXX.")
+    if not TOKEN:
+        raise Blad("Brak tokenu Home Assistant (dodatek musi mieć włączony dostęp do API).")
+    kroki = []
+
+    def krok(t):
+        kroki.append(t)
+        log(t)
+
+    st = stan_klucza(klucz)
+    if st is None:
+        raise Blad("Nie mogę połączyć się z serwerem licencji. Sprawdź internet i spróbuj ponownie.")
+    if st != "aktywny":
+        raise Blad({"wycofany": "Ten klucz został wycofany (np. po zwrocie).",
+                    "zablokowany_naduzycie": "Ten klucz jest zablokowany: działa na zbyt wielu instalacjach. Napisz na pompa@woleoze.pl.",
+                    }.get(st, "Nie znam tego klucza. Sprawdź, czy jest wpisany dokładnie jak w mailu."))
+    krok("Klucz aktywny.")
+
+    z = pobierz_pakiety(klucz)
+    kopia = Kopia("instalacja")
+    try:
+        przen = przenies_reczne_pakiety(kopia)
+        if przen:
+            krok("Ręcznie wgrane pakiety Pro przeniesione do kopii: " + ", ".join(przen))
+        nazwy = set(z.namelist())
+        for nazwa, cel in MAPA_ZIP.items():
+            if nazwa in nazwy:
+                sc = os.path.join(CFG, cel)
+                kopia.zabezpiecz(sc)
+                zapisz_plik(sc, z.read(nazwa))
+        host = tryb_lan_host or stan.get("bramka_host")
+        if host:
+            if SZABLON_BRAMKI not in nazwy:
+                raise Blad("Serwer nie ma jeszcze pakietu dla bramki LAN. Napisz na pompa@woleoze.pl.")
+            sc = os.path.join(CFG, PLIK_BRAMKI)
+            kopia.zabezpiecz(sc)
+            zapisz_plik(sc, z.read(SZABLON_BRAMKI).decode("utf-8").replace("__BRAMKA_HOST__", host))
+            krok(f"Pakiet bramki LAN ustawiony na {host}.")
+        krok("Pakiety Pro zapisane w packages/pompa_ha/.")
+
+        st_js, js = zapytanie("GET", PRO_JS, surowe=True, timeout=30)
+        if st_js != 200 or b"rotenso-pro" not in js:
+            raise Blad("Nie mogę pobrać pliku kart (pro.js). Sprawdź internet.")
+        sc = os.path.join(CFG, "www/rotenso/pro.js")
+        kopia.zabezpiecz(sc)
+        zapisz_plik(sc, js)
+        os.makedirs(os.path.join(CFG, "www/raporty"), exist_ok=True)
+        krok("Karty zapisane w www/rotenso/.")
+
+        krok(zapewnij_pakiety(kopia))
+        ok, opis = sprawdz_konfiguracje()
+        if not ok:
+            raise Blad("Home Assistant odrzucił konfigurację, więc wszystko cofnąłem. Szczegóły: " + opis)
+        krok("Kontrola konfiguracji: " + opis + ".")
+    except Exception:
+        kopia.przywroc()
+        raise
+
+    ustaw_lovelace(klucz)
+    krok("Pulpit „Pompa” i zasób kart gotowe.")
+    stan.update({"klucz": klucz, "zainstalowano": datetime.datetime.now().isoformat(timespec="seconds"), "wersja_inst": WERSJA})
+    if tryb_lan_host:
+        stan["bramka_host"] = tryb_lan_host
+    zapisz_stan()
+    krok("Restart Home Assistant za chwilę. Po ok. minucie otwórz „Pompa” w pasku bocznym.")
+    restart_ha()
+    return kroki
+
+
+def odinstaluj():
+    kopia = Kopia("odinstalowanie")
+    for wzgl in (KAT_PAK, "www/rotenso/pro.js"):
+        p = os.path.join(CFG, wzgl)
+        if os.path.isdir(p):
+            for kor, _, pliki in os.walk(p):
+                for n in pliki:
+                    kopia.zabezpiecz(os.path.join(kor, n))
+            shutil.rmtree(p)
+        elif os.path.isfile(p):
+            kopia.zabezpiecz(p)
+            os.remove(p)
+    ws = WS()
+    try:
+        for z in ws.wywolaj("lovelace/resources") or []:
+            if "/local/rotenso/pro.js" in str(z.get("url", "")):
+                ws.wywolaj("lovelace/resources/delete", resource_id=z["id"])
+        for d in ws.wywolaj("lovelace/dashboards/list") or []:
+            if d.get("url_path") == PULPIT:
+                ws.wywolaj("lovelace/dashboards/delete", dashboard_id=d["id"])
+    finally:
+        ws.zamknij()
+    for k in ("klucz", "zainstalowano", "bramka_host"):
+        stan.pop(k, None)
+    zapisz_stan()
+    log("Odinstalowano „Pompa w HA” (kopia w pompa_ha_kopia/). Linia `packages:` w configuration.yaml zostaje.")
+    restart_ha()
+
+
+# --- diagnostyka --------------------------------------------------------------------
+NIEDOSTEPNE = ("unavailable", "unknown", "", "None", "nan")
+
+
+def diagnostyka():
+    wyn = {"czas": datetime.datetime.now().isoformat(timespec="seconds"), "wersja_dodatku": WERSJA,
+           "inst": stan.get("inst"), "ok": [], "problemy": [], "podpowiedzi": [], "encje": {}}
+
+    def ok(t):
+        wyn["ok"].append(t)
+
+    def zle(t, podp=""):
+        wyn["problemy"].append(t)
+        wyn["podpowiedzi"].append(podp)
+
+    st, cfg = ha("GET", "/config")
+    if st == 200 and isinstance(cfg, dict):
+        wyn["ha_wersja"] = cfg.get("version")
+        ok(f"Home Assistant {cfg.get('version')}")
+    else:
+        zle("Brak połączenia z Home Assistant", "Uruchom ponownie dodatek.")
+        return wyn
+
+    st, stany = ha("GET", "/states")
+    stany = stany if isinstance(stany, list) else []
+    nasze = {s["entity_id"]: s for s in stany if ".pompa_modbus_" in s["entity_id"]
+             or s["entity_id"].startswith(("sensor.pompa_cop_", "sensor.pompa_prad_", "sensor.pompa_cieplo_", "binary_sensor.alarm_"))}
+    for eid in sorted(nasze)[:500]:
+        s = nasze[eid]
+        wyn["encje"][eid] = {"s": s.get("state"), "t": (s.get("last_reported") or s.get("last_updated") or "")[:19]}
+
+    modbus = [e for e in nasze if e.startswith("sensor.pompa_modbus_")]
+    if not modbus:
+        zle("Home Assistant nie widzi modułu pompy.",
+            "Moduł Wi-Fi: Ustawienia → Urządzenia i usługi → u góry „Wykryto: Pompa Modbus” → Dodaj. "
+            "Nie ma go tam? Sprawdź zasilanie modułu i czy jest w tej samej sieci co HA. "
+            "Bramka LAN: kliknij niżej „Szukaj bramki LAN”.")
+    else:
+        online = nasze.get("binary_sensor.pompa_modbus_modul_online")
+        if online and online.get("state") != "on" and not stan.get("bramka_host"):
+            zle("Moduł jest offline.", "Sprawdź zasilanie modułu i Wi-Fi (sieć „pompa-setup” oznacza, że moduł nie zna twojej sieci).")
+        else:
+            ok("Moduł połączony z Home Assistant.")
+        liczbowe = [e for e in modbus if "kod_bledu" not in e]
+        martwe = [e for e in liczbowe if str(nasze[e].get("state")) in NIEDOSTEPNE]
+        if liczbowe and len(martwe) / len(liczbowe) > 0.7:
+            zle(f"Brak odczytów z pompy ({len(martwe)} z {len(liczbowe)} encji bez wartości).",
+                "1) Zamień przewody A i B na module. 2) W menu serwisanta: 17.2 adres = 1, HMI SET = 0. "
+                "3) Przewody idą do zacisków H1/H2 sterownika ŚCIENNEGO, nie płyty głównej. 4) Pompa musi być zasilona.")
+        else:
+            ok(f"Pompa odpowiada ({len(liczbowe) - len(martwe)} z {len(liczbowe)} odczytów ma wartość).")
+        kod = nasze.get("sensor.pompa_modbus_kod_bledu")
+        if kod and str(kod.get("state")).lower() not in ("brak", "0", "e0", "ok") + NIEDOSTEPNE:
+            zle(f"Pompa zgłasza błąd: {kod.get('state')}", "Sprawdź kod w instrukcji pompy albo wyślij raport do wsparcia.")
+
+    if stan.get("klucz"):
+        s_kl = stan_klucza(stan["klucz"])
+        if s_kl == "aktywny":
+            ok("Klucz Pro aktywny.")
+        elif s_kl is None:
+            zle("Brak połączenia z serwerem licencji.", "Karty działają z kopii do 7 dni. Sprawdź internet.")
+        else:
+            zle(f"Klucz Pro: {s_kl}.", "Napisz na pompa@woleoze.pl.")
+        if "sensor.pompa_cop_co_dzis" in nasze or any(e.startswith("sensor.pompa_prad_") for e in nasze):
+            ok("Pakiety Pro wczytane.")
+        else:
+            zle("Pakiety Pro nie są wczytane.", "Kliknij „Zainstaluj ponownie”. Jeśli nie pomoże, wyślij raport.")
+        try:
+            ws = WS()
+            try:
+                pulp = [d for d in (ws.wywolaj("lovelace/dashboards/list") or []) if d.get("url_path") == PULPIT]
+                zas = [z for z in (ws.wywolaj("lovelace/resources") or []) if "/local/rotenso/pro.js" in str(z.get("url", ""))]
+            finally:
+                ws.zamknij()
+            if pulp and zas:
+                ok("Pulpit „Pompa” i karty zarejestrowane.")
+            else:
+                zle("Brak pulpitu albo zasobu kart.", "Kliknij „Zainstaluj ponownie”.")
+        except Exception as e:
+            zle(f"Nie mogę sprawdzić pulpitów: {e}", "")
+    else:
+        zle("Pro nie jest zainstalowane.", "Wklej klucz z maila i kliknij „Zainstaluj”.")
+    return wyn
+
+
+def wyslij_raport():
+    if not stan.get("klucz"):
+        raise Blad("Najpierw zainstaluj klucz. Bez klucza wyślij maila na pompa@woleoze.pl.")
+    wyn = diagnostyka()
+    wyn["dziennik"] = stan.get("dziennik", [])[-30:]
+    st, odp = serwer("POST", "/v1/raport?" + q(klucz=stan["klucz"], inst=stan["inst"]), wyn)
+    if st != 200:
+        raise Blad(f"Serwer nie przyjął raportu: {(odp or {}).get('blad', st)}")
+    log("Raport wysłany do wsparcia.")
+    return {"ok": True, "id": (odp or {}).get("id")}
+
+
+# --- poprawki (pull) ------------------------------------------------------------------
+def sprawdz_poprawki(recznie=False):
+    if not stan.get("klucz"):
+        return {"poprawki": 0}
+    st, odp = serwer("GET", "/v1/poprawki?" + q(klucz=stan["klucz"], inst=stan["inst"], po=stan.get("ostatnia_poprawka", 0)))
+    if st != 200:
+        if recznie:
+            raise Blad(f"Serwer nie odpowiedział (HTTP {st}).")
+        return {"poprawki": 0}
+    lista = (odp or {}).get("poprawki") or []
+    zastosowane = 0
+    for p in lista:
+        try:
+            potrzebny_restart = zastosuj_poprawke(p)
+            serwer("POST", "/v1/poprawki/potwierdz?" + q(klucz=stan["klucz"], inst=stan["inst"]), {"id": p["id"], "wynik": "ok"})
+            zastosowane += 1
+            powiadom("Pompa w HA", f"Zastosowano poprawkę od wsparcia: {p.get('opis', '')}")
+            if potrzebny_restart:
+                restart_ha()
+                break  # kolejne po restarcie
+        except Exception as e:
+            # Zła poprawka: zgłoś raz i pomiń (wsparcie wyda nową). Bez ponawiania co godzinę.
+            log(f"Poprawka {p.get('id')} pominięta: {e}")
+            serwer("POST", "/v1/poprawki/potwierdz?" + q(klucz=stan["klucz"], inst=stan["inst"]),
+                   {"id": p.get("id"), "wynik": "blad", "blad": str(e)[:1000]})
+            stan["ostatnia_poprawka"] = max(stan.get("ostatnia_poprawka", 0), int(p.get("id") or 0))
+            zapisz_stan()
+    return {"poprawki": zastosowane, "czeka": len(lista) - zastosowane}
+
+
+def zastosuj_poprawke(p):
+    kopia = Kopia(f"poprawka-{p.get('id')}")
+    try:
+        for wzgl, tresc in (p.get("pliki") or {}).items():
+            sc = bezpieczna(wzgl)
+            kopia.zabezpiecz(sc)
+            zapisz_plik(sc, tresc)
+        for wzgl in p.get("usun") or []:
+            sc = bezpieczna(wzgl)
+            if os.path.exists(sc):
+                kopia.zabezpiecz(sc)
+                os.remove(sc)
+        if any(w.endswith((".yaml", ".yml")) for w in (p.get("pliki") or {})) or p.get("usun"):
+            ok, opis = sprawdz_konfiguracje()
+            if not ok:
+                raise Blad("konfiguracja odrzucona, cofnięto: " + opis)
+    except Exception:
+        kopia.przywroc()
+        raise
+    stan["ostatnia_poprawka"] = p["id"]
+    log(f"Zastosowano poprawkę {p['id']}: {p.get('opis', '')}")
+    return bool(p.get("restart", True))
+
+
+def petla_poprawek():
+    time.sleep(300)
+    while True:
+        try:
+            if stan.get("auto_poprawki") and stan.get("klucz"):
+                with blokada:
+                    sprawdz_poprawki()
+        except Exception as e:
+            print("[pompa] pętla poprawek:", e, flush=True)
+        time.sleep(3600)
+
+
+# --- bramka LAN (USR-DR404 i podobne: Modbus TCP) --------------------------------------
+def podsieci():
+    sieci = []
+    try:
+        ws = WS()
+        try:
+            for a in (ws.wywolaj("network") or {}).get("adapters", []):
+                if a.get("enabled"):
+                    for ip in a.get("ipv4", []):
+                        sieci.append(f"{ip['address']}/{ip.get('network_prefix', 24)}")
+        finally:
+            ws.zamknij()
+    except Exception:
+        pass
+    if not sieci:
+        st, odp = zapytanie("GET", SUP_API + "/network/info", naglowki={"Authorization": f"Bearer {TOKEN}"})
+        for i in ((odp or {}).get("data") or {}).get("interfaces", []):
+            for a in (i.get("ipv4") or {}).get("address", []) or []:
+                sieci.append(a)
+    wynik = []
+    for s in sieci:
+        try:
+            n = ipaddress.ip_interface(s).network
+            if n.prefixlen < 24:
+                n = ipaddress.ip_interface(f"{ipaddress.ip_interface(s).ip}/24").network
+            if not n.is_loopback and n.version == 4 and str(n) not in wynik:
+                wynik.append(str(n))
+        except ValueError:
+            pass
+    return wynik
+
+
+def modbus_tcp_odczyt(host, rejestr=0, ile=1, unit=1, timeout=1.5):
+    """Odczyt rejestrów holding przez Modbus TCP. Zwraca listę wartości albo napis z kodem wyjątku."""
+    with socket.create_connection((host, 502), timeout=timeout) as s:
+        s.settimeout(timeout)
+        s.sendall(struct.pack(">HHHBBHH", 0x5050, 0, 6, unit, 3, rejestr, ile))
+        b = s.recv(260)
+    if len(b) >= 9 and b[7] == 3:
+        return [struct.unpack(">H", b[9 + 2 * i: 11 + 2 * i])[0] for i in range(b[8] // 2)]
+    if len(b) >= 9 and b[7] == 0x83:
+        return f"wyjątek {b[8]}"
+    return "brak odpowiedzi Modbus"
+
+
+def szukaj_bramki():
+    sieci = podsieci()
+    if not sieci:
+        raise Blad("Nie znam adresu sieci domowej. Wpisz adres bramki ręcznie.")
+    hosty = [str(h) for n in sieci for h in ipaddress.ip_network(n).hosts()][:1024]
+
+    def otwarty(h):
+        try:
+            with socket.create_connection((h, 502), timeout=0.6):
+                return h
+        except OSError:
+            return None
+
+    with concurrent.futures.ThreadPoolExecutor(64) as ex:
+        kand = [h for h in ex.map(otwarty, hosty) if h]
+    wynik = []
+    for h in kand:
+        try:
+            r = modbus_tcp_odczyt(h, 0, 10)
+            pompa = isinstance(r, list)
+        except OSError as e:
+            r, pompa = f"błąd: {e}", False
+        wynik.append({"host": h, "pompa_odpowiada": pompa, "odczyt": r if pompa else str(r)})
+    log(f"Szukanie bramki: sieci {sieci}, port 502 otwarty na {len(kand)} adresach.")
+    return {"sieci": sieci, "bramki": wynik}
+
+
+# --- serwer panelu (ingress) -------------------------------------------------------------
+PANEL = os.path.join(os.path.dirname(os.path.abspath(__file__)), "panel.html")
+
+
+def stan_publiczny():
+    k = stan.get("klucz") or ""
+    return {
+        "wersja": WERSJA,
+        "klucz": (k[:9] + "…" + k[-4:]) if k else "",
+        "zainstalowano": stan.get("zainstalowano"),
+        "auto_poprawki": stan.get("auto_poprawki"),
+        "ostatnia_poprawka": stan.get("ostatnia_poprawka"),
+        "bramka_host": stan.get("bramka_host"),
+        "dziennik": stan.get("dziennik", [])[-25:],
+    }
+
+
+class Obsluga(http.server.BaseHTTPRequestHandler):
+    server_version = "pompa-ha"
+
+    def log_message(self, *a):
+        pass
+
+    def _odp(self, kod, obj, typ="application/json; charset=utf-8"):
+        b = obj if isinstance(obj, bytes) else json.dumps(obj, ensure_ascii=False).encode()
+        self.send_response(kod)
+        self.send_header("Content-Type", typ)
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Content-Length", str(len(b)))
+        self.end_headers()
+        self.wfile.write(b)
+
+    def _dozwolony(self):
+        ip = self.client_address[0]
+        return ip in ("172.30.32.2", "127.0.0.1", "::1") or os.environ.get("POMPA_DEV") == "1"
+
+    def _cialo(self):
+        n = int(self.headers.get("Content-Length") or 0)
+        if not n:
+            return {}
+        try:
+            return json.loads(self.rfile.read(min(n, 100_000)))
+        except Exception:
+            return {}
+
+    def do_GET(self):
+        if not self._dozwolony():
+            return self._odp(403, {"blad": "tylko przez panel Home Assistant"})
+        p = self.path.split("?")[0].rstrip("/").rsplit("/api/", 1)
+        if len(p) == 1:
+            with open(PANEL, "rb") as f:
+                return self._odp(200, f.read(), "text/html; charset=utf-8")
+        akcja = p[1]
+        try:
+            if akcja == "stan":
+                return self._odp(200, stan_publiczny())
+            if akcja == "diagnostyka":
+                return self._odp(200, diagnostyka())
+        except Blad as e:
+            return self._odp(400, {"blad": str(e)})
+        except Exception as e:
+            traceback.print_exc()
+            return self._odp(500, {"blad": f"Nieoczekiwany błąd: {e}"})
+        return self._odp(404, {"blad": "nie ma takiej akcji"})
+
+    def do_POST(self):
+        if not self._dozwolony():
+            return self._odp(403, {"blad": "tylko przez panel Home Assistant"})
+        p = self.path.split("?")[0].rstrip("/").rsplit("/api/", 1)
+        akcja = p[1] if len(p) == 2 else ""
+        dane = self._cialo()
+        if not blokada.acquire(timeout=1):
+            return self._odp(409, {"blad": "Trwa inna operacja. Poczekaj chwilę."})
+        try:
+            if akcja == "instaluj":
+                return self._odp(200, {"ok": True, "kroki": instaluj(dane.get("klucz") or stan.get("klucz"), dane.get("bramka"))})
+            if akcja == "odinstaluj":
+                odinstaluj()
+                return self._odp(200, {"ok": True})
+            if akcja == "raport":
+                return self._odp(200, wyslij_raport())
+            if akcja == "poprawki":
+                return self._odp(200, sprawdz_poprawki(recznie=True))
+            if akcja == "auto":
+                stan["auto_poprawki"] = bool(dane.get("wl"))
+                zapisz_stan()
+                return self._odp(200, stan_publiczny())
+            if akcja == "bramka/szukaj":
+                return self._odp(200, szukaj_bramki())
+            if akcja == "bramka/uzyj":
+                host = str(dane.get("host") or "").strip()
+                ipaddress.ip_address(host)
+                r = modbus_tcp_odczyt(host, 0, 10)
+                if not isinstance(r, list):
+                    raise Blad(f"Bramka {host} nie przekazuje odczytów z pompy ({r}). Sprawdź przewody A/B i ustawienia bramki.")
+                if not stan.get("klucz"):
+                    stan["bramka_host"] = host
+                    zapisz_stan()
+                    return self._odp(200, {"ok": True, "kroki": [f"Zapamiętano bramkę {host}. Teraz wklej klucz i zainstaluj."]})
+                return self._odp(200, {"ok": True, "kroki": instaluj(stan["klucz"], host)})
+            return self._odp(404, {"blad": "nie ma takiej akcji"})
+        except Blad as e:
+            log("Błąd: " + str(e))
+            return self._odp(400, {"blad": str(e)})
+        except ValueError:
+            return self._odp(400, {"blad": "To nie jest poprawny adres IP."})
+        except Exception as e:
+            traceback.print_exc()
+            log(f"Nieoczekiwany błąd: {e}")
+            return self._odp(500, {"blad": f"Nieoczekiwany błąd: {e}. Wyślij raport albo napisz na pompa@woleoze.pl."})
+        finally:
+            blokada.release()
+
+
+def main():
+    global stan
+    stan = wczytaj_stan()
+    zapisz_stan()
+    log(f"Start dodatku Pompa w HA {WERSJA}.")
+    threading.Thread(target=petla_poprawek, daemon=True).start()
+    http.server.ThreadingHTTPServer(("0.0.0.0", PORT), Obsluga).serve_forever()
+
+
+if __name__ == "__main__":
+    main()

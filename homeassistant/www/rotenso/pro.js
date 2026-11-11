@@ -3,6 +3,7 @@
 //   type: custom:rotenso-pro
 //   karta: pompa            # pompa | koszty | raport
 //   klucz: RPRO-XXXX-XXXX-XXXX-XXXX
+//   inst: a.xxxxxxxxxx      # identyfikator instalacji (wpisuje dodatek „Pompa w HA”; opcjonalny)
 //   encje: { ... }          # nadpisania encji (jak w kartach)
 //   woleoze: true           # stopka
 // Loader pobiera zaciemniony kod karty z serwera licencji, trzyma go w cache
@@ -27,23 +28,15 @@ function hashHost(s) {
   return h.toString(36);
 }
 
-// Identyfikator instalacji: losowy (raz) + hash hosta. Trzymany w localStorage.
-function instId() {
-  let rand = '';
-  try {
-    rand = localStorage.getItem('rotenso-pro-inst') || '';
-    if (!rand) {
-      const b = new Uint8Array(6);
-      (crypto || window.crypto).getRandomValues(b);
-      rand = Array.from(b).map((x) => x.toString(36)).join('');
-      localStorage.setItem('rotenso-pro-inst', rand);
-    }
-  } catch (e) {
-    rand = 'tmp' + Math.floor(Math.random() * 1e9).toString(36);
-  }
+// Identyfikator instalacji = jeden na Home Assistant, NIE na przeglądarkę
+// (telefon, tablet i komputer w tym samym domu liczą się jako jedna instalacja).
+// 1) `inst:` z konfiguracji karty (wpisuje go dodatek „Pompa w HA”);
+// 2) bez dodatku: hash adresu HA (wszystkie przeglądarki na tym samym adresie = jedna instalacja).
+function instId(cfg) {
+  if (cfg && cfg.inst) return String(cfg.inst);
   let host = 'local';
   try { host = location.host || 'local'; } catch (e) { /* noop */ }
-  return rand + '.' + hashHost(host);
+  return 'h.' + hashHost(host);
 }
 
 // Podmiana nazw elementów na wersję „-pro”, żeby nie kolidowały z kartą Start.
@@ -95,7 +88,7 @@ class RotensoPro extends HTMLElement {
     const cacheKey = 'rotenso-pro-kod-' + karta;
     let kod = null;
     try {
-      const url = SERWER + '/v1/karta/' + karta + '.js?klucz=' + encodeURIComponent(klucz) + '&inst=' + encodeURIComponent(instId());
+      const url = SERWER + '/v1/karta/' + karta + '.js?klucz=' + encodeURIComponent(klucz) + '&inst=' + encodeURIComponent(instId(this._config));
       const r = await fetch(url, { method: 'GET' });
       if (r.status === 403) {
         let info = {};

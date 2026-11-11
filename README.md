@@ -96,6 +96,16 @@ Szczegóły i pułapki: [docs/podlaczenie.md](docs/podlaczenie.md).
 
 **Pro kupujesz za 149 zł. Zaraz po płatności dostajesz na e-mail klucz licencji (RPRO-…) i link do paczki plików.** Karty Pro pobierają się z serwera licencji i aktualizują same; serwer dostaje tylko klucz i losowy identyfikator instalacji, żadnych odczytów z pompy. Jeden klucz = jeden dom.
 
+**Instalacja Pro bez kopiowania plików** (Home Assistant OS: Raspberry Pi, Home Assistant Green, mini PC z HA OS):
+
+[![Dodaj repozytorium dodatku do Home Assistant](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FWoleOze%2Frotenso-midea-modbus-ha)
+
+1. Kliknij przycisk wyżej (albo ten z maila) i zainstaluj dodatek **Pompa w HA**.
+2. Otwórz panel **Pompa – instalator**, wklej klucz i kliknij **Zainstaluj**.
+3. Dodatek sam zapisze pakiety w `packages/pompa_ha/`, dopisze jedną linię `packages:` do `configuration.yaml` (z kopią), sprawdzi konfigurację, doda pulpit **Pompa** i zrestartuje HA.
+
+W panelu jest też **Diagnostyka** (co działa, co poprawić) i **Wyślij raport** do wsparcia. Nikt nie łączy się z twoim HA z zewnątrz. HA w Dockerze: pobierz ZIP z linku w mailu i wgraj pliki ręcznie.
+
 Co dokłada Pro:
 
 - **zmiana nastaw instalatora z Home Assistanta**: zadana CWU, histereza grzania (3.5), dT5_ON (1.6), krzywa grzewcza (3.9), moc grzałki (7.8); moduł ESPHome z zapisem,
