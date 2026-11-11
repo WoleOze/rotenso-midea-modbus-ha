@@ -50,7 +50,7 @@ a{color:var(--ak)}
   <section class="k">
     <h2>1. Klucz i instalacja</h2>
     <p>Wklej klucz z maila po zakupie. Dodatek sam zapisze pakiety, karty i pulpit „Pompa”, sprawdzi konfigurację i zrestartuje Home Assistant.</p>
-    <input type="text" id="klucz" placeholder="RPRO-XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
+    <input type="text" id="klucz" aria-label="Klucz Pro z maila" placeholder="RPRO-XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
     <div class="rz">
       <button class="g" id="bInst">Zainstaluj</button>
     </div>
@@ -58,7 +58,7 @@ a{color:var(--ak)}
   </section>
 
   <section class="k">
-    <h2>Ustawienia (opcjonalnie)</h2>
+    <h2>2. Ustawienia (opcjonalnie)</h2>
     <p>Masz tylko moduł pompy? Zostaw domyślne. Masz własny licznik prądu albo chcesz powiadomień na telefon? Wybierz z listy, a dodatek sam dopasuje pakiety i karty.</p>
     <div class="siatka" id="ust">Ładuję…</div>
     <div class="rz"><button class="g" id="bUst">Zapisz i zastosuj</button></div>
@@ -66,7 +66,7 @@ a{color:var(--ak)}
   </section>
 
   <section class="k">
-    <h2>2. Diagnostyka</h2>
+    <h2>3. Diagnostyka</h2>
     <ul class="d" id="diag"><li>Sprawdzam…</li></ul>
     <div class="rz">
       <button id="bDiag">Sprawdź ponownie</button>
@@ -77,7 +77,7 @@ a{color:var(--ak)}
   </section>
 
   <section class="k">
-    <h2>Bramka LAN (zestaw z kablem sieciowym)</h2>
+    <h2>Bramka LAN (zestaw Wi-Fi + LAN)</h2>
     <p>Masz bramkę USR-DR404 podłączoną kablem do routera? Dodatek znajdzie ją w sieci.</p>
     <div class="rz"><button id="bSzukaj">Szukaj bramki LAN</button></div>
     <div id="bramki"></div>
@@ -144,7 +144,7 @@ $('bInst').onclick = () => zajety($('bInst'), async () => {
 });
 $('bDiag').onclick = () => zajety($('bDiag'), odswiezDiag);
 $('bRap').onclick = () => zajety($('bRap'), async () => {
-  try { await api('raport', {}); pokaz($('wRap'), 'Raport wysłany. Odpowiedź przyjdzie mailem.', 'o'); }
+  try { await api('raport', {}); pokaz($('wRap'), 'Raport wysłany. Odpisz na mail z kluczem i napisz, co nie działa.', 'o'); }
   catch (e) { pokaz($('wRap'), e.message, 'b'); }
   odswiezStan();
 });

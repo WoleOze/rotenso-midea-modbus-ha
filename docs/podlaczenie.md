@@ -13,7 +13,7 @@ Krok po kroku: od zakupu modułu do pierwszych odczytów w Home Assistancie. Ca�
 | **Waveshare ESP32-S3-Relay-1CH** albo **ESP32-S3-Relay-1CH-U** | ESP32-S3 z wbudowanym RS‑485 (zaciski A/B) i jednym przekaźnikiem (nieużywanym). Wersja „-U” ma antenę zewnętrzną – lepsza, gdy sterownik wisi daleko od routera. Piny w kodzie: RS‑485 TX = GPIO17, RX = GPIO18, DE/RE = GPIO21, przekaźnik = GPIO47. |
 | zasilanie 5 V (USB‑C) | ładowarka telefonu wystarczy. Nie zasilaj modułu ze sterownika. |
 | przewód 2‑żyłowy (skrętka) | np. jedna para z kabla sieciowego. Do kilku metrów długość bez znaczenia; dla dłuższych odcinków użyj skrętki i poprowadź z dala od kabli zasilających. |
-| mała śrubokręt płaski | zaciski sprężynowe/śrubowe w sterowniku i w module |
+| mały śrubokręt płaski | zaciski sprężynowe/śrubowe w sterowniku i w module |
 
 Działa też każdy inny ESP32 z przetwornikiem RS‑485 (np. MAX485) – zmień wtedy piny w sekcji `uart:` i `modbus:` pliku YAML.
 

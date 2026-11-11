@@ -15,8 +15,8 @@ const ENC = {
   sw_strefa1: 'switch.{id}_zone1_power', sw_cwu: 'switch.{id}_dhw_power', sw_eco: 'switch.{id}_eco_mode', sw_cichy: 'switch.{id}_silent_mode', krzywa: 'switch.{id}_zone1_curve',
 };
 const LINK_PRO = 'https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03';
-const LINK_KONF = 'https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00';
-const STOPKA = '<div class="stopka"><a href="https://woleoze.pl/pompa-ciepla/" target="_blank" rel="noopener">dane i kalkulatory: woleoze.pl</a> · <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha#nie-chcesz-grzebać-w-yaml-skonfiguruję-to-za-ciebie" target="_blank" rel="noopener">pomoc przy konfiguracji</a></div>';
+const LINK_ZESTAW = 'https://pompa.woleoze.pl/#ceny';
+const STOPKA = '<div class="stopka"><a href="https://woleoze.pl/pompa-ciepla/" target="_blank" rel="noopener">dane i kalkulatory: woleoze.pl</a> · <a href="mailto:pompa@woleoze.pl">pomoc: pompa@woleoze.pl</a></div>';
 const BRAK = ['unknown', 'unavailable', '', undefined, null];
 const f = (v, d = 0) => (v == null || isNaN(v) ? '–' : Number(v).toFixed(d).replace('.', ','));
 const fT = (v) => (v == null || isNaN(v) ? '–' : `${f(v)}°C`);
@@ -115,10 +115,10 @@ class RotensoStart extends HTMLElement {
           <h3 style="margin-top:18px">Przełączniki</h3><div class="prz" id="prz"></div>
           <div class="uw">To te same przełączniki, które daje integracja Midea. Zmiana idzie do pompy od razu.</div></div>
         ${w ? `<div class="c c12 pro"><h3>Chcesz więcej?</h3><div class="por">
-          <span class="n">Start</span><span class="cena">0 zł</span><span class="o">ta karta na integracji Midea + moduł Modbus do odczytu: 114 odczytów co 5 s i panel Pompa w podglądzie.</span>
-          <span class="n">Pro</span><span class="cena">149 zł</span><span class="o">zmiana nastaw z HA, prąd i COP osobno dla domu i CWU, CWU na tanie godziny, koszty a inne paliwa, raport z alarmami, kreator i aktualizacje.</span>
-          <span class="n">Pro + konfiguracja</span><span class="cena">249 zł</span><span class="o">wszystko z Pro, a ja konfiguruję to zdalnie za ciebie; zwrot 100%, jeśli moduł nie złapie komunikacji z pompą.</span></div>
-          <div class="bt"><a class="b1" href="${LINK_PRO}" target="_blank" rel="noopener">Pro: 149 zł</a><a href="${LINK_KONF}" target="_blank" rel="noopener">Pro + konfiguracja: 249 zł</a></div></div>` : ''}
+          <span class="n">Start</span><span class="cena">0 zł</span><span class="o">ta karta na integracji Midea + moduł Modbus do odczytu (114 odczytów, parametry pracy co 5 s) i panel Pompa w podglądzie.</span>
+          <span class="n">Pro</span><span class="cena">149 zł</span><span class="o">zmiana nastaw z HA, prąd i COP osobno dla domu i CWU, CWU na tanie godziny, koszty a inne paliwa, raport z alarmami, dodatek do HA z diagnostyką.</span>
+          <span class="n">Zestaw</span><span class="cena">od 499 zł</span><span class="o">moduł wgrany i przetestowany, z licencją Pro: podpinasz dwie żyły, dodatek robi panele.</span></div>
+          <div class="bt"><a class="b1" href="${LINK_PRO}" target="_blank" rel="noopener">Pro: 149 zł</a><a href="${LINK_ZESTAW}" target="_blank" rel="noopener">Zestaw: od 499 zł</a></div></div>` : ''}
       </div>${w ? STOPKA : ''}</div>`;
     if (!this._klikOk) { this._klikOk = true; this.shadowRoot.addEventListener('click', (e) => {
       const b = e.target.closest('button[data-sw]'); if (b) { if (!b.disabled) this._h.callService('switch', 'toggle', { entity_id: b.dataset.sw }); return; }

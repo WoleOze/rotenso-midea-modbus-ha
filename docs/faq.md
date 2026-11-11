@@ -14,7 +14,7 @@ Po kolei:
 6. **Wyjątek 2 (illegal data address)** przy pojedynczych rejestrach to nie awaria: starsze sterowniki nie znają części adresów (np. 11–12) – te
    są w YAML pominięte.
 
-Dalej nic? Kliknij w dodatku „Pompa w HA” → „Wyślij raport” i napisz na pompa@woleoze.pl. Nie chcesz grzebać sam? [Zestaw gotowy do podpięcia](https://buy.stripe.com/cNieVd2qg9sI7jK6aL3Je05) albo [wgranie twojego modułu](https://buy.stripe.com/3cIfZh6Gw0Wc6fGbv53Je07).
+Dalej nic? Napisz na pompa@woleoze.pl; z Pro najpierw kliknij w dodatku „Pompa w HA” → „Wyślij raport”. Nie chcesz grzebać sam? [Zestaw gotowy do podpięcia](https://buy.stripe.com/cNieVd2qg9sI7jK6aL3Je05) albo [wgranie twojego modułu](https://buy.stripe.com/3cIfZh6Gw0Wc6fGbv53Je07).
 
 ## 2. Czy mogę pomylić A z B i coś spalić?
 
@@ -55,10 +55,10 @@ wcześniej sensorem `template`. Podstawienie licznika do podziału dom/CWU, kosz
 
 ## 7. Czy to działa z Midea M‑Thermal bez logo Rotenso?
 
-Tak, o ile sterownik ścienny to Midea KJRH‑120H (albo nowszy z tej rodziny) z wyjściem BMS na H1/H2. Rotenso Aquami to Midea M‑Thermal pod inną
-marką; identyczne sterowniki mają m.in. Kaisai, Sinclair, Inventor, Mundoclima, Carrier/Toshiba Estia (część modeli). Mapa rejestrów jest ta sama –
-różnią się tylko obsługiwane adresy (starsze panele zgłaszają wyjątek 2 dla nowszych rejestrów). Jeśli masz inny sterownik (np. z ekranem
-dotykowym, nowszy protokół), rejestry mogą być inne – sprawdź w instrukcji serwisowej swojego modelu rozdział „Lista Modbus”.
+Tak, o ile sterownik ścienny to czarno-biały Midea KJRH‑120H (albo inny z tej rodziny) z wyjściem BMS na H1/H2 i menu 17.2. Rotenso Aquami to Midea M‑Thermal pod inną
+marką; ten sam sterownik mają m.in. Kaisai Arctic, Galmet Prima, De Dietrich Modena, York YKF i Immergas Magis M (pełna lista: [zgodność](zgodnosc.md)). Mapa rejestrów jest ta sama –
+różnią się tylko obsługiwane adresy (starsze panele zgłaszają wyjątek 2 dla nowszych rejestrów). Kolorowy panel KJRH‑120L / L2 ma te same numery rejestrów, ale inne skale: ta wersja jest w testach.
+Jeśli masz inny sterownik, rejestry mogą być inne – sprawdź w instrukcji serwisowej rozdział „Lista Modbus” albo napisz na pompa@woleoze.pl.
 
 ## 8. Czy to bezpieczne dla pompy?
 

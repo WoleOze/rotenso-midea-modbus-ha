@@ -30,7 +30,7 @@ import urllib.parse
 import urllib.request
 import zipfile
 
-WERSJA = "1.2.0"
+WERSJA = "1.3.0"
 SERWER = os.environ.get("POMPA_SERWER", "https://rotenso-licencje.strefa-tradingu.workers.dev")
 PRO_JS = os.environ.get(
     "POMPA_PRO_JS",
@@ -46,12 +46,13 @@ PORT = int(os.environ.get("PORT", "8099"))
 
 PULPIT = "pompa-ha"
 KAT_PAK = "packages/pompa_ha"
-DOZWOLONE = ("packages/pompa_ha/", "www/rotenso/", "raporty/dopisz.py")
+DOZWOLONE = ("packages/pompa_ha/", "www/rotenso/", "raporty/dopisz.py", "esphome/pompa-modbus-pro.yaml")
 MAPA_ZIP = {  # nazwa w ZIP z serwera → ścieżka względem /config
     "co_cwu_cop.yaml": f"{KAT_PAK}/pompa_ha_co_cwu_cop.yaml",
     "raport.yaml": f"{KAT_PAK}/pompa_ha_raport.yaml",
     "cwu_harmonogram.yaml": f"{KAT_PAK}/pompa_ha_cwu_harmonogram.yaml",
     "dopisz.py": "raporty/dopisz.py",
+    "esphome/pompa-modbus.yaml": "esphome/pompa-modbus-pro.yaml",  # program z zapisem nastaw dla własnych modułów (ESPHome → Install)
 }
 SZABLONY_DO_PLIKOW = {  # szablon z /v1/szablony → plik; wypełniany ustawieniami klienta (kreator w dodatku)
     "co_cwu_cop": f"{KAT_PAK}/pompa_ha_co_cwu_cop.yaml",
@@ -650,6 +651,11 @@ def odinstaluj():
 # --- diagnostyka --------------------------------------------------------------------
 NIEDOSTEPNE = ("unavailable", "unknown", "", "None", "nan")
 
+# Tylko alarmy z pakietu „Pompa w HA” (nie alarmy domu): do raportu i diagnostyki.
+ALARMY_POMPY = tuple(f"binary_sensor.alarm_{n}" for n in (
+    "pompa_blad", "przeplyw_niski", "grzalka_przy_cieple", "dom_wola_a_zimno",
+    "czujnik_offline", "bojler_rano_zimny", "dowolny", "anomalia"))
+
 # Typ pompy z programu modułu (ESPHome project: „woleoze.pompa-<wariant>” → urządzenie HA: producent/model).
 PLATFORMY = {
     "midea": ("Midea M-Thermal (czarno-biały sterownik)",
@@ -704,7 +710,8 @@ def diagnostyka():
     st, stany = ha("GET", "/states")
     stany = stany if isinstance(stany, list) else []
     nasze = {s["entity_id"]: s for s in stany if ".pompa_modbus_" in s["entity_id"]
-             or s["entity_id"].startswith(("sensor.pompa_cop_", "sensor.pompa_prad_", "sensor.pompa_cieplo_", "binary_sensor.alarm_"))}
+             or s["entity_id"].startswith(("sensor.pompa_cop_", "sensor.pompa_prad_", "sensor.pompa_cieplo_"))
+             or s["entity_id"] in ALARMY_POMPY}
     for eid in sorted(nasze)[:500]:
         s = nasze[eid]
         wyn["encje"][eid] = {"s": s.get("state"), "t": (s.get("last_reported") or s.get("last_updated") or "")[:19]}
@@ -730,6 +737,10 @@ def diagnostyka():
             zle(f"Brak odczytów z pompy ({len(martwe)} z {len(liczbowe)} encji bez wartości).", PLATFORMY[plat][1])
         else:
             ok(f"Pompa odpowiada ({len(liczbowe) - len(martwe)} z {len(liczbowe)} odczytów ma wartość).")
+        if stan.get("klucz") and not any(e.startswith("number.pompa_modbus_") for e in nasze):
+            zle("Moduł ma program bez zapisu nastaw (wersja Start).",
+                "Żeby zmieniać nastawy i harmonogram CWU z HA, wgraj raz program Pro: dodatek ESPHome Device Builder → "
+                "pompa-modbus-pro.yaml → Install (zapisaliśmy go przy instalacji klucza). Zestawy mają go już wgranego.")
         kod = nasze.get("sensor.pompa_modbus_kod_bledu")
         if kod and str(kod.get("state")).lower() not in ("brak", "0", "e0", "ok") + NIEDOSTEPNE:
             zle(f"Pompa zgłasza błąd: {kod.get('state')}", "Sprawdź kod w instrukcji pompy albo wyślij raport do wsparcia.")

@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kreator konfiguracji – Rotenso / Midea przez Modbus w Home Assistant</title>
-<meta name="description" content="Wpisz swoje encje i taryfę – dostaniesz gotowe pakiety YAML, widoki pulpitu i listę kroków instalacji. Bez wysyłania czegokolwiek na serwer.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Wpisz swoje encje i taryfę – dostaniesz gotowe pakiety YAML, widoki pulpitu i listę kroków instalacji. Twoje encje zostają w przeglądarce; na serwer licencji idzie tylko klucz.">
 <style>
   :root{--bg:#0d1117;--panel:#141b25;--line:#243041;--txt:#dde5f1;--mut:#8b9ab3;--acc:#5cb8ff;--ok:#3ecf8e;--bad:#ff6b7a;--warn:#f0b35a;--code:#0a0f16}
   *{box-sizing:border-box}
@@ -18,7 +19,8 @@
   label{display:block;font-size:13px;color:var(--mut);margin-bottom:4px}
   label b{color:var(--txt);font-weight:600}
   input[type=text],input[type=number],input[type=time]{width:100%;background:var(--code);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:9px 10px;font:14px ui-monospace,SFMono-Regular,Menlo,monospace}
-  input:focus{outline:none;border-color:var(--acc)}
+  input:focus{border-color:var(--acc)}
+  input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
   input.zle{border-color:var(--bad)}
   .pod{font-size:12px;color:var(--mut);margin-top:4px}
   .chk{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--txt);padding-top:6px}
@@ -119,7 +121,7 @@
   </div>
   <p class="cta" id="cta" hidden></p>
 
-  <footer><a href="https://pompa.woleoze.pl">pompa.woleoze.pl</a> · repozytorium Start: <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha" target="_blank" rel="noopener">github.com/WoleOze/rotenso-midea-modbus-ha</a> · partner technologiczny: <a href="https://woleoze.pl" target="_blank" rel="noopener">woleoze.pl</a></footer>
+  <footer><a href="https://pompa.woleoze.pl">pompa.woleoze.pl</a> · repozytorium Start: <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha" target="_blank" rel="noopener">github.com/WoleOze/rotenso-midea-modbus-ha</a> · projekt <a href="https://woleoze.pl" target="_blank" rel="noopener">woleOZE</a></footer>
 </main>
 
 <!-- Szablony pakietów: treść wstawia skrypt _zrodla/buduj-kreator.py z homeassistant/packages/*.szablon.yaml. Nie edytuj ręcznie. -->
@@ -141,6 +143,17 @@
   const SZ = {};
   let kluczSZ = '';
   const szablon = (n) => SZ[n] || '';
+  // jeden identyfikator tej instalacji HA na kartach (ten sam pod adresem lokalnym i zdalnym; licznik instalacji klucza)
+  function instKreatora() {{
+    let i = '';
+    try {{ i = localStorage.getItem('pompa-inst') || ''; }} catch (e) {{}}
+    if (!/^k\.[a-z2-9]{{10}}$/.test(i)) {{
+      const A = 'abcdefghijkmnpqrstuvwxyz23456789';
+      i = 'k.' + Array.from(crypto.getRandomValues(new Uint8Array(10)), (b) => A[b % 32]).join('');
+      try {{ localStorage.setItem('pompa-inst', i); }} catch (e) {{}}
+    }}
+    return i;
+  }}
 
   const POLA_ENCJI = [
     ['prad_moc', 'moc elektryczna', 'sensor.'],
@@ -198,7 +211,7 @@
     const encje = (lista) => lista.map(([k, v]) => `          ${k}: ${v}`).join('\n');
     const wspolne = [['prad_moc', d.prad_moc], ['prad_licznik', d.prad_licznik], ['cieplo_licznik', d.cieplo_licznik], ['temp_zew', d.temp_zew], ['cwu_zadana_zapis', d.cwu_zadana_zapis], ['workday', d.workday]];
     const taryfa = [['taryfa_tania', cena(d.taryfa_tania)], ['taryfa_droga', cena(d.taryfa_droga)]];
-    const karta = (typ, lista) => `      - type: custom:rotenso-pro\n        karta: ${typ.replace('rotenso-', '')}\n        klucz: ${d.klucz}\n        woleoze: ${d.woleoze}\n        encje:\n${encje(lista)}`;
+    const karta = (typ, lista) => `      - type: custom:rotenso-pro\n        karta: ${typ.replace('rotenso-', '')}\n        klucz: ${d.klucz}\n        inst: ${d.inst}\n        woleoze: ${d.woleoze}\n        encje:\n${encje(lista)}`;
     return `# Widoki pulpitu (Lovelace) z kartami Rotenso – wygenerowane kreatorem.
 # Zasób (Ustawienia → Pulpity → ⋮ → Zasoby, typ „Moduł JavaScript”): /local/rotenso/pro.js?v=1 – plik pro.js z repozytorium Start (homeassistant/www/rotenso/).
 # Karty Pro pobierają się same z serwera licencji (klucz w konfiguracji karty). Linki między widokami działają na każdym pulpicie.
@@ -227,7 +240,7 @@ ${karta('rotenso-raport', wspolne)}
   function kroki(d) {
     const esp = d.prad_moc === 'sensor.pompa_modbus_moc_elektryczna_szacowana';
     const k = [
-      'Program modułu: plik <code>esphome/pompa-modbus.yaml</code> z ZIP-a z maila (link „pakiety”) wgraj na moduł Waveshare ESP32-S3-Relay-1CH i dodaj urządzenie „Pompa Modbus” w HA. Masz zestaw albo usługę wgrania? Ten krok masz za sobą.',
+      'Program modułu: plik <code>esphome/pompa-modbus.yaml</code> z ZIP-a z maila (link „pakiety”) wgraj przez ESPHome na swój moduł ESP32 z RS-485 i dodaj urządzenie „Pompa Modbus” w HA. Masz zestaw albo usługę wgrania? Ten krok masz za sobą.',
       'Sprawdź, że w <code>configuration.yaml</code> jest <code>homeassistant: packages: !include_dir_named packages</code>. Jeśli nie – dopisz i zrestartuj HA.',
       'Zapisz trzy pakiety z tej strony jako <code>/config/packages/co_cwu_cop.yaml</code>, <code>/config/packages/raport.yaml</code>, <code>/config/packages/cwu_harmonogram.yaml</code>.',
       'Plik <code>dopisz.py</code> z ZIP-a z maila skopiuj do <code>/config/raporty/dopisz.py</code> (raport dobowy i dziennik alarmów zapisują się do <code>/config/www/raporty/*.jsonl</code>).',
@@ -259,6 +272,7 @@ ${karta('rotenso-raport', wspolne)}
     bledy.textContent = b.join(' · ');
     if (b.length) { wynik.innerHTML = ''; cta.hidden = true; return; }
     d.klucz = (d.klucz || '').toUpperCase();
+    d.inst = instKreatora();
     if (!/^RPRO-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(d.klucz)) {
       bledy.textContent = 'Wpisz klucz Pro z maila (RPRO-…), żeby pobrać pakiety.'; f.elements.klucz.classList.add('zle'); wynik.innerHTML = ''; return;
     }

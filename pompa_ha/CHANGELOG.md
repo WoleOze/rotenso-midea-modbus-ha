@@ -1,5 +1,10 @@
 # Zmiany
 
+## 1.3.0
+- Instalacja klucza zapisuje też program modułu z zapisem nastaw (`esphome/pompa-modbus-pro.yaml`) dla osób z własnym modułem.
+- Diagnostyka wykrywa program Start bez zapisu nastaw i mówi, co kliknąć.
+- Raport do wsparcia zawiera tylko alarmy pompy, nie alarmy domu.
+
 ## 1.2.0
 - Diagnostyka rozpoznaje typ pompy z programu modułu (Midea, kolorowy panel Midea, Rotenso Windmi, Rotenso Heatmi) i daje podpowiedzi dla właściwego złącza i adresu.
 

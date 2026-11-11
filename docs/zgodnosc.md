@@ -28,12 +28,27 @@ Stan badania: 11.11.2026. Źródła: instrukcje producentów i zgłoszenia użyt
 | Airwell | Wellea | autor projektu odniesienia ma taką pompę |
 | Baxi / Inventor | HP40-XX-MB, ATS/ATM/ATMH | starsza wersja: adres ustawiany przełącznikiem S3 |
 | Sinclair | pompy ze sterownikiem SWC-120F | instrukcja sterownika ma 17.2 |
-| Midea Arctic R290, Kaysun Aquantia R290 | kolorowy panel KJRH-120L / L2 | inna wersja protokołu: działa najwyżej część odczytów, potrzebny osobny plik |
+
+## 🧪 Prawie gotowe: szukamy testerów
+
+Program jest gotowy, brakuje sprawdzenia na żywej pompie. Jeszcze tego nie sprzedajemy.
+
+| Pompa | Gdzie się podpinasz | Uwaga |
+|---|---|---|
+| Rotenso Windmi (sterownik ORIS) | złącze CN67 (A, B, E) na płycie jednostki wewnętrznej, adres 11 | inna płyta i własna mapa rejestrów, osobny program |
+| Rotenso Heatmi | złącze J2, zaciski A2/B2, adres 16 | własna mapa rejestrów, osobny program |
+| Midea Arctic R290, Kaysun Aquantia R290 (kolorowy panel KJRH-120L / L2) | H1/H2 sterownika, jak przy czarno-białym | te same numery rejestrów, inne skale; osobny program |
+
+Podłączenie Windmi i Heatmi: [instrukcja, punkt 3b](https://pompa.woleoze.pl/instrukcja/#rotenso-testy). Masz taką pompę i Home Assistant OS? Napisz na [pompa@woleoze.pl](mailto:pompa@woleoze.pl?subject=Czy%20moja%20pompa%20pasuje%3F).
+
+## ❄️ Klimatyzatory: w przygotowaniu
+
+Rotenso Mirai, Versu, Revio, Imoto, Ukura i klimatyzatory Midea (później Elis, Roni, Teta). Chcesz klimatyzację w HA? Napisz na [pompa@woleoze.pl](mailto:pompa@woleoze.pl?subject=Czy%20moja%20pompa%20pasuje%3F).
 
 ## ❌ Nie pasuje (inna platforma)
 
-- **Rotenso Windmi** (WIM…, sterownik ORIS): inny producent płyty i inna mapa rejestrów.
-- **Rotenso Heatmi, Rotenso Airmi**, **Kaisai KHX R290**: inne mapy rejestrów.
+- **Rotenso Airmi**, **Kaisai KHX R290**: inne mapy rejestrów.
+- **Thermatec** (PREMIUM to płyta PHNIX, PLUS to Solareast): inna platforma.
 - **Kospel** HPMI2/HPMO2, **Hewalex** PCCO MONO, **Galmet Airmax3**, **Viessmann Vitocal 100-A**, **Immergas Magis Pro V2 / Combo V2** (jednostka Samsung).
 
-Masz pompę z listy „prawdopodobne” albo spoza listy i sprawdziłeś, że działa (albo nie)? Napisz w [Discussions](https://github.com/WoleOze/rotenso-midea-modbus-ha/discussions), dopiszemy.
+Masz pompę z listy „prawdopodobne” albo spoza listy i sprawdziłeś, że działa (albo nie)? Napisz na [pompa@woleoze.pl](mailto:pompa@woleoze.pl?subject=Czy%20moja%20pompa%20pasuje%3F), dopiszemy.

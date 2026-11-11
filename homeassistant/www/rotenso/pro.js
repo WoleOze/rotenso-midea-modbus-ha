@@ -17,7 +17,7 @@ const SERWER =
   'https://rotenso-licencje.strefa-tradingu.workers.dev';
 
 const LINK_ZAKUP = 'https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03';
-const KONTAKT = 'https://github.com/WoleOze/rotenso-midea-modbus-ha#nie-chcesz-grzebać-w-yaml-skonfiguruję-to-za-ciebie';
+const KONTAKT = 'mailto:pompa@woleoze.pl';
 const KARTY_OK = ['pompa', 'koszty', 'raport'];
 const CACHE_MS = 7 * 24 * 60 * 60 * 1000; // 7 dni
 
@@ -128,6 +128,7 @@ class RotensoPro extends HTMLElement {
   _bladLicencji(info) {
     const st = info && info.status;
     if (st === 'wycofany') return this._blad('Licencja wycofana', 'Ta licencja została wycofana (np. po zwrocie płatności).');
+    if (st === 'limit_instalacji') return this._blad('Za dużo instalacji', 'Ten klucz działa już na 3 instalacjach Home Assistant. Napisz na pompa@woleoze.pl, odblokujemy.');
     if (st === 'zablokowany_naduzycie') return this._blad('Klucz zablokowany', 'Ten klucz działa na zbyt wielu instalacjach. Napisz do nas, pomożemy.');
     return this._blad('Klucz nieważny', 'Nie rozpoznaję tego klucza. Sprawdź, czy wpisany jest dokładnie tak jak w mailu.');
   }

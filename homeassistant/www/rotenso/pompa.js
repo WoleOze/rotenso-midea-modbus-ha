@@ -21,10 +21,10 @@ const C = {
 };
 // Encje spoza ESPHome: domyślne z tabeli w README, nadpisywane przez `encje:` w konfiguracji karty.
 const ENC = { prad_moc: 'sensor.pompa_modbus_moc_elektryczna_szacowana', temp_zew: 'sensor.pompa_modbus_t4_temperatura_zewnetrzna' };
-// Wersja Pro: link do zakupu (podmieniany na płatność) i usługa konfiguracji za ciebie.
+// Wersja Pro: link do zakupu i zestaw gotowy do podpięcia.
 const LINK_PRO = 'https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03';
-const LINK_KONF = 'https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00';
-const STOPKA = '<div class="stopka"><a href="https://woleoze.pl/pompa-ciepla/" target="_blank" rel="noopener">dane i kalkulatory: woleoze.pl</a> · <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha#nie-chcesz-grzebać-w-yaml-skonfiguruję-to-za-ciebie" target="_blank" rel="noopener">pomoc przy konfiguracji</a></div>';
+const LINK_ZESTAW = 'https://pompa.woleoze.pl/#ceny';
+const STOPKA = '<div class="stopka"><a href="https://woleoze.pl/pompa-ciepla/" target="_blank" rel="noopener">dane i kalkulatory: woleoze.pl</a> · <a href="mailto:pompa@woleoze.pl">pomoc: pompa@woleoze.pl</a></div>';
 // Nastawy z menu DLA SERWISANTA: [encja, numer, opis, wartość fabryczna, jednostka]. Fabryczne z instrukcji producenta (seria AQM, R13).
 const NAST = [
   ['3_5_dt1sh_histereza_grzania', '3.5', 'Sprężarka rusza, gdy woda spadnie o', 5, '°C'],
@@ -207,7 +207,7 @@ class RotensoPompa extends HTMLElement {
         <div class="kol">
           <div class="c" id="cwuKarta"><h3>Ciepła woda (CWU) <span id="cwuOpis"></span></h3><div class="mini" id="cwu"></div></div>
           ${this._woleoze ? `<div class="c pro"><h3>Wersja Pro</h3><p>Sterowanie CWU na tanie godziny, prąd i COP osobno dla domu i ciepłej wody, zmiana nastaw instalatora prosto z Home Assistanta.</p>
-            <div class="bt"><a class="b1" href="${LINK_PRO}" target="_blank" rel="noopener">Pro: 149 zł</a><a href="${LINK_KONF}" target="_blank" rel="noopener">Pro + konfiguracja: 249 zł</a></div></div>` : ''}
+            <div class="bt"><a class="b1" href="${LINK_PRO}" target="_blank" rel="noopener">Pro: 149 zł</a><a href="${LINK_ZESTAW}" target="_blank" rel="noopener">Zestaw: od 499 zł</a></div></div>` : ''}
           <div class="c"><h3>Liczniki i błędy</h3><div class="mini" id="licz"></div><div class="bl" id="bledy" style="margin-top:10px"></div></div>
         </div>
       </div>${this._woleoze ? STOPKA : ''}</div>`;
@@ -293,7 +293,7 @@ class RotensoPompa extends HTMLElement {
     let opis;
     if (!online) opis = 'Brak łączności z modułem Modbus przy sterowniku ściennym. Pompa pracuje normalnie na własnym sterowniku.'
       + ' Sprawdź zamianę A/B i HMI SET = 0 (<a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/faq.md" target="_blank" rel="noopener" style="color:var(--hp)">FAQ</a>).'
-      + (this._woleoze ? ' Dalej nic? <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha#nie-chcesz-grzebać-w-yaml-skonfiguruję-to-za-ciebie" target="_blank" rel="noopener" style="color:var(--hp)">Podłączę zdalnie, zwrot 100%, jeśli nie ruszy →</a>' : '');
+      + (this._woleoze ? ' Dalej nic? Napisz na <a href="mailto:pompa@woleoze.pl" style="color:var(--hp)">pompa@woleoze.pl</a>; z Pro najpierw kliknij „Wyślij raport” w dodatku.' : '');
     else if (blad) opis = `Pompa zgłasza błąd <b>${kod}</b>.`;
     else if (odszr) opis = 'Odszranianie parownika: pompa na chwilę odwraca obieg i zabiera ciepło z wody.';
     else if (biegnie && naCwu) opis = `Ładuje bojler: <b>${fT(n('t5'))}</b> → zadana <b>${fT(n('cwuZ'))}</b>. Dom w tym czasie nie dostaje ciepła.`;
