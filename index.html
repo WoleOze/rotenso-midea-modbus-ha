@@ -160,11 +160,41 @@ figure{margin:0}
 figcaption{font-size:13.5px;color:var(--mut);margin-top:9px;padding:0 4px}
 figcaption b{color:var(--txt)}
 /* cennik */
-.ceny{display:grid;gap:18px;grid-template-columns:repeat(4,1fr);align-items:stretch}
-@media (max-width:1180px){.ceny{grid-template-columns:repeat(2,1fr)}}
+.ceny{display:grid;gap:18px;grid-template-columns:repeat(3,1fr);align-items:stretch}
 .wtym{font-size:12.5px;color:var(--mut);margin:-4px 0 0}
-.pas299{margin-top:18px;background:var(--panel);border:1px dashed var(--line2);border-radius:18px;padding:16px 20px;display:flex;gap:14px 20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.pas299 p{margin:0;color:var(--mut);max-width:640px}.pas299 b{color:var(--txt)}
+.ce.zestaw{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1.05fr;gap:24px 44px;padding:44px 44px 40px;align-items:center;background:radial-gradient(700px 380px at 85% 10%,rgba(46,230,166,.13),transparent 60%),radial-gradient(600px 400px at 0% 100%,rgba(57,192,255,.14),transparent 60%),linear-gradient(180deg,rgba(17,31,64,.95),rgba(8,17,38,.95))}
+.ce.zestaw .c{font-size:76px;letter-spacing:-.03em;background:linear-gradient(135deg,#fff,#9fe9ff 60%,#7dffd0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ce.zestaw .c small{-webkit-text-fill-color:var(--mut)}
+.kafle{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.kafel{background:rgba(5,10,22,.45);border:1px solid var(--line);border-radius:16px;padding:18px 16px}
+.kafel .ik{font-size:26px;line-height:1}
+.kafel b{display:block;font-size:16.5px;margin:10px 0 4px;color:var(--txt)}
+.kafel span{color:var(--mut);font-size:14px;line-height:1.45}
+.zestaw h3{font-size:30px;margin:0;letter-spacing:-.01em}
+.zestaw .lewa{display:flex;flex-direction:column;gap:14px}
+.przel{display:inline-flex;align-self:flex-start;gap:4px;padding:4px;border:1px solid var(--line2);border-radius:999px;background:rgba(5,10,22,.5)}
+.przel button{padding:9px 18px;border-radius:999px;font:800 14.5px/1 inherit;color:var(--mut);cursor:pointer;white-space:nowrap;background:none;border:0}
+.przel button[aria-pressed="true"]{background:var(--hp);color:#03121e}
+.przel button:focus-visible{outline:3px solid var(--warm);outline-offset:2px}
+.zestaw[data-w="wifi"] .tylko-lan,.zestaw[data-w="lan"] .tylko-wifi{display:none}
+.zestaw .model{margin:0;color:var(--txt);font-weight:700}
+.zestaw .model small{display:block;color:var(--mut);font-weight:500;font-size:14px;margin-top:2px}
+.zestaw ul{margin:0;padding:0;list-style:none;font-size:15.5px;color:var(--mut);align-self:center}
+.zestaw ul li{margin:0 0 12px;padding-left:26px;position:relative}
+.zestaw ul li::before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:900}
+.zestaw ul li b{color:var(--txt)}
+.zestaw .b{align-self:flex-start}
+.dwie-ceny{max-width:1000px;margin:18px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.dwie-ceny .ce ul li{margin:6px 0}
+.wgranie{text-align:center;color:var(--mut);margin:22px auto 0;max-width:760px;font-size:15px}
+.wgranie b{color:var(--txt)}
+.porownaj{max-width:1000px;margin:22px auto 0}
+.porownaj summary{cursor:pointer;color:var(--hp);font-weight:700;text-align:center;list-style:none}
+.porownaj summary::-webkit-details-marker{display:none}
+.trzy{max-width:1000px;margin:22px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;font-size:14px;color:var(--mut)}
+.trzy div{border-top:1px solid var(--line);padding-top:10px}
+.trzy b{color:var(--txt);display:block;margin-bottom:2px}
+@media (max-width:860px){.ce.zestaw{grid-template-columns:1fr;padding:30px 20px}.ce.zestaw .c{font-size:60px}.dwie-ceny,.trzy{grid-template-columns:1fr}}
 .ce{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:12px;position:relative;min-width:0}
 .ce.top{border:2px solid var(--hp);background:linear-gradient(180deg,rgba(57,192,255,.10),rgba(13,24,50,.85) 40%);box-shadow:0 0 0 6px rgba(57,192,255,.07),0 24px 70px rgba(57,192,255,.18)}
 .wst{position:absolute;top:-13px;left:22px;background:linear-gradient(135deg,#39c0ff,#2ee6a6);color:#03121e;font-weight:900;font-size:12px;padding:4px 12px;border-radius:999px;letter-spacing:.03em}
@@ -475,7 +505,7 @@ footer p{margin:6px 0}
     <div class="lin"></div>
     <div class="ogn"><div class="e">🔌</div><b>Sterownik ścienny</b><small>zaciski H1 / H2</small></div>
     <div class="lin"></div>
-    <div class="ogn"><div class="e">📡</div><b>Moduł RS-485</b><small>ESP32, ok. 95 zł</small></div>
+    <div class="ogn"><div class="e">📡</div><b>Moduł RS-485</b><small>ESP32 albo bramka LAN</small></div>
     <div class="lin"></div>
     <div class="ogn"><div class="e">🏠</div><b>Home Assistant</b><small>lokalnie, w twoim domu</small></div>
     <div class="lin"></div>
@@ -511,90 +541,81 @@ footer p{margin:6px 0}
   <p style="text-align:center;margin-top:14px"><a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/zgodnosc.md">Pełna lista z modelami i źródłami →</a> · <span style="color:var(--mut)">stan 11.11.2026</span></p>
 </section>
 <section id="ceny">
-  <div class="nag pokaz"><span class="nadt">Cennik</span><h2>Wybierz, ile chcesz robić sam</h2><p>Start sprawdzisz za darmo. Płacisz dopiero, gdy wiesz, że twoja pompa rozmawia z Home Assistant. Ceny brutto.</p></div>
-  <div class="ceny">
+  <div class="nag pokaz"><span class="nadt">Cennik</span><h2>Gotowy zestaw albo zrób sam</h2><p>Ceny brutto. Start sprawdzisz za darmo, zanim wydasz złotówkę.</p></div>
+
+  <div class="ce top zestaw pokaz" id="zestaw" data-w="wifi">
+    <span class="wst">polecane: zero grzebania</span>
+    <div class="lewa">
+      <h3>Zestaw gotowy do podpięcia</h3>
+      <div class="przel" role="group" aria-label="Wariant zestawu"><button type="button" data-w="wifi" aria-pressed="true">Wi-Fi</button><button type="button" data-w="lan" aria-pressed="false">Wi-Fi + LAN</button></div>
+      <div class="c"><span class="tylko-wifi">499</span><span class="tylko-lan">549</span> <small>zł</small></div>
+      <p class="model tylko-wifi">Moduł ESP32 z RS-485 (Wi-Fi)<small>Sieć ustawiasz telefonem w minutę. Zasilanie z ładowarki USB-C.</small></p>
+      <p class="model tylko-lan">Bramka RS-485 → LAN i Wi-Fi<small>Kabel do routera i gotowe. Zasilacz w zestawie.</small></p>
+      <a class="b b1 tylko-wifi" href="mailto:pompa@woleoze.pl?subject=Zapis%3A%20zestaw%20Wi-Fi%20%28499%20z%C5%82%29&body=Zapisuj%C4%99%20si%C4%99%20na%3A%20zestaw%20Wi-Fi%20%28499%20z%C5%82%29.%0A%0AModel%20pompy%3A%0AZdj%C4%99cie%20ekranu%20menu%2017.2%20sterownika%20%28w%20za%C5%82%C4%85czniku%29%3A%0APaczkomat%20do%20wysy%C5%82ki%20%28kod%29%3A%0AFaktura%20VAT%3F%20Je%C5%9Bli%20tak%2C%20NIP%3A%0A">Zapisuję się na zestaw Wi-Fi</a>
+      <a class="b b1 tylko-lan" href="mailto:pompa@woleoze.pl?subject=Zapis%3A%20zestaw%20Wi-Fi%20%2B%20LAN%20%28549%20z%C5%82%29&body=Zapisuj%C4%99%20si%C4%99%20na%3A%20zestaw%20Wi-Fi%20%2B%20LAN%20%28549%20z%C5%82%29.%0A%0AModel%20pompy%3A%0AZdj%C4%99cie%20ekranu%20menu%2017.2%20sterownika%20%28w%20za%C5%82%C4%85czniku%29%3A%0APaczkomat%20do%20wysy%C5%82ki%20%28kod%29%3A%0AFaktura%20VAT%3F%20Je%C5%9Bli%20tak%2C%20NIP%3A%0A">Zapisuję się na zestaw LAN</a>
+      <p class="dop" style="text-align:left">Pierwsza partia. Zapis bez płatności: odpiszę z terminem i linkiem.</p>
+    </div>
+    <div class="kafle">
+      <div class="kafel"><div class="ik">🧪</div><b>Przetestowany</b><span>Wgrany i sprawdzony przed wysyłką.</span></div>
+      <div class="kafel"><div class="ik">🔑</div><b>Pro w cenie</b><span>Nastawy, COP, koszty, raport, alarmy.</span></div>
+      <div class="kafel"><div class="ik">⚡</div><b>Sam się wykrywa</b><span>Home Assistant widzi moduł, dodatek robi panele.</span></div>
+      <div class="kafel"><div class="ik">📦</div><b>Wysyłka w cenie</b><span>Paczkomat, przewód, instrukcja z kodem QR.</span></div>
+    </div>
+  </div>
+
+  <div class="dwie-ceny">
     <div class="ce pokaz">
       <h3>Start</h3><p class="dla">Sprawdzasz, czy to dla ciebie.</p>
       <div class="c">0 <small>zł</small></div>
       <ul>
-        <li><b>karta na integracji Midea</b>, bez żadnego sprzętu</li>
-        <li>moduł do odczytu (wgrywasz sam): 114 odczytów co 5 s</li>
-        <li>podgląd panelu: obieg, COP teraz, doba pracy</li>
-        <li><a href="https://pompa.woleoze.pl/instrukcja/">instrukcja</a> i FAQ</li>
+        <li>karta na integracji Midea, bez sprzętu</li>
+        <li>odczyt pompy przez moduł ESP32 z RS-485, który wgrywasz sam</li>
+        <li>podgląd panelu: obieg, COP, doba pracy</li>
       </ul>
       <div class="sp"></div>
       <a class="b b2" href="https://github.com/WoleOze/rotenso-midea-modbus-ha">Pobierz za darmo</a>
     </div>
     <div class="ce pokaz">
-      <h3>Pro</h3><p class="dla">Masz moduł i umiesz go podpiąć.</p>
+      <h3>Pro</h3><p class="dla">Masz własny moduł ESP32 z RS-485 i umiesz go podpiąć.</p>
       <div class="c">149 <small>zł</small></div>
       <ul>
-        <li><b>nastawy z telefonu</b>: krzywa, histereza, CWU, grzałka</li>
+        <li>nastawy z telefonu: krzywa, histereza, CWU</li>
         <li>prąd i COP osobno: dom i ciepła woda</li>
-        <li>koszty obok ekogroszku, pelletu, gazu i oleju</li>
-        <li>raport i alarmy tylko przy prawdziwych anomaliach</li>
-        <li>harmonogram CWU na tanie godziny</li>
-        <li><b>dodatek do HA</b>: wklejasz klucz, reszta robi się sama</li>
-        <li>aktualizacje bez kopiowania plików</li>
+        <li>koszty, raport, alarmy, harmonogram CWU</li>
+        <li>dodatek do HA: wklejasz klucz, reszta sama</li>
       </ul>
       <div class="sp"></div>
       <a class="b b2" href="https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03" data-stripe="pro">Kupuję Pro · 149 zł</a>
-      <p class="dop">Płacisz raz. Klucz przychodzi na e-mail od razu po płatności.</p>
+      <p class="dop">Płacisz raz. Klucz od razu na e-mail.</p>
     </div>
-    <div class="ce top pokaz">
-      <span class="wst">polecane: zero grzebania</span>
-      <h3>Zestaw Wi-Fi</h3><p class="dla">Nie chcesz nic wgrywać ani konfigurować.</p>
-      <div class="c">499 <small>zł</small></div>
-      <ul>
-        <li><b>moduł z wgranym programem</b>, przetestowany przed wysyłką</li>
-        <li>licencja Pro w cenie</li>
-        <li>przewód i instrukcja z kodem QR</li>
-        <li>Wi-Fi ustawiasz telefonem w minutę, Home Assistant sam wykrywa moduł</li>
-        <li>wysyłka paczkomatem w cenie</li>
-        <li>zasilacz: ładowarka USB-C od telefonu (nie ma jej w zestawie)</li>
-      </ul>
-      <p class="wtym">w tym: sprzęt 120 zł · licencja 149 zł · przygotowanie 230 zł</p>
-      <div class="sp"></div>
-      <a class="b b1" href="mailto:pompa@woleoze.pl?subject=Zapis%3A%20zestaw%20Wi-Fi%20%28499%20z%C5%82%29&body=Zapisuj%C4%99%20si%C4%99%20na%3A%20zestaw%20Wi-Fi%20%28499%20z%C5%82%29.%0A%0AModel%20pompy%3A%0AZdj%C4%99cie%20ekranu%20menu%2017.2%20sterownika%20%28w%20za%C5%82%C4%85czniku%29%3A%0APaczkomat%20do%20wysy%C5%82ki%20%28kod%29%3A%0AFaktura%20VAT%3F%20Je%C5%9Bli%20tak%2C%20NIP%3A%0A">Zapisuję się na zestaw Wi-Fi</a>
-      <p class="dop">Pierwsza partia: odpiszę z terminem wysyłki i linkiem do płatności. Przy zapisie nic nie płacisz.</p>
-    </div>
-    <div class="ce pokaz">
-      <h3>Zestaw Wi-Fi + LAN</h3><p class="dla">Sterownik daleko od routera albo wolisz kabel.</p>
-      <div class="c">549 <small>zł</small></div>
-      <ul>
-        <li><b>przemysłowa bramka</b> na szynę DIN, kabel sieciowy zamiast Wi-Fi</li>
-        <li>zasilacz w zestawie</li>
-        <li>bez ustawień: dodatek sam znajduje bramkę w sieci</li>
-        <li>licencja Pro, przewód i instrukcja jak w zestawie Wi-Fi</li>
-      </ul>
-      <p class="wtym">w tym: sprzęt 150 zł · licencja 149 zł · przygotowanie 250 zł</p>
-      <div class="sp"></div>
-      <a class="b b2" href="mailto:pompa@woleoze.pl?subject=Zapis%3A%20zestaw%20Wi-Fi%20%2B%20LAN%20%28549%20z%C5%82%29&body=Zapisuj%C4%99%20si%C4%99%20na%3A%20zestaw%20Wi-Fi%20%2B%20LAN%20%28549%20z%C5%82%29.%0A%0AModel%20pompy%3A%0AZdj%C4%99cie%20ekranu%20menu%2017.2%20sterownika%20%28w%20za%C5%82%C4%85czniku%29%3A%0APaczkomat%20do%20wysy%C5%82ki%20%28kod%29%3A%0AFaktura%20VAT%3F%20Je%C5%9Bli%20tak%2C%20NIP%3A%0A">Zapisuję się na zestaw LAN</a>
-      <p class="dop">Odpiszę z terminem wysyłki i linkiem do płatności.</p>
-    </div>
-  </div>
-  <div class="pas299 pokaz">
-    <p><b>Wgranie i konfiguracja · 299 zł.</b> Masz własny moduł Waveshare albo bramkę USR-DR404? Wyślij go paczkomatem. Wgram program, przetestuję i odeślę na mój koszt. Licencja Pro w cenie.</p>
-    <a class="b b2" href="mailto:pompa@woleoze.pl?subject=Zapis%3A%20wgranie%20i%20konfiguracja%20mojego%20modu%C5%82u%20%28299%20z%C5%82%29&body=Zapisuj%C4%99%20si%C4%99%20na%3A%20wgranie%20i%20konfiguracja%20mojego%20modu%C5%82u%20%28299%20z%C5%82%29.%0A%0AModel%20pompy%3A%0AZdj%C4%99cie%20ekranu%20menu%2017.2%20sterownika%20%28w%20za%C5%82%C4%85czniku%29%3A%0APaczkomat%20do%20wysy%C5%82ki%20%28kod%29%3A%0AFaktura%20VAT%3F%20Je%C5%9Bli%20tak%2C%20NIP%3A%0A">Zamawiam wgranie</a>
   </div>
 
-  <div class="tab-w pokaz">
-    <table>
-      <thead><tr><th>Co dostajesz</th><th>Start<span>0 zł</span></th><th>Pro<span>149 zł</span></th><th class="wyr">Zestaw Wi-Fi<span>499 zł</span></th><th>Zestaw LAN<span>549 zł</span></th></tr></thead>
-      <tbody>
-        <tr><td>Karta na integracji Midea, bez sprzętu</td><td class="t">✓</td><td class="t">✓</td><td class="t wyr">✓</td><td class="t">✓</td></tr>
-        <tr><td>Odczyt pompy przez moduł</td><td class="t">✓<small>wgrywasz sam</small></td><td class="t">✓<small>+ zapis</small></td><td class="t wyr">✓<small>wgrany</small></td><td class="t">✓<small>gotowy</small></td></tr>
-        <tr><td>Nastawy instalatora z HA</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td><td class="t">✓</td></tr>
-        <tr><td>Prąd i COP osobno: dom i ciepła woda</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td><td class="t">✓</td></tr>
-        <tr><td>Koszty, raport, alarmy, harmonogram CWU</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td><td class="t">✓</td></tr>
-        <tr><td>Dodatek do HA: instalacja, diagnostyka, poprawki</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td><td class="t">✓</td></tr>
-        <tr><td>Moduł w zestawie</td><td class="n">—</td><td class="n">—</td><td class="t wyr">✓<small>Wi-Fi</small></td><td class="t">✓<small>LAN + Wi-Fi</small></td></tr>
-        <tr><td>Wgrany i przetestowany przed wysyłką</td><td class="n">—</td><td class="n">—</td><td class="t wyr">✓</td><td class="t">✓</td></tr>
-        <tr><td>Zasilacz</td><td class="n">—</td><td class="n">—</td><td class="t wyr">✓<small>ładowarka USB-C</small></td><td class="t">✓<small>w zestawie</small></td></tr>
-      </tbody>
-    </table>
+  <p class="wgranie">Masz własny moduł, ale nie chcesz go wgrywać? <b>Wgranie i konfiguracja · 299 zł</b>: wyślij go paczkomatem, odeślę gotowy z licencją Pro, na mój koszt. <a href="mailto:pompa@woleoze.pl?subject=Zapis%3A%20wgranie%20i%20konfiguracja%20mojego%20modu%C5%82u%20%28299%20z%C5%82%29&body=Zapisuj%C4%99%20si%C4%99%20na%3A%20wgranie%20i%20konfiguracja%20mojego%20modu%C5%82u%20%28299%20z%C5%82%29.%0A%0AModel%20pompy%3A%0AZdj%C4%99cie%20ekranu%20menu%2017.2%20sterownika%20%28w%20za%C5%82%C4%85czniku%29%3A%0APaczkomat%20do%20wysy%C5%82ki%20%28kod%29%3A%0AFaktura%20VAT%3F%20Je%C5%9Bli%20tak%2C%20NIP%3A%0A">Zamawiam wgranie →</a></p>
+
+  <div class="trzy">
+    <div><b>Działa z pompami z listy</b>Midea M-Thermal z czarno-białym sterownikiem. Sprawdzisz w minutę: <a href="#zgodnosc">menu 17.2</a>.</div>
+    <div><b>Montaż: dwie żyły, ok. 15 min</b>Robisz sam albo twój instalator. <a href="https://pompa.woleoze.pl/instrukcja/">Instrukcja montażu</a>.</div>
+    <div><b>Pomoc tylko mailowo</b>Z raportem z panelu. Nikt nie łączy się z twoim domem.</div>
   </div>
-  <p class="drobne">Uczciwie: działa z pompami z listy „Potwierdzone”, sprawdź swoją w minutę (menu 17.2). Dwie żyły do sterownika ściennego podłączasz sam albo robi to twój instalator: ok. 15 minut, <a href="https://pompa.woleoze.pl/instrukcja/">instrukcja montażu</a>. Pomoc tylko mailowo, z raportem z panelu. Nikt nie łączy się z twoim domem. To nie magia: oszczędność zależy od twojej instalacji, panel pokazuje, co się dzieje, i pozwala to poprawić. Ceny brutto. Płatność kartą lub BLIK przez Stripe. Sprzedawca i operator strony: WOLEOZE.PL Sp. z o.o., ul. Biasowicka 8E, 44-264 Jankowice, NIP 6423246378, KRS 0001048206. Faktura VAT na życzenie: po płatności napisz na pompa@woleoze.pl i podaj NIP. Zasady zwrotu i odstąpienia: <a href="#zwrot">w pytaniach niżej</a>.</p>
+
+  <details class="porownaj">
+    <summary>Porównaj dokładnie ↓</summary>
+    <div class="tab-w">
+      <table>
+        <thead><tr><th>Co dostajesz</th><th>Start<span>0 zł</span></th><th>Pro<span>149 zł</span></th><th class="wyr">Zestaw<span>499 / 549 zł</span></th></tr></thead>
+        <tbody>
+          <tr><td>Karta na integracji Midea, bez sprzętu</td><td class="t">✓</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
+          <tr><td>Odczyt pompy przez moduł</td><td class="t">✓<small>wgrywasz sam</small></td><td class="t">✓<small>+ zapis</small></td><td class="t wyr">✓<small>gotowy</small></td></tr>
+          <tr><td>Nastawy instalatora z HA</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
+          <tr><td>Prąd i COP osobno: dom i ciepła woda</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
+          <tr><td>Koszty, raport, alarmy, harmonogram CWU</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
+          <tr><td>Dodatek do HA: instalacja, diagnostyka, poprawki</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
+          <tr><td>Moduł wgrany i przetestowany, w pudełku</td><td class="n">—</td><td class="n">—</td><td class="t wyr">✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+  <p class="drobne">To nie magia: oszczędność zależy od twojej instalacji, panel pokazuje, co się dzieje, i pozwala to poprawić. Płatność kartą lub BLIK przez Stripe. Sprzedawca i operator strony: WOLEOZE.PL Sp. z o.o., ul. Biasowicka 8E, 44-264 Jankowice, NIP 6423246378, KRS 0001048206. Faktura VAT na życzenie: po płatności napisz na pompa@woleoze.pl i podaj NIP. Zasady zwrotu i odstąpienia: <a href="#zwrot">w pytaniach niżej</a>.</p>
 </section>
 
 <!-- CZY TO DLA MNIE -->
@@ -635,7 +656,7 @@ footer p{margin:6px 0}
     <details><summary>A jak nie zadziała z moją pompą?</summary><div class="od"><p>Działa na pompach z płytą Midea M-Thermal i czarno-białym sterownikiem z zaciskami H1/H2 oraz menu 17.2: Rotenso Aquami (u nas AQM120X3 ze sterownikiem KJRH-120H), Kaisai Arctic, Galmet Prima i inne z <a href="#zgodnosc">listy zgodności</a>.</p><p><b>Nie działa</b> z Rotenso Windmi, Heatmi i Airmi, Kaisai KHX, Galmet Airmax3 ani Thermatec: to inne płyty i inne rejestry. Kolorowy sterownik Midea (KJRH-120L/L2, np. Arctic R290) ma te same rejestry w innych skalach. Wersja dla niego jest w przygotowaniu, dziś tego nie sprzedajemy.</p><p><b>Start:</b> nic nie tracisz, jest za darmo. <b>Zestaw:</b> przy zapisie wyślij zdjęcie ekranu menu 17.2, potwierdzę, że pompa pasuje, zanim cokolwiek zapłacisz. <b>Pro samodzielnie:</b> najpierw uruchom Start i sprawdź, czy moduł czyta pompę. Wtedy wiesz, że Pro zadziała.</p><p>Nie wiesz, czy twoja pompa to ta rodzina? Zapytaj w <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/discussions">Discussions</a>, zanim zapłacisz.</p></div></details>
     <details><summary>Czy muszę umieć YAML?</summary><div class="od"><p>Do karty Start nie. Kopiujesz plik, dodajesz zasób i wklejasz gotowy widok: pięć kroków opisanych w README.</p><p>Moduł ESPHome to jeden gotowy plik: wpisujesz hasło do Wi-Fi i wgrywasz. W Pro kreator pyta o twoje encje (licznik prądu, taryfa, powiadomienia) i sam generuje pliki.</p><p>Nie chcesz tego dotykać? Wybierz zestaw: przychodzi wgrany i przetestowany, a dodatek w Home Assistant sam robi panele po wpisaniu klucza.</p></div></details>
     <details><summary>Co jeśli zmienię pompę?</summary><div class="od"><p>Jeśli nowa pompa też jest na płycie Midea M-Thermal ze sterownikiem z zaciskami H1/H2, przepinasz moduł i działa dalej.</p><p>Jeśli to inna marka, rejestry będą inne i ten pakiet nie pomoże. Moduł ESP32 to zwykła płytka: użyjesz jej w innym projekcie ESPHome.</p></div></details>
-    <details><summary>Czego potrzebuję?</summary><div class="od"><p>Home Assistant (np. Raspberry Pi albo Home Assistant Green) i integracji Midea do karty Start. Do pełnego odczytu: moduł ESP32 z RS-485 za ok. 95 zł albo nasz zestaw, plus dwie żyły do sterownika ściennego.</p></div></details>
+    <details><summary>Czego potrzebuję?</summary><div class="od"><p>Home Assistant (np. Raspberry Pi albo Home Assistant Green) i integracji Midea do karty Start. Do pełnego odczytu: moduł ESP32 z RS-485 albo nasz zestaw, plus dwie żyły do sterownika ściennego.</p></div></details>
     <details><summary>Czy moje dane idą do chmury?</summary><div class="od"><p>Odczyty z pompy nie wychodzą z domu. Moduł gada z pompą po kablu i wysyła dane tylko do twojego Home Assistant w domowej sieci.</p><p>Start nie łączy się z nami wcale. Karty Pro pobierają się z naszego serwera licencji: wysyłają tylko klucz i losowy identyfikator instalacji, żadnych odczytów z pompy. Gdy serwer nie odpowiada, karta działa do 7 dni z kopii zapisanej w przeglądarce.</p><p>Karta Start korzysta z integracji Midea, czyli tego samego połączenia, którego używa aplikacja producenta.</p></div></details>
     <details id="zwrot"><summary>Zwrot i odstąpienie: jak to jest?</summary><div class="od"><p><b>Zestaw (sprzęt):</b> masz 14 dni na odstąpienie od zakupu sprzętu bez podawania przyczyny. Szczegóły zwrotów i reklamacji poda regulamin, który publikujemy przed pierwszą wysyłką.</p><p><b>Wgranie i konfiguracja (usługa):</b> po wykonaniu usługi na twoje żądanie prawo do odstąpienia wygasa.</p><p><b>Pro (treść cyfrowa):</b> przy zakupie zgadzasz się, żebym od razu wysłał ci klucz licencji. Z chwilą wysłania klucza tracisz prawo do odstąpienia, bo treści cyfrowej nie da się „oddać”. Dlatego najpierw sprawdź za darmo Start.</p><p>Sprzedawca i operator strony: WOLEOZE.PL Sp. z o.o., ul. Biasowicka 8E, 44-264 Jankowice, NIP 6423246378, KRS 0001048206. Faktura VAT na życzenie: po płatności napisz na pompa@woleoze.pl i podaj NIP.</p></div></details>
   </div>
@@ -713,6 +734,9 @@ if(!RM&&'IntersectionObserver' in window){const io3=new IntersectionObserver(w=>
   const krok=t=>{if(ruszony)return;const d=t-t0;let i=0;while(i<kl.length-2&&d>kl[i+1][0])i++;const [ta,va]=kl[i],[tb,vb]=kl[i+1];
     const k=Math.min(1,Math.max(0,(d-ta)/(tb-ta))),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2,v=va+(vb-va)*e;ustP(v);suw.value=Math.round(v);if(d<kl[kl.length-1][0])requestAnimationFrame(krok)};
   setTimeout(()=>requestAnimationFrame(krok),500)},{threshold:.6});io3.observe(por)}
+
+// przełącznik wariantu zestawu (Wi-Fi / LAN)
+{const z=document.getElementById('zestaw');if(z)z.querySelectorAll('.przel button').forEach(b=>b.addEventListener('click',()=>{z.dataset.w=b.dataset.w;z.querySelectorAll('.przel button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'))}))}
 
 // quiz „czy to dla mnie”
 const st={},wynik=document.getElementById('wynik');
