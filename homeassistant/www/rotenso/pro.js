@@ -13,7 +13,7 @@
 // ⚠ PO DEPLOYU: wpisz rzeczywisty adres Workera w SERWER poniżej.
 const SERWER =
   (typeof window !== 'undefined' && window.ROTENSO_SERWER) ||
-  'https://rotenso-licencje.PODMIEN.workers.dev';
+  'https://rotenso-licencje.strefa-tradingu.workers.dev';
 
 const LINK_ZAKUP = 'https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03';
 const KONTAKT = 'https://github.com/WoleOze/rotenso-midea-modbus-ha#nie-chcesz-grzebać-w-yaml-skonfiguruję-to-za-ciebie';
