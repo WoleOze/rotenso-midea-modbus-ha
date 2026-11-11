@@ -19,7 +19,7 @@ Stan badania: 11.11.2026. Źródła: instrukcje producentów i zgłoszenia użyt
 | Immergas | Magis M (M14T, M30) | zgłoszenia użytkowników |
 | Mitsui, Vivax / Hyundai, Kosner | monobloki na płycie Midea | zgłoszenia użytkowników |
 
-## 🟡 Prawdopodobne (ta sama platforma, mogą być różnice w rejestrach)
+## 🟡 Powinno działać (ta sama płyta, ale nikt jeszcze nie potwierdził; mogą być różnice w rejestrach)
 
 | Marka | Seria | Uwaga |
 |---|---|---|
@@ -29,9 +29,9 @@ Stan badania: 11.11.2026. Źródła: instrukcje producentów i zgłoszenia użyt
 | Baxi / Inventor | HP40-XX-MB, ATS/ATM/ATMH | starsza wersja: adres ustawiany przełącznikiem S3 |
 | Sinclair | pompy ze sterownikiem SWC-120F | instrukcja sterownika ma 17.2 |
 
-## 🧪 Prawie gotowe: szukamy testerów
+## 🧪 Jeszcze nie wiemy, czy działa (szukamy testerów)
 
-Program jest gotowy, brakuje sprawdzenia na żywej pompie. Jeszcze tego nie sprzedajemy.
+Program jest napisany, ale nikt go jeszcze nie podłączył do prawdziwej pompy. Dlatego tego nie sprzedajemy.
 
 | Pompa | Gdzie się podpinasz | Uwaga |
 |---|---|---|

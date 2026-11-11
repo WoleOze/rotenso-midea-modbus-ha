@@ -57,7 +57,7 @@ wcześniej sensorem `template`. Podstawienie licznika do podziału dom/CWU, kosz
 
 Tak, o ile sterownik ścienny to czarno-biały Midea KJRH‑120H (albo inny z tej rodziny) z wyjściem BMS na H1/H2 i menu 17.2. Rotenso Aquami to Midea M‑Thermal pod inną
 marką; ten sam sterownik mają m.in. Kaisai Arctic, Galmet Prima, De Dietrich Modena, York YKF i Immergas Magis M (pełna lista: [zgodność](zgodnosc.md)). Mapa rejestrów jest ta sama –
-różnią się tylko obsługiwane adresy (starsze panele zgłaszają wyjątek 2 dla nowszych rejestrów). Kolorowy panel KJRH‑120L / L2 ma te same numery rejestrów, ale inne skale: ta wersja jest w testach.
+różnią się tylko obsługiwane adresy (starsze panele zgłaszają wyjątek 2 dla nowszych rejestrów). Kolorowy panel KJRH‑120L / L2 ma te same numery rejestrów, ale inne skale: tej wersji nikt jeszcze nie sprawdził na prawdziwej pompie.
 Jeśli masz inny sterownik, rejestry mogą być inne – sprawdź w instrukcji serwisowej rozdział „Lista Modbus” albo napisz na pompa@woleoze.pl.
 
 ## 8. Czy to bezpieczne dla pompy?

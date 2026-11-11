@@ -47,7 +47,7 @@ Uczciwie: to nie magia. Panel pokazuje, co się dzieje w pompie. Oszczędności 
 Decyduje sterownik: płyta **Midea M-Thermal** i panel z zaciskami **H1/H2** oraz menu **17.2 „Adres HMI dla BMS”**.
 
 - ✅ **Potwierdzone:** Rotenso Aquami, Midea M-Thermal R32, Kaisai Arctic, Galmet Prima, De Dietrich Modena, York YKF, Immergas Magis M, Mitsui, Vivax/Hyundai, Kosner.
-- 🟡 **Prawdopodobne:** Ferroli Omnia 3.2, Clivet EDGE, Airwell Wellea, Baxi/Inventor, Sinclair.
+- 🟡 **Powinno działać** (nikt jeszcze nie potwierdził): Ferroli Omnia 3.2, Clivet EDGE, Airwell Wellea, Baxi/Inventor, Sinclair.
 - ❌ **Nie pasuje:** Rotenso Windmi, Heatmi, Airmi, Kospel, Hewalex, Galmet Airmax3, Viessmann Vitocal 100-A.
 
 Pełna lista z modelami i źródłami: [docs/zgodnosc.md](docs/zgodnosc.md) (stan 11.11.2026).
