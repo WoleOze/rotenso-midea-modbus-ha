@@ -17,7 +17,7 @@ Sprawdzone na **Rotenso Aquami AQM120X3** (12 kW, 3 fazy, R32) ze sterownikiem �
 |---|---|---|---|---|
 | Cena | **0 zł** | **149 zł** | **499 zł** | **549 zł** |
 | Karta na integracji Midea, bez dodatkowego sprzętu | ✓ | ✓ | ✓ | ✓ |
-| Odczyt pompy przez moduł (114 odczytów co 5 s) | ✓ (wgrywasz sam) | ✓ + zapis | ✓ gotowy | ✓ gotowy |
+| Odczyt pompy przez moduł (114 odczytów, parametry pracy co 5 s) | ✓ (wgrywasz sam) | ✓ + zapis | ✓ gotowy | ✓ gotowy |
 | Nastawy instalatora z HA (krzywa, histereza, CWU, grzałka) | | ✓ | ✓ | ✓ |
 | Prąd i COP osobno: dom i ciepła woda | | ✓ | ✓ | ✓ |
 | Koszty, raport, alarmy z progami, harmonogram CWU | | ✓ | ✓ | ✓ |
@@ -25,7 +25,7 @@ Sprawdzone na **Rotenso Aquami AQM120X3** (12 kW, 3 fazy, R32) ze sterownikiem �
 | Moduł wgrany i przetestowany, w pudełku | | | moduł ESP32 z RS-485 | bramka RS-485 → LAN i Wi-Fi + zasilacz |
 | | [Instalacja niżej](#instalacja-start-w-5-krokach) | [Kupuję Pro →](https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03) | [Zamawiam →](https://buy.stripe.com/cNieVd2qg9sI7jK6aL3Je05) | [Zamawiam →](https://buy.stripe.com/28E00j4yofR633u7eP3Je06) |
 
-Masz własny moduł, ale nie chcesz go wgrywać? **Wgranie i konfiguracja · 299 zł**: wyślij go paczkomatem, odeślę gotowy z licencją Pro, na mój koszt. [Zamawiam wgranie →](https://buy.stripe.com/3cIfZh6Gw0Wc6fGbv53Je07)
+Masz własny moduł, ale nie chcesz go wgrywać? **Wgranie i konfiguracja · 299 zł**: wysyłasz go paczkomatem, odsyłamy gotowy z licencją Pro, na nasz koszt. [Zamawiam wgranie →](https://buy.stripe.com/3cIfZh6Gw0Wc6fGbv53Je07)
 
 Uczciwie: to nie magia. Panel pokazuje, co się dzieje w pompie. Oszczędności zależą od twojej instalacji i nastaw, nie od samego panelu.
 
@@ -191,13 +191,13 @@ ESPHome, karty i rejestry to wieczór albo dwa dla kogoś, kto robi to pierwszy 
 |---|---|---|
 | **Zestaw Wi-Fi** (moduł ESP32 z RS-485) | **499 zł** | [Zamawiam →](https://buy.stripe.com/cNieVd2qg9sI7jK6aL3Je05) |
 | **Zestaw Wi-Fi + LAN** (bramka RS-485 → LAN i Wi-Fi, zasilacz) | **549 zł** | [Zamawiam →](https://buy.stripe.com/28E00j4yofR633u7eP3Je06) |
-| **Wgranie i konfiguracja** twojego modułu (wysyłasz paczkomatem, odsyłam na mój koszt) | **299 zł** | [Zamawiam →](https://buy.stripe.com/3cIfZh6Gw0Wc6fGbv53Je07) |
+| **Wgranie i konfiguracja** twojego modułu (wysyłasz paczkomatem, odsyłamy na nasz koszt) | **299 zł** | [Zamawiam →](https://buy.stripe.com/3cIfZh6Gw0Wc6fGbv53Je07) |
 
 **To nie dla ciebie, jeśli:** nie masz jeszcze Home Assistant (najpierw postaw HA, np. na Raspberry Pi albo Home Assistant Green) albo twoja pompa nie jest na płycie Midea M-Thermal. Nie wiesz? Wyślij zdjęcie ekranu menu 17.2 na pompa@woleoze.pl, zanim zapłacisz.
 
 Sprzedawca: WOLEOZE.PL Sp. z o.o., ul. Biasowicka 8E, 44-264 Jankowice, Sąd Rejonowy w Gliwicach, X Wydział Gospodarczy KRS, KRS 0001048206, NIP 6423246378, kapitał zakładowy 17 500 zł. Faktura VAT na życzenie: po płatności napisz na pompa@woleoze.pl i podaj NIP.
 
-## Partner technologiczny: woleOZE
+## Projekt woleOZE
 
 Ceny paliw, sprawności kotłów i kalkulatory pochodzą z [woleoze.pl](https://woleoze.pl/pompa-ciepla/).
 

@@ -23,7 +23,7 @@ Pompa (moduł hydrauliczny) rozmawia ze sterownikiem ściennym (HMI, panel z wy�
 magistrali. **Wyjście Modbus RTU dla systemów BMS jest na płytce tego sterownika**, na zaciskach oznaczonych **H1** i **H2** (czasem wyprowadzonych
 na osobną listwę obok zasilania panelu). Nie podłączaj się do zacisków na płycie głównej jednostki – tam H1/H2 to magistrala do panelu, nie Modbus.
 
-![Schemat: moduł Waveshare – sterownik ścienny H1/H2](schemat-modbus-panel.png)
+![Schemat: moduł ESP32 z RS-485 – sterownik ścienny H1/H2](schemat-modbus-panel.png)
 
 Podłączenie (wariant potwierdzony w tym repo):
 
