@@ -118,7 +118,7 @@ Co dokłada Pro:
 
 [Kupuję Pro: 149 zł →](https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03)
 
-Płatność kartą lub BLIK przez Stripe. Sprzedawca: osoba prywatna (działalność nierejestrowana).
+Płatność kartą lub BLIK przez Stripe. Sprzedawca i operator strony: WOLEOZE.PL Sp. z o.o., ul. Biasowicka 8E, 44-264 Jankowice, NIP 6423246378, KRS 0001048206. Faktura VAT na życzenie: po płatności napisz na pompa@woleoze.pl i podaj NIP.
 
 ### Instalacja Pro (klucz)
 
@@ -201,7 +201,7 @@ ESPHome, karty i rejestry to wieczór albo dwa dla kogoś, kto robi to pierwszy 
 
 **To nie dla ciebie, jeśli:** nie masz jeszcze Home Assistant (najpierw postaw HA, np. na Raspberry Pi albo Home Assistant Green) albo twoja pompa nie jest na płycie Midea M-Thermal. Nie wiesz? Zapytaj w [Discussions](https://github.com/WoleOze/rotenso-midea-modbus-ha/discussions), zanim zapłacisz.
 
-Usługę świadczę jako osoba prywatna (działalność nierejestrowana). Masz 14 dni na odstąpienie od umowy, dopóki nie zaczniemy pracy; po wykonaniu usługi za twoją zgodą prawo do odstąpienia wygasa. Fakturę wystawię na życzenie.
+Sprzedawca: WOLEOZE.PL Sp. z o.o., ul. Biasowicka 8E, 44-264 Jankowice, NIP 6423246378, KRS 0001048206. Masz 14 dni na odstąpienie od umowy, dopóki nie zaczniemy pracy; po wykonaniu usługi za twoją zgodą prawo do odstąpienia wygasa. Faktura VAT na życzenie: po płatności napisz na pompa@woleoze.pl i podaj NIP.
 
 ## Partner technologiczny: woleOZE
 
