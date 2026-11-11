@@ -191,6 +191,8 @@ Ceny paliw, sprawności kotłów i kalkulatory pochodzą z [woleoze.pl](https://
 - Czy G12w się opłaca przy pompie: [kalkulator G11 / G12](https://woleoze.pl/kalkulator-g11-g12/).
 - Firma do montażu albo serwisu: [katalog 2427 firm montujących pompy ciepła](https://woleoze.pl/firmy/pompy-ciepla/) (stan 11.11.2026).
 
+**Kontakt w sprawie konfiguracji i Pro:** [pompa@woleoze.pl](mailto:pompa@woleoze.pl)
+
 ## Wsparcie
 
 Wersja Start jest darmowa i taka zostanie. Jeśli zaoszczędziła ci godzin grzebania w rejestrach, możesz postawić kawę:
