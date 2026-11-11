@@ -1,6 +1,6 @@
 # Rotenso Aquami / Midea M-Thermal w Home Assistant
 
-Podgląd pompy ciepła **Rotenso Aquami** (i innych pomp na płycie **Midea M-Thermal**) w Home Assistant. Zaczynasz od karty na integracji Midea, bez żadnego sprzętu. Jeśli chcesz zobaczyć więcej, dokładasz moduł ESP32 z RS-485 podpięty do sterownika ściennego: 114 odczytów co 5 s, bez chmury.
+Podgląd pompy ciepła **Rotenso**, **Kaisai**, **Galmet** i innych pomp na płycie **Midea M-Thermal** w Home Assistant. Zaczynasz od karty na integracji Midea, bez żadnego sprzętu. Jeśli chcesz zobaczyć więcej, dokładasz moduł ESP32 z RS-485 podpięty do sterownika ściennego: 114 odczytów co 5 s, bez chmury.
 
 Sprawdzone na **Rotenso Aquami AQM120X3** (12 kW, 3 fazy, R32) ze sterownikiem ściennym **KJRH-120H** („Reni”). Działa od 9.11.2026.
 
@@ -157,7 +157,7 @@ Jeśli trafiłeś tu przed zakupem: ta instalacja działa dobrze, bo ma bufor, d
 
 ## Ograniczenia
 
-- Testowane na jednym modelu. Rejestry są z listy Modbus Rotenso (instrukcja instalacji, str. 49–60), wspólnej dla Midea M-Thermal, więc inne modele powinny działać, ale sprawdź listę Modbus w instrukcji swojej pompy.
+- Działa z pompami Rotenso, Kaisai i Galmet na płycie Midea M-Thermal; nasza instalacja testowa to Rotenso Aquami AQM120X3. Rejestry są z listy Modbus Rotenso (instrukcja instalacji, str. 49–60), wspólnej dla Midea M-Thermal, więc inne modele powinny działać, ale sprawdź listę Modbus w instrukcji swojej pompy.
 - Chłodzenie, strefa 2 i solary: rejestry są w yaml, karty ich nie pokazują.
 - Przykładowy ekran całego domu (bufor, solary, pompki obiegowe, prąd) jest w `docs/zrzuty/centrum-przyklad.png`. Nie publikujemy go jako gotowca, bo jest szyty pod jedną kotłownię.
 
