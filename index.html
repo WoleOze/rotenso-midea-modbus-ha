@@ -186,8 +186,12 @@ figcaption b{color:var(--txt)}
 .zestaw .b{align-self:flex-start}
 .dwie-ceny{max-width:1000px;margin:18px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .dwie-ceny .ce ul li{margin:6px 0}
-.wgranie{text-align:center;color:var(--mut);margin:22px auto 0;max-width:760px;font-size:15px}
-.wgranie b{color:var(--txt)}
+.baner299{max-width:1000px;margin:20px auto 0;display:flex;align-items:center;gap:18px;padding:20px 24px;border-radius:18px;border:1px solid var(--line2);background:linear-gradient(135deg,rgba(57,192,255,.12),rgba(46,230,166,.08))}
+.baner299 .ik{font-size:32px;line-height:1}
+.baner299 .tx{flex:1;min-width:0}
+.baner299 .tx b{display:block;font-size:18px;color:var(--txt);margin-bottom:3px}
+.baner299 .tx span{color:var(--mut);font-size:15px}
+@media (max-width:640px){.baner299{flex-wrap:wrap;padding:18px}.baner299 .b{width:100%}}
 .porownaj{max-width:1000px;margin:22px auto 0}
 .porownaj summary{cursor:pointer;color:var(--hp);font-weight:700;text-align:center;list-style:none}
 .porownaj summary::-webkit-details-marker{display:none}
@@ -339,6 +343,7 @@ footer p{margin:6px 0}
 .zg .zgl{display:block;margin-top:10px;font-weight:700;font-size:14px;color:var(--hp);text-decoration:none}
 .zg .zgl:hover{text-decoration:underline}
 .zg .zg-nie{grid-column:1/-1}
+.zg .zgo{width:100%;margin:0 0 4px;font-size:13.5px;color:var(--mut)}
 .zg .zg-nie b{margin-right:8px}.zg>div{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}.zg b{width:100%;font-size:16px;margin-bottom:4px}.zg span{font-size:14px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
 </style>
 </head>
@@ -540,7 +545,7 @@ footer p{margin:6px 0}
   <div class="zg pokaz">
     <div><b>✅ Potwierdzone</b><span>Rotenso Aquami</span><span>Midea M-Thermal R32</span><span>Kaisai Arctic</span><span>Galmet Prima</span><span>De Dietrich Modena</span><span>York YKF</span><span>Immergas Magis M</span><span>Mitsui</span><span>Vivax / Hyundai</span><span>Kosner</span></div>
     <div><b>🟡 Prawdopodobne</b><span>Ferroli Omnia 3.2</span><span>Clivet EDGE</span><span>Airwell Wellea</span><span>Baxi / Inventor</span><span>Sinclair</span></div>
-    <div id="testy"><b>🧪 W testach</b><span>Midea z kolorowym panelem (Arctic R290)</span><span>Rotenso Windmi</span><span>Rotenso Heatmi</span><a class="zgl" href="mailto:pompa@woleoze.pl?subject=Zg%C5%82oszenie%20do%20test%C3%B3w%3A%20Pompa%20w%20HA&amp;body=Marka%20i%20model%20pompy%3A%0AZdj%C4%99cie%20ty%C5%82u%20sterownika%20i%20ekranu%20menu%20%28w%20za%C5%82%C4%85czniku%29%3A%0AMasz%20Home%20Assistant%20OS%3F%20%28tak/nie%29%3A%0A">Masz taką pompę? Zgłoś się do testów →</a></div>
+    <div id="testy"><b>🧪 Prawie gotowe: szukamy testerów</b><p class="zgo">Program gotowy, brakuje sprawdzenia na żywej pompie. Jeszcze tego nie sprzedajemy.</p><span>Rotenso Windmi</span><span>Rotenso Heatmi</span><span>Midea z kolorowym panelem (Arctic R290)</span><a class="zgl" href="mailto:pompa@woleoze.pl?subject=Zg%C5%82oszenie%20do%20test%C3%B3w%3A%20Pompa%20w%20HA&amp;body=Marka%20i%20model%20pompy%3A%0AZdj%C4%99cie%20ty%C5%82u%20sterownika%20i%20ekranu%20menu%20%28w%20za%C5%82%C4%85czniku%29%3A%0AMasz%20Home%20Assistant%20OS%3F%20%28tak/nie%29%3A%0A">Masz Windmi albo Heatmi? Zgłoś się do testów →</a></div>
     <div><b>❄️ Klimatyzatory: wkrótce</b><span>Rotenso Mirai, Versu, Revio, Imoto, Ukura</span><span>Midea</span><span>Rotenso Elis, Roni, Teta (później)</span><a class="zgl" href="mailto:pompa@woleoze.pl?subject=Zapis%3A%20klimatyzacja%20w%20Home%20Assistant&amp;body=Marka%20i%20model%20klimatyzatora%3A%0AAplikacja%2C%20z%20kt%C3%B3rej%20dzi%C5%9B%20sterujesz%20%28np.%20NetHome%20Plus%2C%20Smart%20Life%29%3A%0A">Chcesz klimatyzację w HA? Zapisz się →</a></div>
     <div class="zg-nie"><b>❌ Nie pasuje</b><span>Rotenso Airmi</span><span>Kaisai KHX</span><span>Thermatec</span><span>Kospel</span><span>Hewalex</span><span>Galmet Airmax3</span><span>Viessmann Vitocal 100-A</span></div>
   </div>
@@ -596,7 +601,11 @@ footer p{margin:6px 0}
     </div>
   </div>
 
-  <p class="wgranie">Masz własny moduł, ale nie chcesz go wgrywać? <b>Wgranie i konfiguracja · 299 zł</b>: wyślij go paczkomatem, odeślę gotowy z licencją Pro, na mój koszt. <a href="https://buy.stripe.com/3cIfZh6Gw0Wc6fGbv53Je07" data-stripe="wgranie">Zamawiam wgranie →</a></p>
+  <div class="baner299 pokaz">
+    <div class="ik">📦</div>
+    <div class="tx"><b>Masz własny moduł? Wgranie i konfiguracja · 299 zł</b><span>Wyślij go paczkomatem. Wgram program, przetestuję i odeślę na mój koszt, z licencją Pro.</span></div>
+    <a class="b b2" href="https://buy.stripe.com/3cIfZh6Gw0Wc6fGbv53Je07" data-stripe="wgranie">Zamawiam wgranie</a>
+  </div>
 
   <div class="trzy">
     <div><b>Działa z pompami z listy</b>Midea M-Thermal z czarno-białym sterownikiem. Sprawdzisz w minutę: <a href="#zgodnosc">menu 17.2</a>.</div>
@@ -659,7 +668,7 @@ footer p{margin:6px 0}
   <div class="faq">
     <details><summary>149 zł za panel? Po co, skoro Start jest za darmo?</summary><div class="od"><p>Start pokazuje, co pompa robi. Pro pozwala to zmienić i policzyć: nastawy z telefonu, prąd i COP osobno na dom i ciepłą wodę, koszt obok innych paliw, harmonogram CWU na tanie godziny.</p><p>U nas sam harmonogram CWU obciął ok. 2,7 kWh na dobę. U ciebie wynik będzie inny. Dlatego najpierw sprawdź Start za darmo, a Pro kup, gdy zobaczysz, że jest co poprawiać.</p></div></details>
     <details><summary>Czy to bezpieczne dla pompy?</summary><div class="od"><p><b>Start tylko czyta.</b> Moduł nie ma żadnej encji do zapisu, więc niczego w pompie nie zmieni.</p><p><b>Pro zapisuje nastawy</b> tak, jak zmiana w menu serwisanta: po jednej wartości. Karta pokazuje wartości fabryczne obok obecnych, więc zawsze wiesz, do czego wrócić. Po zapisie nastawy serwisowej pompa potrafi wyłączyć ciepłą wodę: pakiet to wykrywa i przypomina.</p><p>Nie podawaj zasilania na H1/H2. Moduł zasilaj tylko z 5 V przez USB-C.</p></div></details>
-    <details><summary>A jak nie zadziała z moją pompą?</summary><div class="od"><p>Działa na pompach z płytą Midea M-Thermal i czarno-białym sterownikiem z zaciskami H1/H2 oraz menu 17.2: Rotenso Aquami (u nas AQM120X3 ze sterownikiem KJRH-120H), Kaisai Arctic, Galmet Prima i inne z <a href="#zgodnosc">listy zgodności</a>.</p><p><b>W testach:</b> Midea z kolorowym panelem (KJRH-120L/L2, np. Arctic R290), Rotenso Windmi i Rotenso Heatmi. Pliki są gotowe, brakuje sprawdzenia na żywej pompie: <a href="#testy">zgłoś się do testów</a>.</p><p><b>Nie działa</b> z Rotenso Airmi, Kaisai KHX, Galmet Airmax3 ani Thermatec: to inne płyty i inne rejestry.</p><p><b>Start:</b> nic nie tracisz, jest za darmo. <b>Zestaw:</b> nie masz pewności, czy pompa pasuje? Przed zakupem wyślij zdjęcie ekranu menu 17.2 na pompa@woleoze.pl, odpowiem, zanim zapłacisz. <b>Pro samodzielnie:</b> najpierw uruchom Start i sprawdź, czy moduł czyta pompę. Wtedy wiesz, że Pro zadziała.</p><p>Nie wiesz, czy twoja pompa to ta rodzina? Zapytaj w <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/discussions">Discussions</a>, zanim zapłacisz.</p></div></details>
+    <details><summary>A jak nie zadziała z moją pompą?</summary><div class="od"><p>Działa na pompach z płytą Midea M-Thermal i czarno-białym sterownikiem z zaciskami H1/H2 oraz menu 17.2: Rotenso Aquami (u nas AQM120X3 ze sterownikiem KJRH-120H), Kaisai Arctic, Galmet Prima i inne z <a href="#zgodnosc">listy zgodności</a>.</p><p><b>Prawie gotowe, szukamy testerów:</b> Rotenso Windmi, Rotenso Heatmi i Midea z kolorowym panelem (KJRH-120L/L2, np. Arctic R290). Program jest gotowy, ale nie sprawdziliśmy go jeszcze na żywej pompie, więc tego nie sprzedajemy. <a href="#testy">Zgłoś się do testów</a>.</p><p><b>Nie działa</b> z Rotenso Airmi, Kaisai KHX, Galmet Airmax3 ani Thermatec: to inne płyty i inne rejestry.</p><p><b>Start:</b> nic nie tracisz, jest za darmo. <b>Zestaw:</b> nie masz pewności, czy pompa pasuje? Przed zakupem wyślij zdjęcie ekranu menu 17.2 na pompa@woleoze.pl, odpowiem, zanim zapłacisz. <b>Pro samodzielnie:</b> najpierw uruchom Start i sprawdź, czy moduł czyta pompę. Wtedy wiesz, że Pro zadziała.</p><p>Nie wiesz, czy twoja pompa to ta rodzina? Zapytaj w <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/discussions">Discussions</a>, zanim zapłacisz.</p></div></details>
     <details><summary>Czy muszę umieć YAML?</summary><div class="od"><p>Do karty Start nie. Kopiujesz plik, dodajesz zasób i wklejasz gotowy widok: pięć kroków opisanych w README.</p><p>Moduł ESPHome to jeden gotowy plik: wpisujesz hasło do Wi-Fi i wgrywasz. W Pro kreator pyta o twoje encje (licznik prądu, taryfa, powiadomienia) i sam generuje pliki.</p><p>Nie chcesz tego dotykać? Wybierz zestaw: przychodzi wgrany i przetestowany, a dodatek w Home Assistant sam robi panele po wpisaniu klucza.</p></div></details>
     <details><summary>Co jeśli zmienię pompę?</summary><div class="od"><p>Jeśli nowa pompa też jest na płycie Midea M-Thermal ze sterownikiem z zaciskami H1/H2, przepinasz moduł i działa dalej.</p><p>Jeśli to inna marka, rejestry będą inne i ten pakiet nie pomoże. Moduł ESP32 to zwykła płytka: użyjesz jej w innym projekcie ESPHome.</p></div></details>
     <details><summary>Czego potrzebuję?</summary><div class="od"><p>Home Assistant (np. Raspberry Pi albo Home Assistant Green) i integracji Midea do karty Start. Do pełnego odczytu: moduł ESP32 z RS-485 albo nasz zestaw, plus dwie żyły do sterownika ściennego.</p></div></details>
