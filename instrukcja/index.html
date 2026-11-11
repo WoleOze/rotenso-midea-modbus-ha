@@ -51,6 +51,7 @@ code{font:14px ui-monospace,Menlo,monospace;background:rgba(127,140,170,.15);pad
     <li><a href="#zanim">1. Zanim zaczniesz</a></li>
     <li><a href="#pompa">2. Ustawienie pompy</a></li>
     <li><a href="#przewody">3. Dwie żyły</a></li>
+    <li><a href="#rotenso-testy">3b. Windmi i Heatmi</a></li>
     <li><a href="#siec">4. Zasilanie i sieć</a></li>
     <li><a href="#ha">5. Home Assistant</a></li>
     <li><a href="#diagnostyka">6. Diagnostyka</a></li>
@@ -90,6 +91,33 @@ code{font:14px ui-monospace,Menlo,monospace;background:rgba(127,140,170,.15);pad
     </ol>
     <img class="schemat" src="../docs/schemat-modbus-panel.png" alt="Schemat: zacisk A+ modułu do H2, B− do H1 na sterowniku ściennym; nie na płycie głównej jednostki" loading="lazy">
     <div class="uw"><b>Tylko sterownik ścienny.</b> Na płycie głównej jednostki też są zaciski H1/H2, ale to magistrala do panelu, nie Modbus. Nie podłączaj się tam.</div>
+  </section>
+
+  <section class="k" id="rotenso-testy">
+    <h2>3b. Rotenso Windmi i Heatmi (wersja testowa)</h2>
+    <p>Te pompy mają inny sterownik niż Midea, więc moduł podłącza się w innym miejscu: na płycie <b>jednostki wewnętrznej</b>, a nie przy sterowniku ściennym. Program jest gotowy, ale czeka na pierwsze sprawdzenie na żywej pompie. Dlatego zestaw dla tych pomp dostajesz tylko po zgłoszeniu do testów.</p>
+    <div class="uw"><b>Tylko instalator albo elektryk.</b> W jednostce wewnętrznej jest 230/400 V. Przed zdjęciem obudowy odetnij zasilanie pompy wyłącznikiem w rozdzielnicy.</div>
+    <div class="dwa">
+      <div class="wariant">
+        <h3>Rotenso Windmi (sterownik ORIS)</h3>
+        <ol class="kroki">
+          <li>Na płycie jednostki wewnętrznej znajdź złącze <b>CN67</b> z zaciskami <b>A, B, E</b>.</li>
+          <li>Połącz: <b>A+ modułu → A</b>, <b>B− modułu → B</b>. Ekran przewodu do E.</li>
+          <li>Nie podłączaj się do <b>CN63 (H1/H2)</b>: to łącze sterownika ORIS.</li>
+          <li>Adres Modbus pompy: fabrycznie <b>11</b>. Program modułu ma go już ustawionego.</li>
+        </ol>
+      </div>
+      <div class="wariant">
+        <h3>Rotenso Heatmi (split)</h3>
+        <ol class="kroki">
+          <li>Na płycie jednostki wewnętrznej znajdź złącze <b>J2</b> z zaciskami <b>A2, B2</b>.</li>
+          <li>Połącz <b>A2</b> i <b>B2</b> z A i B modułu. Brak odczytów? Zamień przewody miejscami.</li>
+          <li>Nie podłączaj się do <b>A1/B1</b>: tam jest sterownik. Po wpięciu tam pompa przestaje ruszać.</li>
+          <li>Adres Modbus: <b>16</b> (przełącznik SW3 na 0 albo 1).</li>
+        </ol>
+      </div>
+    </div>
+    <p>Masz taką pompę? <a href="mailto:pompa@woleoze.pl?subject=Zg%C5%82oszenie%20do%20test%C3%B3w%3A%20Pompa%20w%20HA">Zgłoś się do testów</a> i dołącz zdjęcie płyty jednostki wewnętrznej z widocznymi złączami.</p>
   </section>
 
   <section class="k" id="siec">

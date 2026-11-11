@@ -30,7 +30,7 @@ import urllib.parse
 import urllib.request
 import zipfile
 
-WERSJA = "1.1.0"
+WERSJA = "1.2.0"
 SERWER = os.environ.get("POMPA_SERWER", "https://rotenso-licencje.strefa-tradingu.workers.dev")
 PRO_JS = os.environ.get(
     "POMPA_PRO_JS",
@@ -650,6 +650,37 @@ def odinstaluj():
 # --- diagnostyka --------------------------------------------------------------------
 NIEDOSTEPNE = ("unavailable", "unknown", "", "None", "nan")
 
+# Typ pompy z programu modułu (ESPHome project: „woleoze.pompa-<wariant>” → urządzenie HA: producent/model).
+PLATFORMY = {
+    "midea": ("Midea M-Thermal (czarno-biały sterownik)",
+              "1) Zamień przewody A i B na module. 2) W menu serwisanta: 17.2 adres = 1, HMI SET = 0. "
+              "3) Przewody idą do zacisków H1/H2 sterownika ŚCIENNEGO, nie płyty głównej. 4) Pompa musi być zasilona."),
+    "midea-120l": ("Midea z kolorowym panelem (wersja testowa)",
+                   "1) Zamień przewody A i B na module. 2) W menu serwisanta sprawdź adres Modbus dla BMS = 1. "
+                   "3) Przewody idą do zacisków H1/H2 sterownika ściennego. 4) Pompa musi być zasilona. Wyślij raport: to wersja testowa."),
+    "windmi": ("Rotenso Windmi (wersja testowa)",
+               "1) Przewody idą do złącza CN67 (A, B, E) na płycie jednostki wewnętrznej, NIE do CN63 (H1/H2) ani do sterownika ORIS. "
+               "2) Adres Modbus pompy = 11 (fabrycznie). 3) Zamień A i B. 4) Pompa musi być zasilona. Wyślij raport: to wersja testowa."),
+    "heatmi": ("Rotenso Heatmi (wersja testowa)",
+               "1) Przewody idą do złącza J2, zaciski A2/B2 na płycie jednostki wewnętrznej, NIE A1/B1 (tam jest sterownik). "
+               "2) Adres Modbus = 16 (przełącznik SW3 na 0 albo 1). 3) Zamień A i B. 4) Pompa musi być zasilona. Wyślij raport: to wersja testowa."),
+}
+
+
+def platforma():
+    try:
+        ws = WS()
+        try:
+            for d in ws.wywolaj("config/device_registry/list") or []:
+                model = str(d.get("model") or "")
+                if str(d.get("manufacturer") or "").lower() == "woleoze" and model.startswith("pompa-"):
+                    return model[len("pompa-"):] if model[len("pompa-"):] in PLATFORMY else "midea"
+        finally:
+            ws.zamknij()
+    except Exception:
+        pass
+    return "midea"
+
 
 def diagnostyka():
     wyn = {"czas": datetime.datetime.now().isoformat(timespec="seconds"), "wersja_dodatku": WERSJA,
@@ -690,12 +721,13 @@ def diagnostyka():
             zle("Moduł jest offline.", "Sprawdź zasilanie modułu i Wi-Fi (sieć „pompa-setup” oznacza, że moduł nie zna twojej sieci).")
         else:
             ok("Moduł połączony z Home Assistant.")
+        plat = platforma()
+        wyn["platforma"] = plat
+        ok(f"Pompa: {PLATFORMY[plat][0]}.")
         liczbowe = [e for e in modbus if "kod_bledu" not in e]
         martwe = [e for e in liczbowe if str(nasze[e].get("state")) in NIEDOSTEPNE]
         if liczbowe and len(martwe) / len(liczbowe) > 0.7:
-            zle(f"Brak odczytów z pompy ({len(martwe)} z {len(liczbowe)} encji bez wartości).",
-                "1) Zamień przewody A i B na module. 2) W menu serwisanta: 17.2 adres = 1, HMI SET = 0. "
-                "3) Przewody idą do zacisków H1/H2 sterownika ŚCIENNEGO, nie płyty głównej. 4) Pompa musi być zasilona.")
+            zle(f"Brak odczytów z pompy ({len(martwe)} z {len(liczbowe)} encji bez wartości).", PLATFORMY[plat][1])
         else:
             ok(f"Pompa odpowiada ({len(liczbowe) - len(martwe)} z {len(liczbowe)} odczytów ma wartość).")
         kod = nasze.get("sensor.pompa_modbus_kod_bledu")
