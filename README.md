@@ -100,6 +100,40 @@ Co dokłada Pro:
 
 Płatność kartą lub BLIK przez Stripe. Sprzedawca: osoba prywatna (działalność nierejestrowana).
 
+### Instalacja Pro (klucz)
+
+Po zakupie dostajesz mailem **klucz** w formacie `RPRO-XXXX-XXXX-XXXX-XXXX`. Karty Pro
+działają na tym samym pliku `pro.js` (loader), który pobiera i odświeża kartę po kluczu —
+nie musisz wgrywać `pompa.js`/`koszty.js`/`raport.js` ręcznie.
+
+1. Skopiuj `homeassistant/www/rotenso/pro.js` z tego repo do swojego HA:
+   `/config/www/rotenso/pro.js`.
+2. Dodaj zasób: **Ustawienia → Pulpity → ⋮ → Zasoby → Dodaj** →
+   URL `/local/rotenso/pro.js`, typ **Moduł JavaScript**. Odśwież stronę (Ctrl+F5).
+3. Dodaj kartę (ręczna edycja YAML) i wpisz swój klucz:
+
+   ```yaml
+   type: custom:rotenso-pro
+   karta: pompa            # pompa | koszty | raport
+   klucz: RPRO-XXXX-XXXX-XXXX-XXXX
+   # opcjonalnie nadpisania encji (jak w kartach Start):
+   encje:
+     prad_moc: sensor.moj_licznik_moc
+   woleoze: true
+   ```
+
+   Dla trzech kart dodaj trzy karty z `karta: pompa`, `karta: koszty`, `karta: raport`
+   (ten sam klucz).
+
+4. **Pakiety Pro** (pliki YAML + ESPHome) pobierz jako ZIP z linku z maila
+   (`/v1/pakiety?klucz=…`) i rozpakuj do `/config/packages/` (oraz, dla modułu,
+   wgraj `esphome/pompa-modbus.yaml` w ESPHome). Po zmianach: **Narzędzia
+   programisty → YAML → Sprawdź konfigurację → Zrestartuj**.
+
+Jeden klucz działa na maksymalnie 3 instalacjach. Karta działa też offline (kod
+jest pamiętany lokalnie przez 7 dni). Zły lub wycofany klucz pokazuje kafelek z
+informacją i linkiem do zakupu.
+
 ## Co już dało u nas (dane z HA, 9–11.11.2026)
 
 Te zmiany zrobiliśmy funkcjami wersji Pro (zapis nastaw, harmonogram CWU), a efekt widać w panelach.
