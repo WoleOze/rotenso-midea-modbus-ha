@@ -94,7 +94,7 @@ Szczegóły i pułapki: [docs/podlaczenie.md](docs/podlaczenie.md).
 
 ## Pro
 
-**Pro kupujesz za 149 zł; po płatności w ciągu 24 h dostajesz dostęp do prywatnego repo z plikami i aktualizacjami:** [github.com/WoleOze/rotenso-midea-modbus-ha-pro](https://github.com/WoleOze/rotenso-midea-modbus-ha-pro) (dostęp po zakupie).
+**Pro kupujesz za 149 zł. Zaraz po płatności dostajesz na e-mail klucz licencji (RPRO-…) i link do paczki plików.** Karty Pro pobierają się z serwera licencji i aktualizują same; serwer dostaje tylko klucz i losowy identyfikator instalacji, żadnych odczytów z pompy. Jeden klucz = jeden dom.
 
 Co dokłada Pro:
 
@@ -104,7 +104,7 @@ Co dokłada Pro:
 - **panel Koszty**: prąd pompy godzina po godzinie w twojej taryfie obok tego samego ciepła z ekogroszku, węgla, pelletu, drewna, gazu, LPG, oleju i grzałki,
 - **panel Raport**: alarmy teraz, dziennik dzień / tydzień / miesiąc, raport dobowy do pliku, powiadomienia na telefon tylko przy prawdziwej anomalii, progi do ustawienia,
 - **kreator konfiguracji**: wpisujesz swoje encje (licznik prądu, taryfa, powiadomienia), dostajesz gotowe pliki,
-- **aktualizacje** w prywatnym repo.
+- **aktualizacje kart** same, bez kopiowania plików.
 
 [Kupuję Pro: 149 zł →](https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03)
 
@@ -167,7 +167,7 @@ Jeśli trafiłeś tu przed zakupem: ta instalacja działa dobrze, bo ma bufor, d
 
 ## Ograniczenia
 
-- Działa z pompami Rotenso, Kaisai i Galmet na płycie Midea M-Thermal; nasza instalacja testowa to Rotenso Aquami AQM120X3. Rejestry są z listy Modbus Rotenso (instrukcja instalacji, str. 49–60), wspólnej dla Midea M-Thermal, więc inne modele powinny działać, ale sprawdź listę Modbus w instrukcji swojej pompy.
+- Działa z pompami na płycie Midea M-Thermal z czarno-białym sterownikiem (zaciski H1/H2, menu 17.2), np. Rotenso Aquami, Kaisai Arctic, Galmet Prima; nasza instalacja testowa to Rotenso Aquami AQM120X3. **Nie działa** z Rotenso Windmi, Heatmi, Airmi, Kaisai KHX, Galmet Airmax3 ani Thermatec (inne płyty). Kolorowy sterownik KJRH-120L/L2 ma inne skale rejestrów: wersja w przygotowaniu. Rejestry są z listy Modbus Rotenso (instrukcja instalacji, str. 49–60), wspólnej dla Midea M-Thermal, więc inne modele powinny działać, ale sprawdź listę Modbus w instrukcji swojej pompy.
 - Chłodzenie, strefa 2 i solary: rejestry są w yaml, karty ich nie pokazują.
 - Przykładowy ekran całego domu (bufor, solary, pompki obiegowe, prąd) jest w `docs/zrzuty/centrum-przyklad.png`. Nie publikujemy go jako gotowca, bo jest szyty pod jedną kotłownię.
 
