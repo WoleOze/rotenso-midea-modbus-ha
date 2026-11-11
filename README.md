@@ -9,26 +9,23 @@ Sprawdzone na **Rotenso Aquami AQM120X3** (12 kW, 3 fazy, R32) ze sterownikiem �
 ![Karta Start (przykładowe dane)](docs/zrzuty/start.png)
 *Karta Start na integracji Midea. Przykładowe dane.*
 
-## Trzy wersje
+## Wersje i zestawy
 
-**Start** jest za darmo, działa w pełni i bez limitu czasu. Sprawdzisz na swojej pompie, czy wszystko gada, zanim wydasz złotówkę.
+**Start** jest za darmo, działa w pełni i bez limitu czasu. Sprawdzisz na swojej pompie, czy wszystko gada, zanim wydasz złotówkę. Ceny brutto.
 
-| | **Start** | **Pro** | **Pro + konfiguracja** |
-|---|---|---|---|
-| Cena | **0 zł** | **149 zł** | **249 zł** |
-| Karta na integracji Midea, bez dodatkowego sprzętu: stan, temperatury, prąd, ciepło, COP, przełączniki | ✓ | ✓ | ✓ |
-| Moduł ESPHome: 114 odczytów z pompy co 5 s | ✓ (tylko odczyt) | ✓ | ✓ |
-| Panel Pompa: obieg na żywo, COP teraz, doba pracy, krzywa, nastawy, liczniki, błędy | ✓ (podgląd) | ✓ | ✓ |
-| Schemat podłączenia, FAQ | ✓ | ✓ | ✓ |
-| Zmiana nastaw instalatora z HA (krzywa, histereza, CWU, grzałka) | | ✓ | ✓ |
-| Prąd i COP osobno: dom i ciepła woda | | ✓ | ✓ |
-| Panel Koszty: pompa a ekogroszek, pellet, gaz | | ✓ | ✓ |
-| Panel Raport: dzień / tydzień / miesiąc, alarmy z progami | | ✓ | ✓ |
-| Harmonogram CWU na tanie godziny | | ✓ | ✓ |
-| Kreator konfiguracji i aktualizacje | | ✓ | ✓ |
-| Zdalnie podpinam moduł, panele, alarmy, harmonogram; test odczytu i zapisu nastawy | | | ✓ |
-| Zwrot 100%, jeśli moduł nie złapie komunikacji z pompą | | | ✓ |
-| | [Instalacja niżej](#instalacja-start-w-5-krokach) | [Kupuję Pro →](https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03) | [Zamawiam konfigurację →](https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00) |
+| | **Start** | **Pro** | **Zestaw Wi-Fi** | **Zestaw Wi-Fi + LAN** |
+|---|---|---|---|---|
+| Cena | **0 zł** | **149 zł** | **499 zł** | **549 zł** |
+| Karta na integracji Midea, bez dodatkowego sprzętu | ✓ | ✓ | ✓ | ✓ |
+| Odczyt pompy przez moduł (114 odczytów co 5 s) | ✓ (wgrywasz sam) | ✓ + zapis | ✓ gotowy | ✓ gotowy |
+| Nastawy instalatora z HA (krzywa, histereza, CWU, grzałka) | | ✓ | ✓ | ✓ |
+| Prąd i COP osobno: dom i ciepła woda | | ✓ | ✓ | ✓ |
+| Koszty, raport, alarmy z progami, harmonogram CWU | | ✓ | ✓ | ✓ |
+| Dodatek do HA: instalacja z kluczem, diagnostyka, poprawki | | ✓ | ✓ | ✓ |
+| Moduł wgrany i przetestowany, w pudełku | | | moduł ESP32 z RS-485 | bramka RS-485 → LAN i Wi-Fi + zasilacz |
+| | [Instalacja niżej](#instalacja-start-w-5-krokach) | [Kupuję Pro →](https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03) | [Zamawiam →](https://buy.stripe.com/cNieVd2qg9sI7jK6aL3Je05) | [Zamawiam →](https://buy.stripe.com/28E00j4yofR633u7eP3Je06) |
+
+Masz własny moduł, ale nie chcesz go wgrywać? **Wgranie i konfiguracja · 299 zł**: wyślij go paczkomatem, odeślę gotowy z licencją Pro, na mój koszt. [Zamawiam wgranie →](https://buy.stripe.com/3cIfZh6Gw0Wc6fGbv53Je07)
 
 Uczciwie: to nie magia. Panel pokazuje, co się dzieje w pompie. Oszczędności zależą od twojej instalacji i nastaw, nie od samego panelu.
 
@@ -181,27 +178,24 @@ Jeśli trafiłeś tu przed zakupem: ta instalacja działa dobrze, bo ma bufor, d
 - Chłodzenie, strefa 2 i solary: rejestry są w yaml, karty ich nie pokazują.
 - Przykładowy ekran całego domu (bufor, solary, pompki obiegowe, prąd) jest w `docs/zrzuty/centrum-przyklad.png`. Nie publikujemy go jako gotowca, bo jest szyty pod jedną kotłownię.
 
-## Nie chcesz grzebać w YAML? Skonfiguruję to za ciebie
+## Nie chcesz grzebać w YAML? Weź zestaw
 
-ESPHome, karty i rejestry to wieczór albo dwa dla kogoś, kto robi to pierwszy raz. Mogę zrobić to zdalnie za ciebie.
+ESPHome, karty i rejestry to wieczór albo dwa dla kogoś, kto robi to pierwszy raz. Zestaw przychodzi gotowy:
 
-**Co dostajesz:** wszystko z Pro. Moduł gada z pompą, w Home Assistant masz panele Start, Pompa, Koszty i Raport, podział prądu i COP na dom i CWU, alarmy z progami dobranymi do twojej instalacji i harmonogram CWU na tanie godziny. Na koniec sprawdzamy razem odczyty i jeden zapis nastawy.
+- moduł z wgranym programem, przetestowany przed wysyłką, z licencją Pro;
+- podpinasz dwie żyły do sterownika ściennego ([instrukcja montażu](https://pompa.woleoze.pl/instrukcja/)), Home Assistant sam wykrywa moduł;
+- dodatek „Pompa w HA” po wpisaniu klucza zakłada pakiety, karty i pulpit, a potem sam sprawdza, czy wszystko działa;
+- pomoc tylko mailowo, z raportem z panelu. Nikt nie łączy się z twoim Home Assistant.
 
-**Dlaczego warto:** u nas sam harmonogram CWU obciął zużycie o 2,7 kWh dziennie, to ok. 800 zł rocznie przy G12w (dane z HA, 9–11.11.2026). U ciebie wynik będzie inny, ale pokażą go te same karty.
-
-| Usługa | Cena | |
+| | Cena | |
 |---|---|---|
-| **Pro + zdalna konfiguracja** (do 3 h pracy) | **249 zł** | [Zamawiam konfigurację →](https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00) |
-| Wgranie modułu: zamawiasz moduł z dostawą do mojego paczkomatu, ja wgrywam i odsyłam | + 39 zł | [Dopłata za wgranie →](https://buy.stripe.com/7sY4gz4yo5cs33u42D3Je01) |
-| Poprawki po konfiguracji (30 min; 2 szt. = 1 h) | 50 zł | [Poprawki →](https://buy.stripe.com/eVqbJ1aWM7kA6fG8iT3Je02) |
+| **Zestaw Wi-Fi** (moduł ESP32 z RS-485) | **499 zł** | [Zamawiam →](https://buy.stripe.com/cNieVd2qg9sI7jK6aL3Je05) |
+| **Zestaw Wi-Fi + LAN** (bramka RS-485 → LAN i Wi-Fi, zasilacz) | **549 zł** | [Zamawiam →](https://buy.stripe.com/28E00j4yofR633u7eP3Je06) |
+| **Wgranie i konfiguracja** twojego modułu (wysyłasz paczkomatem, odsyłam na mój koszt) | **299 zł** | [Zamawiam →](https://buy.stripe.com/3cIfZh6Gw0Wc6fGbv53Je07) |
 
-**Gwarancja:** jeśli moduł nie złapie komunikacji z twoją pompą, oddaję 100%.
+**To nie dla ciebie, jeśli:** nie masz jeszcze Home Assistant (najpierw postaw HA, np. na Raspberry Pi albo Home Assistant Green) albo twoja pompa nie jest na płycie Midea M-Thermal. Nie wiesz? Wyślij zdjęcie ekranu menu 17.2 na pompa@woleoze.pl, zanim zapłacisz.
 
-**Jak to wygląda:** płacisz (karta, BLIK) i w formularzu podajesz model pompy → w ciągu 24 h w dni robocze piszę do ciebie mailem i ustalamy termin → łączymy się zdalnie z twoim Home Assistant.
-
-**To nie dla ciebie, jeśli:** nie masz jeszcze Home Assistant (najpierw postaw HA, np. na Raspberry Pi albo Home Assistant Green) albo twoja pompa nie jest na płycie Midea M-Thermal. Nie wiesz? Zapytaj w [Discussions](https://github.com/WoleOze/rotenso-midea-modbus-ha/discussions), zanim zapłacisz.
-
-Sprzedawca: WOLEOZE.PL Sp. z o.o., ul. Biasowicka 8E, 44-264 Jankowice, NIP 6423246378, KRS 0001048206. Masz 14 dni na odstąpienie od umowy, dopóki nie zaczniemy pracy; po wykonaniu usługi za twoją zgodą prawo do odstąpienia wygasa. Faktura VAT na życzenie: po płatności napisz na pompa@woleoze.pl i podaj NIP.
+Sprzedawca: WOLEOZE.PL Sp. z o.o., ul. Biasowicka 8E, 44-264 Jankowice, NIP 6423246378, KRS 0001048206. Faktura VAT na życzenie: po płatności napisz na pompa@woleoze.pl i podaj NIP.
 
 ## Partner technologiczny: woleOZE
 

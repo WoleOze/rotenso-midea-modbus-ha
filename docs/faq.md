@@ -14,7 +14,7 @@ Po kolei:
 6. **Wyjątek 2 (illegal data address)** przy pojedynczych rejestrach to nie awaria: starsze sterowniki nie znają części adresów (np. 11–12) – te
    są w YAML pominięte.
 
-Dalej nic? [Podłączę to zdalnie](https://github.com/WoleOze/rotenso-midea-modbus-ha#nie-chcesz-grzebać-w-yaml-skonfiguruję-to-za-ciebie): 249 zł, zwrot 100%, jeśli moduł nie złapie komunikacji.
+Dalej nic? Kliknij w dodatku „Pompa w HA” → „Wyślij raport” i napisz na pompa@woleoze.pl. Nie chcesz grzebać sam? [Zestaw gotowy do podpięcia](https://buy.stripe.com/cNieVd2qg9sI7jK6aL3Je05) albo [wgranie twojego modułu](https://buy.stripe.com/3cIfZh6Gw0Wc6fGbv53Je07).
 
 ## 2. Czy mogę pomylić A z B i coś spalić?
 
