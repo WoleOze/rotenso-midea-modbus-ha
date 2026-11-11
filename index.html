@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pompa ciepła w Home Assistant</title>
-<meta name="description" content="Rotenso Aquami, Kaisai Arctic, Galmet Prima i inne pompy na płycie Midea M-Thermal w Home Assistant: COP, prąd osobno na dom i ciepłą wodę, koszt obok pelletu i ekogroszku, starty sprężarki, nastawy z telefonu. Start za darmo, Pro 149 zł, konfiguracja za ciebie 249 zł.">
+<meta name="description" content="Rotenso Aquami, Kaisai Arctic, Galmet Prima i inne pompy na płycie Midea M-Thermal w Home Assistant: COP, prąd osobno na dom i ciepłą wodę, koszt obok pelletu i ekogroszku, starty sprężarki, nastawy z telefonu. Start za darmo, Pro 149 zł, zestaw gotowy do podpięcia od 499 zł.">
 <meta name="theme-color" content="#050a16">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <meta property="og:type" content="website">
@@ -160,7 +160,11 @@ figure{margin:0}
 figcaption{font-size:13.5px;color:var(--mut);margin-top:9px;padding:0 4px}
 figcaption b{color:var(--txt)}
 /* cennik */
-.ceny{display:grid;gap:18px;grid-template-columns:repeat(3,1fr);align-items:stretch}
+.ceny{display:grid;gap:18px;grid-template-columns:repeat(4,1fr);align-items:stretch}
+@media (max-width:1180px){.ceny{grid-template-columns:repeat(2,1fr)}}
+.wtym{font-size:12.5px;color:var(--mut);margin:-4px 0 0}
+.pas299{margin-top:18px;background:var(--panel);border:1px dashed var(--line2);border-radius:18px;padding:16px 20px;display:flex;gap:14px 20px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.pas299 p{margin:0;color:var(--mut);max-width:640px}.pas299 b{color:var(--txt)}
 .ce{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:12px;position:relative;min-width:0}
 .ce.top{border:2px solid var(--hp);background:linear-gradient(180deg,rgba(57,192,255,.10),rgba(13,24,50,.85) 40%);box-shadow:0 0 0 6px rgba(57,192,255,.07),0 24px 70px rgba(57,192,255,.18)}
 .wst{position:absolute;top:-13px;left:22px;background:linear-gradient(135deg,#39c0ff,#2ee6a6);color:#03121e;font-weight:900;font-size:12px;padding:4px 12px;border-radius:999px;letter-spacing:.03em}
@@ -320,12 +324,12 @@ footer p{margin:6px 0}
     <p class="lead">Sterownik na ścianie pokazuje kilka liczb. Tu widzisz całą pompę: <b>COP</b>, <b>prąd osobno na dom i ciepłą wodę</b>, <b>koszt obok pelletu i ekogroszku</b>, starty sprężarki i nastawy instalatora. 114 odczytów co 5 sekund, w twoim Home Assistant.</p>
     <div class="btns">
       <a class="b b1" href="#ceny">Zacznij za darmo</a>
-      <a class="b b2" href="https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00">Skonfiguruj za mnie · 249 zł</a>
+      <a class="b b2" href="#ceny">Zestaw gotowy do podpięcia · od 499 zł</a>
     </div>
     <ul class="dowody">
       <li>bez chmury</li>
       <li>działa w 15 min z integracją Midea</li>
-      <li>zwrot 100% przy konfiguracji</li>
+      <li>instalacja w HA: wklejasz klucz, reszta sama</li>
     </ul>
   </div>
 
@@ -507,76 +511,90 @@ footer p{margin:6px 0}
   <p style="text-align:center;margin-top:14px"><a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/zgodnosc.md">Pełna lista z modelami i źródłami →</a> · <span style="color:var(--mut)">stan 11.11.2026</span></p>
 </section>
 <section id="ceny">
-  <div class="nag pokaz"><span class="nadt">Trzy drogi</span><h2>Zacznij za darmo. Dokup, gdy zobaczysz, że działa.</h2><p>Start działa w pełni i bez limitu czasu. Sprawdzisz na swojej pompie, czy wszystko gada, zanim wydasz złotówkę.</p></div>
+  <div class="nag pokaz"><span class="nadt">Cennik</span><h2>Wybierz, ile chcesz robić sam</h2><p>Start sprawdzisz za darmo. Płacisz dopiero, gdy wiesz, że twoja pompa rozmawia z Home Assistant. Ceny brutto.</p></div>
   <div class="ceny">
     <div class="ce pokaz">
       <h3>Start</h3><p class="dla">Sprawdzasz, czy to dla ciebie.</p>
       <div class="c">0 <small>zł</small></div>
       <ul>
         <li><b>karta na integracji Midea</b>, bez żadnego sprzętu</li>
-        <li><b>moduł ESP do odczytu</b>: 114 odczytów z pompy co 5 s</li>
-        <li>panel Pompa w podglądzie: obieg, COP teraz, doba pracy, krzywa, błędy</li>
-        <li>schemat podłączenia, FAQ</li>
-        <li>bez limitu czasu</li>
+        <li>moduł do odczytu (wgrywasz sam): 114 odczytów co 5 s</li>
+        <li>podgląd panelu: obieg, COP teraz, doba pracy</li>
+        <li><a href="https://pompa.woleoze.pl/instrukcja/">instrukcja</a> i FAQ</li>
       </ul>
       <div class="sp"></div>
       <a class="b b2" href="https://github.com/WoleOze/rotenso-midea-modbus-ha">Pobierz za darmo</a>
     </div>
     <div class="ce pokaz">
-      <h3>Pro</h3><p class="dla">Robisz sam, chcesz pełny obraz.</p>
-      <div class="c">149 <small>zł · jednorazowo</small></div>
+      <h3>Pro</h3><p class="dla">Masz moduł i umiesz go podpiąć.</p>
+      <div class="c">149 <small>zł</small></div>
       <ul>
-        <li>wszystko ze Startu</li>
-        <li><b>zmiana nastaw instalatora z HA</b>: krzywa, histereza, CWU, grzałka</li>
+        <li><b>nastawy z telefonu</b>: krzywa, histereza, CWU, grzałka</li>
         <li>prąd i COP osobno: dom i ciepła woda</li>
-        <li>panel Koszty: pompa a ekogroszek, pellet, gaz</li>
-        <li>panel Raport i alarmy z progami</li>
+        <li>koszty obok ekogroszku, pelletu, gazu i oleju</li>
+        <li>raport i alarmy tylko przy prawdziwych anomaliach</li>
         <li>harmonogram CWU na tanie godziny</li>
-        <li>kreator konfiguracji</li>
-        <li><b>klucz licencji na e-mail zaraz po płatności</b>, aktualizacje kart same</li>
+        <li><b>dodatek do HA</b>: wklejasz klucz, reszta robi się sama</li>
+        <li>aktualizacje bez kopiowania plików</li>
       </ul>
       <div class="sp"></div>
       <a class="b b2" href="https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03" data-stripe="pro">Kupuję Pro · 149 zł</a>
-      <p class="dop">Klucz przychodzi na e-mail zaraz po płatności.</p>
+      <p class="dop">Płacisz raz. Klucz przychodzi na e-mail od razu po płatności.</p>
     </div>
     <div class="ce top pokaz">
       <span class="wst">polecane: zero grzebania</span>
-      <h3>Pro + konfiguracja za ciebie</h3><p class="dla">Ja to podpinam, ty patrzysz na wyniki.</p>
-      <div class="c">249 <small>zł · jednorazowo</small></div>
+      <h3>Zestaw Wi-Fi</h3><p class="dla">Nie chcesz nic wgrywać ani konfigurować.</p>
+      <div class="c">499 <small>zł</small></div>
       <ul>
-        <li>wszystko z Pro</li>
-        <li><b>zdalnie podpinam</b> moduł, panele, alarmy i harmonogram (do 3 h pracy)</li>
-        <li>dobieram progi alarmów do twojej instalacji</li>
-        <li>razem sprawdzamy odczyt i zapis jednej nastawy</li>
-        <li>wgranie modułu wysłanego paczkomatem: <a href="https://buy.stripe.com/7sY4gz4yo5cs33u42D3Je01">+39 zł</a></li>
+        <li><b>moduł z wgranym programem</b>, przetestowany przed wysyłką</li>
+        <li>licencja Pro w cenie</li>
+        <li>przewód i instrukcja z kodem QR</li>
+        <li>Wi-Fi ustawiasz telefonem w minutę, Home Assistant sam wykrywa moduł</li>
+        <li>wysyłka paczkomatem w cenie</li>
+        <li>zasilacz: ładowarka USB-C od telefonu (nie ma jej w zestawie)</li>
       </ul>
-      <div class="gw">Zwrot 100%, jeśli moduł nie złapie komunikacji z twoją pompą.</div>
+      <p class="wtym">w tym: sprzęt 120 zł · licencja 149 zł · przygotowanie 230 zł</p>
       <div class="sp"></div>
-      <a class="b b1" href="https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00">Zamawiam konfigurację · 249 zł</a>
-      <p class="dop">Odezwę się mailem w ciągu 24 h w dni robocze.</p>
+      <a class="b b1" href="mailto:pompa@woleoze.pl?subject=Zapis%3A%20zestaw%20Wi-Fi%20%28499%20z%C5%82%29&body=Zapisuj%C4%99%20si%C4%99%20na%3A%20zestaw%20Wi-Fi%20%28499%20z%C5%82%29.%0A%0AModel%20pompy%3A%0AZdj%C4%99cie%20ekranu%20menu%2017.2%20sterownika%20%28w%20za%C5%82%C4%85czniku%29%3A%0APaczkomat%20do%20wysy%C5%82ki%20%28kod%29%3A%0AFaktura%20VAT%3F%20Je%C5%9Bli%20tak%2C%20NIP%3A%0A">Zapisuję się na zestaw Wi-Fi</a>
+      <p class="dop">Pierwsza partia: odpiszę z terminem wysyłki i linkiem do płatności. Przy zapisie nic nie płacisz.</p>
     </div>
+    <div class="ce pokaz">
+      <h3>Zestaw Wi-Fi + LAN</h3><p class="dla">Sterownik daleko od routera albo wolisz kabel.</p>
+      <div class="c">549 <small>zł</small></div>
+      <ul>
+        <li><b>przemysłowa bramka</b> na szynę DIN, kabel sieciowy zamiast Wi-Fi</li>
+        <li>zasilacz w zestawie</li>
+        <li>bez ustawień: dodatek sam znajduje bramkę w sieci</li>
+        <li>licencja Pro, przewód i instrukcja jak w zestawie Wi-Fi</li>
+      </ul>
+      <p class="wtym">w tym: sprzęt 150 zł · licencja 149 zł · przygotowanie 250 zł</p>
+      <div class="sp"></div>
+      <a class="b b2" href="mailto:pompa@woleoze.pl?subject=Zapis%3A%20zestaw%20Wi-Fi%20%2B%20LAN%20%28549%20z%C5%82%29&body=Zapisuj%C4%99%20si%C4%99%20na%3A%20zestaw%20Wi-Fi%20%2B%20LAN%20%28549%20z%C5%82%29.%0A%0AModel%20pompy%3A%0AZdj%C4%99cie%20ekranu%20menu%2017.2%20sterownika%20%28w%20za%C5%82%C4%85czniku%29%3A%0APaczkomat%20do%20wysy%C5%82ki%20%28kod%29%3A%0AFaktura%20VAT%3F%20Je%C5%9Bli%20tak%2C%20NIP%3A%0A">Zapisuję się na zestaw LAN</a>
+      <p class="dop">Odpiszę z terminem wysyłki i linkiem do płatności.</p>
+    </div>
+  </div>
+  <div class="pas299 pokaz">
+    <p><b>Wgranie i konfiguracja · 299 zł.</b> Masz własny moduł Waveshare albo bramkę USR-DR404? Wyślij go paczkomatem. Wgram program, przetestuję i odeślę na mój koszt. Licencja Pro w cenie.</p>
+    <a class="b b2" href="mailto:pompa@woleoze.pl?subject=Zapis%3A%20wgranie%20i%20konfiguracja%20mojego%20modu%C5%82u%20%28299%20z%C5%82%29&body=Zapisuj%C4%99%20si%C4%99%20na%3A%20wgranie%20i%20konfiguracja%20mojego%20modu%C5%82u%20%28299%20z%C5%82%29.%0A%0AModel%20pompy%3A%0AZdj%C4%99cie%20ekranu%20menu%2017.2%20sterownika%20%28w%20za%C5%82%C4%85czniku%29%3A%0APaczkomat%20do%20wysy%C5%82ki%20%28kod%29%3A%0AFaktura%20VAT%3F%20Je%C5%9Bli%20tak%2C%20NIP%3A%0A">Zamawiam wgranie</a>
   </div>
 
   <div class="tab-w pokaz">
     <table>
-      <thead><tr><th>Co dostajesz</th><th>Start<span>0 zł</span></th><th>Pro<span>149 zł</span></th><th class="wyr">Pro + konf.<span>249 zł</span></th></tr></thead>
+      <thead><tr><th>Co dostajesz</th><th>Start<span>0 zł</span></th><th>Pro<span>149 zł</span></th><th class="wyr">Zestaw Wi-Fi<span>499 zł</span></th><th>Zestaw LAN<span>549 zł</span></th></tr></thead>
       <tbody>
-        <tr><td>Karta na integracji Midea, bez sprzętu</td><td class="t">✓</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
-        <tr><td>Moduł ESPHome: 114 odczytów co 5 s</td><td class="t">✓<small>odczyt</small></td><td class="t">✓<small>+ zapis</small></td><td class="t wyr">✓</td></tr>
-        <tr><td>Panel Pompa: obieg, COP, doba pracy, krzywa</td><td class="t">✓<small>podgląd</small></td><td class="t">✓</td><td class="t wyr">✓</td></tr>
-        <tr><td>Schemat podłączenia, FAQ</td><td class="t">✓</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
-        <tr><td>Zmiana nastaw instalatora z HA</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
-        <tr><td>Prąd i COP osobno: dom i ciepła woda</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
-        <tr><td>Panel Koszty: pompa a inne paliwa</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
-        <tr><td>Panel Raport, alarmy z progami</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
-        <tr><td>Harmonogram CWU na tanie godziny</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
-        <tr><td>Kreator, automatyczne aktualizacje kart</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td></tr>
-        <tr><td>Zdalna konfiguracja, test odczytu i zapisu</td><td class="n">—</td><td class="n">—</td><td class="t wyr">✓</td></tr>
-        <tr><td>Zwrot 100%, gdy moduł nie złapie komunikacji</td><td class="n">—</td><td class="n">—</td><td class="t wyr">✓</td></tr>
+        <tr><td>Karta na integracji Midea, bez sprzętu</td><td class="t">✓</td><td class="t">✓</td><td class="t wyr">✓</td><td class="t">✓</td></tr>
+        <tr><td>Odczyt pompy przez moduł</td><td class="t">✓<small>wgrywasz sam</small></td><td class="t">✓<small>+ zapis</small></td><td class="t wyr">✓<small>wgrany</small></td><td class="t">✓<small>gotowy</small></td></tr>
+        <tr><td>Nastawy instalatora z HA</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td><td class="t">✓</td></tr>
+        <tr><td>Prąd i COP osobno: dom i ciepła woda</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td><td class="t">✓</td></tr>
+        <tr><td>Koszty, raport, alarmy, harmonogram CWU</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td><td class="t">✓</td></tr>
+        <tr><td>Dodatek do HA: instalacja, diagnostyka, poprawki</td><td class="n">—</td><td class="t">✓</td><td class="t wyr">✓</td><td class="t">✓</td></tr>
+        <tr><td>Moduł w zestawie</td><td class="n">—</td><td class="n">—</td><td class="t wyr">✓<small>Wi-Fi</small></td><td class="t">✓<small>LAN + Wi-Fi</small></td></tr>
+        <tr><td>Wgrany i przetestowany przed wysyłką</td><td class="n">—</td><td class="n">—</td><td class="t wyr">✓</td><td class="t">✓</td></tr>
+        <tr><td>Zasilacz</td><td class="n">—</td><td class="n">—</td><td class="t wyr">✓<small>ładowarka USB-C</small></td><td class="t">✓<small>w zestawie</small></td></tr>
       </tbody>
     </table>
   </div>
-  <p class="drobne">Uczciwie: to nie magia. Oszczędność zależy od twojej instalacji i nastaw. Panel pokazuje, co się dzieje, i pozwala to poprawić. Płatność kartą lub BLIK przez Stripe. Pro: klucz licencji na e-mail zaraz po płatności, jeden klucz na jeden dom. Sprzedawca i operator strony: WOLEOZE.PL Sp. z o.o., ul. Biasowicka 8E, 44-264 Jankowice, NIP 6423246378, KRS 0001048206. Faktura VAT na życzenie: po płatności napisz na pompa@woleoze.pl i podaj NIP. Zasady zwrotu i odstąpienia: <a href="#zwrot">w pytaniach niżej</a>.</p>
+  <p class="drobne">Uczciwie: działa z pompami z listy „Potwierdzone”, sprawdź swoją w minutę (menu 17.2). Dwie żyły do sterownika ściennego podłączasz sam albo robi to twój instalator: ok. 15 minut, <a href="https://pompa.woleoze.pl/instrukcja/">instrukcja montażu</a>. Pomoc tylko mailowo, z raportem z panelu. Nikt nie łączy się z twoim domem. To nie magia: oszczędność zależy od twojej instalacji, panel pokazuje, co się dzieje, i pozwala to poprawić. Ceny brutto. Płatność kartą lub BLIK przez Stripe. Sprzedawca i operator strony: WOLEOZE.PL Sp. z o.o., ul. Biasowicka 8E, 44-264 Jankowice, NIP 6423246378, KRS 0001048206. Faktura VAT na życzenie: po płatności napisz na pompa@woleoze.pl i podaj NIP. Zasady zwrotu i odstąpienia: <a href="#zwrot">w pytaniach niżej</a>.</p>
 </section>
 
 <!-- CZY TO DLA MNIE -->
@@ -591,7 +609,7 @@ footer p{margin:6px 0}
     <div class="wynik" id="wynik" aria-live="polite">
       <span class="nadt">Twoja droga</span>
       <h3>Odpowiedz na trzy pytania</h3>
-      <p>Na podstawie trzech odpowiedzi polecę jedną z dróg: Start, Pro albo konfigurację za ciebie.</p>
+      <p>Na podstawie trzech odpowiedzi polecę jedną z dróg: Start, Pro albo zestaw gotowy do podpięcia.</p>
     </div>
   </div>
 </section>
@@ -614,12 +632,12 @@ footer p{margin:6px 0}
   <div class="faq">
     <details><summary>149 zł za panel? Po co, skoro Start jest za darmo?</summary><div class="od"><p>Start pokazuje, co pompa robi. Pro pozwala to zmienić i policzyć: nastawy z telefonu, prąd i COP osobno na dom i ciepłą wodę, koszt obok innych paliw, harmonogram CWU na tanie godziny.</p><p>U nas sam harmonogram CWU obciął ok. 2,7 kWh na dobę. U ciebie wynik będzie inny. Dlatego najpierw sprawdź Start za darmo, a Pro kup, gdy zobaczysz, że jest co poprawiać.</p></div></details>
     <details><summary>Czy to bezpieczne dla pompy?</summary><div class="od"><p><b>Start tylko czyta.</b> Moduł nie ma żadnej encji do zapisu, więc niczego w pompie nie zmieni.</p><p><b>Pro zapisuje nastawy</b> tak, jak zmiana w menu serwisanta: po jednej wartości. Karta pokazuje wartości fabryczne obok obecnych, więc zawsze wiesz, do czego wrócić. Po zapisie nastawy serwisowej pompa potrafi wyłączyć ciepłą wodę: pakiet to wykrywa i przypomina.</p><p>Nie podawaj zasilania na H1/H2. Moduł zasilaj tylko z 5 V przez USB-C.</p></div></details>
-    <details><summary>A jak nie zadziała z moją pompą?</summary><div class="od"><p>Działa na pompach z płytą Midea M-Thermal i czarno-białym sterownikiem z zaciskami H1/H2 oraz menu 17.2: Rotenso Aquami (u nas AQM120X3 ze sterownikiem KJRH-120H), Kaisai Arctic, Galmet Prima i inne z <a href="#zgodnosc">listy zgodności</a>.</p><p><b>Nie działa</b> z Rotenso Windmi, Heatmi i Airmi, Kaisai KHX, Galmet Airmax3 ani Thermatec: to inne płyty i inne rejestry. Kolorowy sterownik Midea (KJRH-120L/L2, np. Arctic R290) ma te same rejestry w innych skalach. Wersja dla niego jest w przygotowaniu, dziś tego nie sprzedajemy.</p><p><b>Start:</b> nic nie tracisz, jest za darmo. <b>Konfiguracja:</b> jeśli moduł nie złapie komunikacji z pompą, oddaję 100%. <b>Pro samodzielnie:</b> najpierw uruchom Start i sprawdź, czy moduł czyta pompę. Wtedy wiesz, że Pro zadziała.</p><p>Nie wiesz, czy twoja pompa to ta rodzina? Zapytaj w <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/discussions">Discussions</a>, zanim zapłacisz.</p></div></details>
-    <details><summary>Czy muszę umieć YAML?</summary><div class="od"><p>Do karty Start nie. Kopiujesz plik, dodajesz zasób i wklejasz gotowy widok: pięć kroków opisanych w README.</p><p>Moduł ESPHome to jeden gotowy plik: wpisujesz hasło do Wi-Fi i wgrywasz. W Pro kreator pyta o twoje encje (licznik prądu, taryfa, powiadomienia) i sam generuje pliki.</p><p>Nie chcesz tego dotykać? Wybierz konfigurację za ciebie: łączę się zdalnie i robię wszystko.</p></div></details>
+    <details><summary>A jak nie zadziała z moją pompą?</summary><div class="od"><p>Działa na pompach z płytą Midea M-Thermal i czarno-białym sterownikiem z zaciskami H1/H2 oraz menu 17.2: Rotenso Aquami (u nas AQM120X3 ze sterownikiem KJRH-120H), Kaisai Arctic, Galmet Prima i inne z <a href="#zgodnosc">listy zgodności</a>.</p><p><b>Nie działa</b> z Rotenso Windmi, Heatmi i Airmi, Kaisai KHX, Galmet Airmax3 ani Thermatec: to inne płyty i inne rejestry. Kolorowy sterownik Midea (KJRH-120L/L2, np. Arctic R290) ma te same rejestry w innych skalach. Wersja dla niego jest w przygotowaniu, dziś tego nie sprzedajemy.</p><p><b>Start:</b> nic nie tracisz, jest za darmo. <b>Zestaw:</b> przy zapisie wyślij zdjęcie ekranu menu 17.2, potwierdzę, że pompa pasuje, zanim cokolwiek zapłacisz. <b>Pro samodzielnie:</b> najpierw uruchom Start i sprawdź, czy moduł czyta pompę. Wtedy wiesz, że Pro zadziała.</p><p>Nie wiesz, czy twoja pompa to ta rodzina? Zapytaj w <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/discussions">Discussions</a>, zanim zapłacisz.</p></div></details>
+    <details><summary>Czy muszę umieć YAML?</summary><div class="od"><p>Do karty Start nie. Kopiujesz plik, dodajesz zasób i wklejasz gotowy widok: pięć kroków opisanych w README.</p><p>Moduł ESPHome to jeden gotowy plik: wpisujesz hasło do Wi-Fi i wgrywasz. W Pro kreator pyta o twoje encje (licznik prądu, taryfa, powiadomienia) i sam generuje pliki.</p><p>Nie chcesz tego dotykać? Wybierz zestaw: przychodzi wgrany i przetestowany, a dodatek w Home Assistant sam robi panele po wpisaniu klucza.</p></div></details>
     <details><summary>Co jeśli zmienię pompę?</summary><div class="od"><p>Jeśli nowa pompa też jest na płycie Midea M-Thermal ze sterownikiem z zaciskami H1/H2, przepinasz moduł i działa dalej.</p><p>Jeśli to inna marka, rejestry będą inne i ten pakiet nie pomoże. Moduł ESP32 to zwykła płytka: użyjesz jej w innym projekcie ESPHome.</p></div></details>
-    <details><summary>Czego potrzebuję?</summary><div class="od"><p>Home Assistant (np. Raspberry Pi albo Home Assistant Green) i integracji Midea do karty Start. Do pełnego odczytu: moduł ESP32 z RS-485 za ok. 95 zł i dwie żyły do sterownika ściennego.</p></div></details>
+    <details><summary>Czego potrzebuję?</summary><div class="od"><p>Home Assistant (np. Raspberry Pi albo Home Assistant Green) i integracji Midea do karty Start. Do pełnego odczytu: moduł ESP32 z RS-485 za ok. 95 zł albo nasz zestaw, plus dwie żyły do sterownika ściennego.</p></div></details>
     <details><summary>Czy moje dane idą do chmury?</summary><div class="od"><p>Odczyty z pompy nie wychodzą z domu. Moduł gada z pompą po kablu i wysyła dane tylko do twojego Home Assistant w domowej sieci.</p><p>Start nie łączy się z nami wcale. Karty Pro pobierają się z naszego serwera licencji: wysyłają tylko klucz i losowy identyfikator instalacji, żadnych odczytów z pompy. Gdy serwer nie odpowiada, karta działa do 7 dni z kopii zapisanej w przeglądarce.</p><p>Karta Start korzysta z integracji Midea, czyli tego samego połączenia, którego używa aplikacja producenta.</p></div></details>
-    <details id="zwrot"><summary>Zwrot i odstąpienie: jak to jest?</summary><div class="od"><p><b>Konfiguracja za ciebie (usługa):</b> masz 14 dni na odstąpienie od umowy, dopóki nie zaczniemy pracy. Gdy na twoją prośbę zaczniemy i skończymy konfigurację, prawo do odstąpienia wygasa. Niezależnie od tego: jeśli moduł nie złapie komunikacji z pompą, oddaję 100%.</p><p><b>Pro (treść cyfrowa):</b> przy zakupie zgadzasz się, żebym od razu wysłał ci klucz licencji. Z chwilą wysłania klucza tracisz prawo do odstąpienia, bo treści cyfrowej nie da się „oddać”. Dlatego najpierw sprawdź za darmo Start.</p><p>Sprzedawca i operator strony: WOLEOZE.PL Sp. z o.o., ul. Biasowicka 8E, 44-264 Jankowice, NIP 6423246378, KRS 0001048206. Faktura VAT na życzenie: po płatności napisz na pompa@woleoze.pl i podaj NIP.</p></div></details>
+    <details id="zwrot"><summary>Zwrot i odstąpienie: jak to jest?</summary><div class="od"><p><b>Zestaw (sprzęt):</b> masz 14 dni na odstąpienie od zakupu sprzętu bez podawania przyczyny. Szczegóły zwrotów i reklamacji poda regulamin, który publikujemy przed pierwszą wysyłką.</p><p><b>Wgranie i konfiguracja (usługa):</b> po wykonaniu usługi na twoje żądanie prawo do odstąpienia wygasa.</p><p><b>Pro (treść cyfrowa):</b> przy zakupie zgadzasz się, żebym od razu wysłał ci klucz licencji. Z chwilą wysłania klucza tracisz prawo do odstąpienia, bo treści cyfrowej nie da się „oddać”. Dlatego najpierw sprawdź za darmo Start.</p><p>Sprzedawca i operator strony: WOLEOZE.PL Sp. z o.o., ul. Biasowicka 8E, 44-264 Jankowice, NIP 6423246378, KRS 0001048206. Faktura VAT na życzenie: po płatności napisz na pompa@woleoze.pl i podaj NIP.</p></div></details>
   </div>
 </section>
 
@@ -628,10 +646,10 @@ footer p{margin:6px 0}
   <div class="koniec pokaz">
     <span class="nadt">Bez ryzyka</span>
     <h2>Sprawdź za darmo <span class="g">dziś wieczorem</span></h2>
-    <p>Karta Start działa na integracji Midea, bez żadnego sprzętu. Kilka plików i zobaczysz swoją pompę w Home Assistant. Spodoba ci się, dokładasz Pro albo zlecasz konfigurację.</p>
+    <p>Karta Start działa na integracji Midea, bez żadnego sprzętu. Kilka plików i zobaczysz swoją pompę w Home Assistant. Spodoba ci się, dokładasz Pro albo zamawiasz zestaw gotowy do podpięcia.</p>
     <div class="btns">
       <a class="b b1" href="https://github.com/WoleOze/rotenso-midea-modbus-ha">Pobierz Start za darmo</a>
-      <a class="b b2" href="https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00">Skonfiguruj za mnie · 249 zł</a>
+      <a class="b b2" href="#ceny">Zestaw gotowy do podpięcia · od 499 zł</a>
     </div>
   </div>
 </section>
@@ -653,7 +671,7 @@ footer p{margin:6px 0}
 
 <div class="pasekCTA" id="pasekCTA" aria-hidden="true">
   <a class="b b1" href="#ceny" tabindex="-1">Zacznij za darmo</a>
-  <a class="b b2" href="https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00" tabindex="-1">Konfiguracja 249 zł</a>
+  <a class="b b2" href="#ceny" tabindex="-1">Zestaw · od 499 zł</a>
 </div>
 
 <script>
@@ -698,12 +716,12 @@ if(!RM&&'IntersectionObserver' in window){const io3=new IntersectionObserver(w=>
 
 // quiz „czy to dla mnie”
 const st={},wynik=document.getElementById('wynik');
-const GH='https://github.com/WoleOze/rotenso-midea-modbus-ha',KONF='https://buy.stripe.com/7sYbJ1gh6gVa9rS56H3Je00',PRO='https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03';
+const GH='https://github.com/WoleOze/rotenso-midea-modbus-ha',KONF='mailto:pompa@woleoze.pl?subject=Zapis%3A%20zestaw%20Wi-Fi%20%28499%20z%C5%82%29&body=Zapisuj%C4%99%20si%C4%99%20na%3A%20zestaw%20Wi-Fi%20%28499%20z%C5%82%29.%0A%0AModel%20pompy%3A%0AZdj%C4%99cie%20ekranu%20menu%2017.2%20sterownika%20%28w%20za%C5%82%C4%85czniku%29%3A%0APaczkomat%20do%20wysy%C5%82ki%20%28kod%29%3A%0AFaktura%20VAT%3F%20Je%C5%9Bli%20tak%2C%20NIP%3A%0A',PRO='https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03';
 const R={
   brakHA:['Najpierw Home Assistant','Bez Home Assistant ten pakiet nie ma na czym działać. Postaw HA (np. Raspberry Pi albo Home Assistant Green), dodaj integrację Midea i wróć tu. Start czeka za darmo.',[['Jak zainstalować Home Assistant →','https://www.home-assistant.io/installation/','b1']]],
   innaPompa:['Start, ale najpierw zapytaj','Pakiet działa na płycie Midea M-Thermal ze sterownikiem z zaciskami H1/H2 (Rotenso Aquami, Kaisai Arctic, Galmet Prima i inne z listy zgodności). Rotenso Windmi, Heatmi, Airmi, Kaisai KHX i Galmet Airmax3 nie pasują. Nie wiesz, czy to twoja? Zapytaj w Discussions, zanim cokolwiek kupisz. Start i tak sprawdzisz za darmo.',[['Zapytaj w Discussions','https://github.com/WoleOze/rotenso-midea-modbus-ha/discussions','b1'],['Start za darmo',GH,'b2']]],
   start:['Start za darmo, potem Pro','Lubisz sam podpinać i sprawdzać. Zacznij od karty Start, uruchom moduł do odczytu. Gdy zobaczysz, że wszystko gada, dokup Pro za 149 zł: nastawy, koszty, raport, harmonogram CWU.',[['Pobierz Start za darmo',GH,'b1'],['Pro · 149 zł',PRO,'b2']]],
-  konf:['Pro + konfiguracja za ciebie','Masz HA i pasującą pompę, a nie chcesz tracić wieczorów na ESPHome i YAML. Łączę się zdalnie i podpinam wszystko. Jeśli moduł nie złapie komunikacji, oddaję 100%.',[['Zamawiam konfigurację · 249 zł',KONF,'b1'],['Najpierw Start za darmo',GH,'b2']]]
+  konf:['Zestaw gotowy do podpięcia','Masz HA i pasującą pompę, a nie chcesz tracić wieczorów na ESPHome i YAML. Zestaw przychodzi wgrany i przetestowany: podpinasz dwie żyły, Home Assistant sam wykrywa moduł, a dodatek robi panele.',[['Zapisuję się na zestaw · od 499 zł',KONF,'b1'],['Najpierw Start za darmo',GH,'b2']]]
 };
 const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function pokazW(k){const [h,p,bt]=R[k];wynik.innerHTML='<span class="nadt">Twoja droga</span><h3>'+esc(h)+'</h3><p>'+esc(p)+'</p><div class="btns">'+bt.map(b=>'<a class="b '+b[2]+'" href="'+b[1]+'">'+esc(b[0])+'</a>').join('')+'</div>';const r=wynik.getBoundingClientRect();if(r.top>innerHeight-120||r.bottom<0)wynik.scrollIntoView({block:'center',behavior:RM?'auto':'smooth'})}
@@ -713,7 +731,7 @@ function oblicz(){
   if(st.pompa==='nie')return pokazW('innaPompa');
   if(st.ha==='tak'&&st.pompa==='tak'&&st.sam)return pokazW(st.sam==='tak'?'start':'konf');
   const zostalo=['ha','pompa','sam'].filter(k=>!st[k]).length;
-  wynik.innerHTML='<span class="nadt">Twoja droga</span><h3>Jeszcze '+zostalo+(zostalo===1?' pytanie':' pytania')+'</h3><p>Na podstawie trzech odpowiedzi polecę jedną z dróg: Start, Pro albo konfigurację za ciebie.</p>';
+  wynik.innerHTML='<span class="nadt">Twoja droga</span><h3>Jeszcze '+zostalo+(zostalo===1?' pytanie':' pytania')+'</h3><p>Na podstawie trzech odpowiedzi polecę jedną z dróg: Start, Pro albo zestaw gotowy do podpięcia.</p>';
 }
 document.querySelectorAll('.py').forEach(p=>p.querySelectorAll('.qb').forEach(b=>b.addEventListener('click',()=>{
   st[p.dataset.py]=b.dataset.v;p.querySelectorAll('.qb').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));oblicz()})));
