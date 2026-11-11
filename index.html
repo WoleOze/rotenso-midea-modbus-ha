@@ -301,6 +301,7 @@ footer p{margin:6px 0}
  .kulki{display:none}
  .lin::after{display:none}
 }
+.zg{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}.zg>div{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}.zg b{width:100%;font-size:16px;margin-bottom:4px}.zg span{font-size:14px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
 </style>
 </head>
 <body>
@@ -314,7 +315,7 @@ footer p{margin:6px 0}
 <div class="w">
 <header class="hero" id="hero">
   <div>
-    <div class="tag"><span class="kropka"></span>Rotenso · Kaisai · Galmet · Midea M-Thermal · Home Assistant</div>
+    <div class="tag"><span class="kropka"></span>Rotenso · Midea · Kaisai · Galmet · De Dietrich · York · Home Assistant</div>
     <h1>Twoja pompa grzeje. Ale czy wiesz, <span class="g">za ile i czy dobrze?</span></h1>
     <p class="lead">Sterownik na ścianie pokazuje kilka liczb. Tu widzisz całą pompę: <b>COP</b>, <b>prąd osobno na dom i ciepłą wodę</b>, <b>koszt obok pelletu i ekogroszku</b>, starty sprężarki i nastawy instalatora. 114 odczytów co 5 sekund, w twoim Home Assistant.</p>
     <div class="btns">
@@ -496,6 +497,17 @@ footer p{margin:6px 0}
 </section>
 
 <!-- CENY -->
+<section id="zgodnosc">
+  <div class="w">
+  <div class="nag pokaz"><h2>Z jakimi pompami działa</h2><p>Decyduje sterownik, nie marka: płyta Midea M-Thermal i panel z zaciskami H1/H2 oraz menu <b>17.2 „Adres HMI dla BMS”</b>. Znajdziesz to w menu serwisanta w minutę.</p></div>
+  <div class="zg pokaz">
+    <div><b>✅ Potwierdzone</b><span>Rotenso Aquami</span><span>Midea M-Thermal R32</span><span>Kaisai Arctic</span><span>Galmet Prima</span><span>De Dietrich Modena</span><span>York YKF</span><span>Immergas Magis M</span><span>Mitsui</span><span>Vivax / Hyundai</span><span>Kosner</span></div>
+    <div><b>🟡 Prawdopodobne</b><span>Ferroli Omnia 3.2</span><span>Clivet EDGE</span><span>Airwell Wellea</span><span>Baxi / Inventor</span><span>Sinclair</span></div>
+    <div><b>❌ Nie pasuje</b><span>Rotenso Windmi</span><span>Rotenso Heatmi / Airmi</span><span>Kospel</span><span>Hewalex</span><span>Galmet Airmax3</span><span>Viessmann Vitocal 100-A</span></div>
+  </div>
+  <p style="text-align:center;margin-top:14px"><a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/zgodnosc.md">Pełna lista z modelami i źródłami →</a> · <span style="color:var(--mut)">stan 11.11.2026</span></p>
+  </div>
+</section>
 <section id="ceny">
   <div class="nag pokaz"><span class="nadt">Trzy drogi</span><h2>Zacznij za darmo. Dokup, gdy zobaczysz, że działa.</h2><p>Start działa w pełni i bez limitu czasu. Sprawdzisz na swojej pompie, czy wszystko gada, zanim wydasz złotówkę.</p></div>
   <div class="ceny">
