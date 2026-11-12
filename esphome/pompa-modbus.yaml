@@ -1,6 +1,6 @@
 # Rotenso Aquami (AQM120X3; Midea M-Thermal) w Home Assistant przez Modbus RTU i ESPHome
 # Wersja Start: tylko odczyt. Zapis nastaw w wersji Pro.
-# Repo: https://github.com/WoleOze/rotenso-midea-modbus-ha  (Licencja Start, patrz LICENSE)
+# Repo: https://github.com/WoleOze/rotenso-midea-modbus-ha  (program modułu: GNU GPL v3, patrz LICENSE i pompa.woleoze.pl/program-modulu)
 #
 # Moduł: Waveshare ESP32-S3-Relay-1CH albo ESP32-S3-Relay-1CH-U (piny z przykładu producenta):
 #   RS-485 TX = GPIO17, RX = GPIO18, kierunek nadawania DE/RE = GPIO21, przekaźnik = GPIO47 (nieużywany, na stałe wyłączony).

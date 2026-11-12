@@ -1,5 +1,12 @@
 Wersje opublikowane przed 11.11.2026 15:00 na licencji MIT pozostają na MIT.
 
+PROGRAM MODUŁU (GNU GPL v3)
+Program wgrywany do modułu (pliki ESPHome z katalogu esphome/ oraz programy publikowane na serwerze
+aktualizacji wraz ze źródłem) zawiera runtime ESPHome na licencji GNU GPL v3. W postaci wgranej do modułu
+i w źródłach tych wersji jest udostępniany na licencji GNU GPL v3 (https://www.gnu.org/licenses/gpl-3.0.html,
+pełny tekst: program-modulu/gpl-3.0.txt). Punkty 1–3 Licencji Start nie ograniczają praw z GPL v3.
+Źródła wydanych wersji: https://pompa.woleoze.pl/program-modulu/
+
 LICENCJA START
 
 Copyright (c) 2026 WOLEOZE.PL Sp. z o.o. (woleoze.pl)
