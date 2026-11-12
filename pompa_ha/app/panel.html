@@ -35,6 +35,9 @@ label.p input{width:20px;height:20px}
 .drobne{font-size:12.5px;color:var(--mut)}
 a{color:var(--ak)}
 .bramka{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--lin)}
+.bramka>span{min-width:0;overflow-wrap:anywhere}
+.bramka>button{flex:none}
+.bramka code{display:block;margin-top:4px;padding:6px 8px;border-radius:6px;background:rgba(127,140,170,.15);font:12px ui-monospace,Menlo,monospace;overflow-wrap:anywhere}
 .siatka{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
 .siatka label{display:block;font-size:13.5px;font-weight:600;margin-bottom:4px}
 .siatka select,.siatka input[type=number],.siatka input[type=time]{width:100%;font:14px system-ui,sans-serif;padding:9px 10px;border-radius:10px;border:1px solid var(--lin);background:var(--bg);color:var(--txt)}
@@ -195,8 +198,8 @@ $('bMarki').onclick = () => zajety($('bMarki'), async () => {
     else if (!r.kandydaci.length) { pokaz($('wMarki'), 'Nie widzę integracji Panasonic (HeishaMon), NIBE, Mitsubishi ani Vaillant. Dodaj integrację pompy, poczekaj na odczyty i spróbuj ponownie.', 'b'); return; }
     else pokaz($('wMarki'), r.obecna_opis ? 'Teraz: ' + r.obecna_opis + '.' : '');
     $('marki').innerHTML = r.kandydaci.map((k) => '<div class="bramka"><span><b>' + esc(k.opis) + '</b>' +
-      (k.uwagi.length ? '<br><span class="drobne">' + k.uwagi.map(esc).join('<br>') + '</span>' : '') +
-      '</span><button class="g" data-m="' + esc(k.id) + '"' + (r.modul ? ' disabled' : '') + '>Użyj</button></div>').join('');
+      (k.uwagi.length ? '<br><span class="drobne">' + k.uwagi.map((u) => { const i = u.indexOf(': --'); return i < 0 ? esc(u) : esc(u.slice(0, i + 1)) + '<code>' + esc(u.slice(i + 2)) + '</code>'; }).join('<br>') + '</span>' : '') +
+      '</span><button class="g" data-m="' + esc(k.id) + '"' + (r.modul ? ' disabled' : '') + '>' + (k.id === r.obecna ? 'W użyciu · zainstaluj ponownie' : 'Użyj') + '</button></div>').join('');
     $('marki').querySelectorAll('button').forEach((btn) => btn.onclick = () => zajety(btn, async () => {
       try { const x = await api('marka/uzyj', { id: btn.dataset.m }); pokaz($('wMarki'), x.kroki.join('\n'), 'o'); }
       catch (e) { pokaz($('wMarki'), e.message, 'b'); }

@@ -30,7 +30,7 @@ import urllib.parse
 import urllib.request
 import zipfile
 
-WERSJA = "1.4.0"
+WERSJA = "1.4.1"
 SERWER = os.environ.get("POMPA_SERWER", "https://rotenso-licencje.strefa-tradingu.workers.dev")
 PRO_JS = os.environ.get(
     "POMPA_PRO_JS",

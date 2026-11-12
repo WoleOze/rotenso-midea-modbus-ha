@@ -1,5 +1,8 @@
 # Zmiany
 
+## 1.4.1
+- Panel na telefonie: długie polecenia (filtr ebusd) nie rozpychają ekranu; przy marce w użyciu przycisk „W użyciu · zainstaluj ponownie”.
+
 ## 1.4.0
 - Inne marki bez naszego modułu: Panasonic Aquarea (HeishaMon), NIBE seria S, Mitsubishi Ecodan (ESPHome Ecodan albo MELCloud), Vaillant aroTHERM (ebusd albo myVAILLANT). Przycisk „Wykryj integrację” znajduje integrację w Home Assistant, a „Użyj” instaluje adapter: karty Pro i alarmy działają na jej encjach. Na start w testach: prosimy o raport z dodatku.
 - Daikin Altherma 4 i Altherma 3 z EKRHH przez Modbus TCP: „Szukaj bramki LAN” rozpoznaje pompę Daikin w sieci i odróżnia ją od bramki do Midea.
