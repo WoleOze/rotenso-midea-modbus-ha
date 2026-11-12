@@ -15,6 +15,8 @@ Dodatek instaluje „Pompa w Home Assistant” bez kopiowania plików i bez edyc
 6. **Wyślij raport** przesyła do wsparcia wynik diagnostyki i stany encji pompy (bez haseł i bez danych z reszty domu).
 7. **Poprawki**: dodatek co godzinę pyta serwer, czy wsparcie przygotowało poprawkę dla twojego klucza. Zmienia wyłącznie pliki „Pompa w HA” (`packages/pompa_ha/`, `www/rotenso/`, `raporty/dopisz.py`, `esphome/pompa-modbus-pro.yaml`). Możesz to wyłączyć przełącznikiem.
 
+**Program modułu (zestawy):** nowa wersja programu modułu pojawia się w Home Assistant jako aktualizacja **„Program modułu”** (Ustawienia → Urządzenia i usługi → Pompa Modbus albo na górze strony Ustawienia, przy aktualizacjach). Instalujesz ją jednym kliknięciem „Zainstaluj”. Moduł sam się zrestartuje po 1–2 minutach. Nie odłączaj wtedy zasilania. Dotyczy zestawów i modułów wgranych przez nas od tej wersji programu. Starszy moduł trzeba raz wgrać przez USB (https://web.esphome.io), potem aktualizacje przychodzą już same.
+
 Nikt nie łączy się z twoim Home Assistant z zewnątrz. To dodatek wysyła zapytania do serwera licencji, tak jak aktualizacje w telefonie.
 
 Wymaga Home Assistant OS (Raspberry Pi, Home Assistant Green, mini PC z HA OS). Instrukcja montażu: https://pompa.woleoze.pl/instrukcja/
