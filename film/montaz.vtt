@@ -1,0 +1,186 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.200
+Pompa w Home Assistant. Montaż w 15 minut.
+
+2
+00:00:03.200 --> 00:00:07.500
+Przygotuj: moduł z zestawu, 2 żyły przewodu, mały śrubokręt płaski i ładowarkę USB-C.
+
+3
+00:00:07.500 --> 00:00:09.700
+Krok 1 z 7: Sprawdź menu pompy.
+Na sterowniku ściennym naciśnij MENU.
+
+4
+00:00:09.700 --> 00:00:12.700
+Wejdź w menu serwisanta. Hasło zwykle 234.
+
+5
+00:00:12.700 --> 00:00:15.000
+Otwórz 17. HMI ADDRESS SET.
+
+6
+00:00:15.000 --> 00:00:16.500
+17.1 HMI SET = GŁÓWNA.
+
+7
+00:00:16.500 --> 00:00:18.300
+17.2 = 1. To ustawienie fabryczne.
+
+8
+00:00:18.300 --> 00:00:21.500
+Po wyjściu z menu pompa się wyłącza. Włącz ją przyciskiem ON/OFF.
+
+9
+00:00:21.500 --> 00:00:23.800
+Krok 2 z 7: Zdejmij sterownik.
+Wyłącz pompę przyciskiem ON/OFF.
+
+10
+00:00:23.800 --> 00:00:26.500
+Zdejmij sterownik ze ściany i obróć go.
+
+11
+00:00:26.500 --> 00:00:29.100
+Listwa E Y X B A to przewody do pompy. Nie ruszaj.
+
+12
+00:00:29.100 --> 00:00:34.500
+Po prawej zaciski H2 (wyżej) i H1 (niżej).
+
+13
+00:00:34.500 --> 00:00:37.100
+Uwaga: Tylko sterownik ścienny.
+Nie podłączaj się do H1/H2 na płycie głównej jednostki.
+
+14
+00:00:37.100 --> 00:00:38.800
+To inna magistrala, nie Modbus.
+
+15
+00:00:38.800 --> 00:00:41.500
+Dwie żyły idą tylko do sterownika ściennego.
+
+16
+00:00:41.500 --> 00:00:45.100
+Krok 3 z 7: Podłącz dwie żyły.
+Niebieska żyła: H2 → A+ modułu.
+
+17
+00:00:45.100 --> 00:00:48.500
+Brązowa żyła: H1 → B− modułu.
+
+18
+00:00:48.500 --> 00:00:50.300
+Masy (GND) nie łączysz.
+
+19
+00:00:50.300 --> 00:00:52.300
+Istniejących przewodów nie odpinasz.
+
+20
+00:00:52.300 --> 00:00:55.500
+Załóż sterownik z powrotem i włącz pompę.
+
+21
+00:00:55.500 --> 00:00:57.500
+Krok 4 z 7: Zasilanie modułu.
+Podłącz ładowarkę USB-C (5 V).
+
+22
+00:00:57.500 --> 00:00:59.300
+Dioda PWR świeci na czerwono.
+
+23
+00:00:59.300 --> 00:01:02.300
+Po chwili miga niebieska RS485: moduł rozmawia z pompą.
+
+24
+00:01:02.300 --> 00:01:06.000
+Nigdy nie podawaj zasilania na H1/H2.
+
+25
+00:01:06.000 --> 00:01:08.300
+Krok 5 z 7: Połącz z Wi-Fi.
+W telefonie wybierz Wi-Fi „pompa-setup”.
+
+26
+00:01:08.300 --> 00:01:10.500
+Hasło: pompa-setup.
+
+27
+00:01:10.500 --> 00:01:12.200
+Otworzy się strona 192.168.4.1.
+
+28
+00:01:12.200 --> 00:01:15.200
+Wybierz swoją sieć domową i wpisz hasło.
+
+29
+00:01:15.200 --> 00:01:18.500
+Sieć „pompa-setup” znika. Gotowe.
+
+30
+00:01:18.500 --> 00:01:20.900
+Krok 6 z 7: Home Assistant.
+Ustawienia → Urządzenia i usługi.
+
+31
+00:01:20.900 --> 00:01:23.000
+Wykryto: Pompa Modbus → Dodaj.
+
+32
+00:01:23.000 --> 00:01:24.500
+Otwórz dodatek „Pompa w HA”.
+
+33
+00:01:24.500 --> 00:01:28.900
+Wklej klucz z maila i kliknij „Zainstaluj”.
+
+34
+00:01:28.900 --> 00:01:33.500
+Po minucie w pasku bocznym jest „Pompa”. Gotowe.
+
+35
+00:01:33.500 --> 00:01:36.300
+Zestaw Wi-Fi + LAN: Wariant z kablem.
+Bramka RS-485 → LAN: te same dwie żyły, H2 → A+ i H1 → B−.
+
+36
+00:01:36.300 --> 00:01:37.700
+Zasilacz 5 V z zestawu.
+
+37
+00:01:37.700 --> 00:01:39.500
+Kabel sieciowy do routera.
+
+38
+00:01:39.500 --> 00:01:42.900
+W dodatku: „Szukaj bramki LAN” → „Użyj”.
+
+39
+00:01:42.900 --> 00:01:45.000
+Kroków z Wi-Fi nie robisz.
+
+40
+00:01:45.000 --> 00:01:47.200
+Krok 7 z 7: Diagnostyka.
+Panel „Pompa – instalator” sprawdza wszystko sam.
+
+41
+00:01:47.200 --> 00:01:48.600
+Zielony ✓ znaczy: działa.
+
+42
+00:01:48.600 --> 00:01:51.400
+Czerwony ✗ przy odczytach? Najpierw zamień przewody A i B.
+
+43
+00:01:51.400 --> 00:01:55.500
+Potem sprawdź: 17.2 = 1 i HMI SET = GŁÓWNA.
+
+44
+00:01:55.500 --> 00:02:01.500
+Pomoc mailowo: pompa@woleoze.pl. Instrukcja: pompa.woleoze.pl/instrukcja. Projekt woleOZE.

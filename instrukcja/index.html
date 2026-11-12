@@ -35,6 +35,8 @@ th{font-size:13.5px;color:var(--mut);font-weight:700}
 .wariant h3{margin-top:0}
 code{font:14px ui-monospace,Menlo,monospace;background:rgba(127,140,170,.15);padding:1px 5px;border-radius:5px}
 .stopka{color:var(--mut);font-size:14px;margin-top:24px}
+.film video{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:10px;background:#0b1220}
+.film p{margin:8px 0 0;color:var(--mut);font-size:14.5px}
 @media print{
   body{background:#fff;color:#000;font-size:12.5pt}
   .spis,.nodruk{display:none}
@@ -49,6 +51,7 @@ code{font:14px ui-monospace,Menlo,monospace;background:rgba(127,140,170,.15);pad
   <h1>Instrukcja montażu</h1>
   <p class="pod">Pompa w Home Assistant: zestaw Wi-Fi, zestaw Wi-Fi + LAN albo własny moduł z Pro. Całość zajmuje ok. 20 minut. Nie trzeba otwierać jednostki zewnętrznej ani niczego programować.</p>
   <ul class="spis">
+    <li><a href="#film">▶ Film</a></li>
     <li><a href="#zanim">1. Zanim zaczniesz</a></li>
     <li><a href="#pompa">2. Ustawienie pompy</a></li>
     <li><a href="#przewody">3. Dwie żyły</a></li>
@@ -58,6 +61,16 @@ code{font:14px ui-monospace,Menlo,monospace;background:rgba(127,140,170,.15);pad
     <li><a href="#diagnostyka">6. Diagnostyka</a></li>
     <li><a href="#pomoc">7. Pomoc</a></li>
   </ul>
+
+  <section class="k film nodruk" id="film">
+    <h2>Film: cały montaż w 2 minuty</h2>
+    <video controls preload="none" playsinline poster="/film/montaz-poster.jpg">
+      <source src="/film/montaz.mp4" type="video/mp4">
+      <track kind="captions" src="/film/montaz.vtt" srclang="pl" label="Polski">
+      Twoja przeglądarka nie odtwarza filmu: <a href="/film/montaz.mp4">pobierz montaz.mp4</a>.
+    </video>
+    <p>Rysunki zamiast zdjęć: menu sterownika, zaciski H1/H2, diody modułu, Wi-Fi i Home Assistant. Szczegóły każdego kroku są niżej.</p>
+  </section>
 
   <section class="k" id="zanim">
     <h2>1. Zanim zaczniesz</h2>

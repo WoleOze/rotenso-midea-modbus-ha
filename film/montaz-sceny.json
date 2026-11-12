@@ -1,0 +1,82 @@
+{
+ "dl": 121.5,
+ "sceny": [
+  {
+   "id": "tytul",
+   "od": 0,
+   "do": 7.5,
+   "tytul": "Plansza tytułowa",
+   "krok": ""
+  },
+  {
+   "id": "menu",
+   "od": 7.5,
+   "do": 21.5,
+   "tytul": "Sprawdź menu pompy",
+   "krok": 1
+  },
+  {
+   "id": "sterownik",
+   "od": 21.5,
+   "do": 34.5,
+   "tytul": "Zdejmij sterownik",
+   "krok": 2
+  },
+  {
+   "id": "uwaga",
+   "od": 34.5,
+   "do": 41.5,
+   "tytul": "Tylko sterownik ścienny",
+   "krok": "Uwaga"
+  },
+  {
+   "id": "przewody",
+   "od": 41.5,
+   "do": 55.5,
+   "tytul": "Podłącz dwie żyły",
+   "krok": 3
+  },
+  {
+   "id": "zasilanie",
+   "od": 55.5,
+   "do": 66,
+   "tytul": "Zasilanie modułu",
+   "krok": 4
+  },
+  {
+   "id": "siec",
+   "od": 66,
+   "do": 78.5,
+   "tytul": "Połącz z Wi-Fi",
+   "krok": 5
+  },
+  {
+   "id": "ha",
+   "od": 78.5,
+   "do": 93.5,
+   "tytul": "Home Assistant",
+   "krok": 6
+  },
+  {
+   "id": "lan",
+   "od": 93.5,
+   "do": 105,
+   "tytul": "Wariant z kablem",
+   "krok": "Zestaw Wi-Fi + LAN"
+  },
+  {
+   "id": "diag",
+   "od": 105,
+   "do": 115.5,
+   "tytul": "Diagnostyka",
+   "krok": 7
+  },
+  {
+   "id": "koniec",
+   "od": 115.5,
+   "do": 121.5,
+   "tytul": "Plansza końcowa",
+   "krok": ""
+  }
+ ]
+}

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8">
+<title>Pompa w HA · montaż (film)</title>
+<!-- Film instruktażowy „Pompa w Home Assistant · montaż w 15 minut” (12.11.2026). Rysunkowy, bez zdjęć i bez lektora.
+     Klatka = funkcja czasu: window.klatka(t) ustawia wszystko deterministycznie (bez przejść CSS), nagraj.mjs robi zrzut każdej klatki.
+     Podgląd jednej chwili w przeglądarce: scena.html?t=42.5   ·   Treść scen i czasy: sceny.js   ·   Rysunki sprzętu: rysunki.js
+     Barwy i krój jak pompa.woleoze.pl (tło #050a16, akcenty #39c0ff #2ee6a6 #ffb020 #ff5470, Inter). -->
+<style>
+@font-face{font-family:Inter;src:url(fonty/Inter-Regular.ttf);font-weight:400}
+@font-face{font-family:Inter;src:url(fonty/Inter-Medium.ttf);font-weight:500}
+@font-face{font-family:Inter;src:url(fonty/Inter-Bold.ttf);font-weight:700}
+@font-face{font-family:Plex;src:url(fonty/IBMPlexMono-Medium.ttf);font-weight:500}
+@font-face{font-family:Plex;src:url(fonty/IBMPlexMono-SemiBold.ttf);font-weight:600}
+:root{--bg:#050a16;--panel:rgba(13,24,50,.78);--panel2:rgba(17,31,64,.94);--line:rgba(110,160,255,.18);--line2:rgba(110,160,255,.34);--txt:#eaf0ff;--mut:#97a8cc;--hp:#39c0ff;--hot:#ff5470;--warm:#ffb020;--ok:#2ee6a6;--br:#d9a06e;--niebd:#4f8cff}
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:var(--bg)}
+body{font-family:Inter,sans-serif;color:var(--txt);position:relative;-webkit-font-smoothing:antialiased;font-weight:500}
+#tlo{position:absolute;inset:0;background:
+ radial-gradient(1100px 700px at 90% -14%,rgba(255,84,112,.13),transparent 60%),
+ radial-gradient(1100px 820px at -8% 36%,rgba(57,192,255,.13),transparent 60%),
+ linear-gradient(rgba(80,130,255,.035) 1px,transparent 1px) 0 0/100% 34px,
+ linear-gradient(90deg,rgba(80,130,255,.035) 1px,transparent 1px) 0 0/34px 100%,var(--bg)}
+#gora{position:absolute;left:80px;right:80px;top:30px;height:52px;display:flex;align-items:center;gap:22px;z-index:5}
+.logo{font-weight:700;font-size:30px;letter-spacing:.06em;white-space:nowrap}.logo span{color:var(--hp)}
+.gsep{width:2px;height:28px;background:var(--line2)}
+.gtyt{font-size:22px;color:var(--mut)}
+.gsp{flex:1}
+.gwole{font-size:22px;color:var(--mut)}.gwole b{color:var(--txt);font-weight:700}
+#pasek{position:absolute;left:80px;right:80px;bottom:28px;height:6px;border-radius:3px;background:rgba(110,160,255,.12);z-index:5}
+#pasek i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#39c0ff,#2ee6a6)}
+.sc{position:absolute;inset:0;visibility:hidden;opacity:0}
+/* lewa kolumna: KROK, tytuł, lista poleceń (bieżące duże, wykonane małe z ✓) */
+.lewa{position:absolute;left:80px;top:122px;width:600px;bottom:60px}
+.krok{font-size:23px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--hp)}
+.paski{display:flex;gap:10px;margin:14px 0 24px}.paski i{width:72px;height:8px;border-radius:4px;background:rgba(110,160,255,.17)}.paski i.p{background:rgba(57,192,255,.5)}.paski i.a{background:var(--hp);box-shadow:0 0 14px rgba(57,192,255,.6)}
+.lewa h2{font-size:52px;line-height:1.06;font-weight:700;margin:0 0 30px;letter-spacing:-.012em}
+.kroki{display:flex;flex-direction:column;gap:18px}
+.k{display:flex;gap:.45em;align-items:flex-start;line-height:1.2;font-weight:500}
+.k .n{flex:none;width:.9em;height:1.2em;position:relative}
+.k .n svg{position:absolute;left:0;top:.14em;width:.9em;height:.9em}
+.k .n .bar{position:absolute;left:.24em;top:.12em;width:.2em;height:1em;border-radius:.1em;background:var(--hp);box-shadow:0 0 12px rgba(57,192,255,.7)}
+.k .tx{flex:1}
+.w{display:inline-block}
+.nb{color:var(--hp)}.cz{color:var(--hot)}.zi{color:var(--ok)}.po{color:var(--warm)}.br{color:var(--br)}
+/* scena po prawej */
+.stage{position:absolute;left:720px;top:120px;width:1140px;height:880px}
+.stage>svg{position:absolute;left:0;top:0;width:1140px;height:880px;overflow:visible}
+.stage>svg.okienko{overflow:hidden;clip-path:inset(0 round 24px)}
+.chip{position:absolute;left:0;top:0;transform:translate(-50%,-50%);padding:12px 22px;border-radius:16px;background:var(--panel2);border:2.5px solid var(--line2);font-weight:700;font-size:30px;white-space:nowrap;display:flex;align-items:center;gap:12px;box-shadow:0 14px 40px rgba(0,0,0,.5);opacity:0;visibility:hidden}
+.chip svg{width:1.05em;height:1.05em;flex:none}
+.chip.duzy{font-size:46px;padding:10px 26px;border-radius:18px}
+.chip.cz{border-color:rgba(255,84,112,.85);color:#ffd5dc}
+.chip.zi{border-color:rgba(46,230,166,.8)}
+.chip.ma{font-size:24px;padding:9px 16px;border-radius:12px}
+.stan .kr{width:16px;height:16px;border-radius:50%;flex:none}
+.ilu{position:absolute;right:0;top:0;font-size:17px;font-weight:700;letter-spacing:.16em;color:var(--warm);border:2px solid rgba(255,176,32,.6);border-radius:10px;padding:7px 13px;background:rgba(5,10,22,.75);z-index:4}
+.et{position:absolute;transform:translate(-50%,-50%);font-size:22px;font-weight:700;color:var(--mut);white-space:nowrap;letter-spacing:.02em}
+.badge{position:absolute;display:flex;align-items:center;gap:14px;padding:14px 20px;border-radius:16px;background:var(--panel2);border:2px solid var(--line2);font-size:26px;font-weight:700;white-space:nowrap;box-shadow:0 14px 40px rgba(0,0,0,.45);opacity:0;visibility:hidden}
+.badge svg{width:1.1em;height:1.1em;flex:none}
+.lst{font-family:Plex;font-weight:600;letter-spacing:.18em;background:#1a6c3c;color:#f2f5f0;border-radius:8px;padding:4px 10px}
+/* plansza tytułowa */
+.tyt{position:absolute;left:80px;top:150px;width:960px}
+.tag{display:inline-flex;gap:12px;align-items:center;font-size:20px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);font-weight:700}
+.kropka{width:13px;height:13px;border-radius:50%;background:var(--ok);box-shadow:0 0 14px var(--ok)}
+.tyt h1{font-size:98px;line-height:1.02;font-weight:700;margin:22px 0 14px;letter-spacing:-.02em}
+.g{background:linear-gradient(90deg,#39c0ff,#2ee6a6 55%,#ffb020);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tyt .g{font-size:64px;font-weight:700;line-height:1.1;display:inline-block;letter-spacing:-.01em}
+.tyt p{font-size:29px;color:var(--mut);margin:20px 0 0;line-height:1.35}
+.przyg{position:absolute;left:80px;top:628px;font-size:22px;letter-spacing:.16em;font-weight:700;color:var(--hp);text-transform:uppercase}
+.karty{position:absolute;left:80px;right:80px;top:672px;height:300px;display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+.karta{background:var(--panel);border:2px solid var(--line);border-radius:22px;padding:18px 24px;display:flex;flex-direction:column;align-items:flex-start;box-shadow:0 24px 60px rgba(0,0,0,.4);opacity:0}
+.karta svg{width:100%;height:150px;overflow:visible}
+.karta b{font-size:33px;font-weight:700;margin-top:8px}
+.karta span{font-size:22px;color:var(--mut);margin-top:6px;line-height:1.25}
+.hpill{position:absolute;display:flex;gap:12px;align-items:center;padding:12px 20px;border-radius:999px;background:var(--panel2);border:2px solid rgba(46,230,166,.6);font-size:24px;font-weight:700;opacity:0}
+/* plansza końcowa */
+.kon{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.kon .plogo{font-size:120px;font-weight:700;letter-spacing:.04em;line-height:1}.kon .plogo span{color:var(--hp)}
+.kon .p1{font-size:50px;font-weight:700;margin-top:56px}.kon .p1 b{color:var(--ok)}
+.kon .p2{font-size:44px;font-weight:700;margin-top:22px;color:var(--hp)}
+.kon .p3{font-size:28px;color:var(--mut);margin-top:56px;letter-spacing:.04em}.kon .p3 b{color:var(--txt)}
+/* karty sceny „uwaga” */
+.karta2{position:absolute;background:var(--panel);border:2.5px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.45);opacity:0}
+.karta2 .kt{font-size:32px;font-weight:700;padding:24px 28px 0}
+.karta2 .kp{font-size:22px;color:var(--mut);padding:6px 28px 0}
+.karta2 svg{position:absolute;left:0;top:120px;width:100%;height:auto;overflow:hidden}
+.stempel{position:absolute;left:50%;top:56%;width:190px;height:190px;margin:-95px 0 0 -95px;filter:drop-shadow(0 18px 30px rgba(0,0,0,.55));opacity:0}
+.stempel svg{width:100%;height:100%}
+.zakaz{position:absolute;display:flex;align-items:center;gap:22px;padding:18px 28px;border-radius:18px;background:rgba(60,10,24,.92);border:2.5px solid rgba(255,84,112,.9);font-size:30px;font-weight:700;white-space:nowrap;box-shadow:0 18px 50px rgba(0,0,0,.5);opacity:0}
+.zakaz svg{width:1.3em;height:1.3em}
+.zakaz .pady{font-family:Plex;font-weight:600;background:#1a6c3c;border-radius:8px;padding:4px 12px;letter-spacing:.06em}
+/* telefon (makieta, jasny motyw jak ustawienia telefonu) */
+.tel{position:absolute;width:380px;height:800px;border-radius:58px;background:#07090d;border:3px solid #33405f;box-shadow:0 40px 90px rgba(0,0,0,.6)}
+.tel .ek{position:absolute;left:13px;top:13px;right:13px;bottom:13px;border-radius:46px;overflow:hidden;background:#f2f2f7;color:#111;font-family:Inter}
+.tel .notch{position:absolute;left:50%;top:11px;width:112px;height:32px;margin-left:-56px;border-radius:17px;background:#000;z-index:5}
+.tel .sb{position:absolute;left:0;right:0;top:0;height:54px;display:flex;justify-content:space-between;align-items:center;padding:8px 30px 0;font-size:17px;font-weight:700;z-index:4}
+.tel .sb .bat{width:28px;height:13px;border:2px solid #111;border-radius:4px;position:relative}.tel .sb .bat::after{content:"";position:absolute;left:1px;top:1px;bottom:1px;width:70%;background:#111;border-radius:1px}
+.tel .pg{position:absolute;left:0;right:0;top:54px;bottom:0;padding:6px 16px;background:#f2f2f7}
+.tel .pt{font-size:36px;font-weight:700;margin:6px 6px 14px}
+.tel .grp{background:#fff;border-radius:14px;overflow:hidden}
+.tel .row{display:flex;justify-content:space-between;align-items:center;height:58px;padding:0 16px;font-size:21px;border-bottom:1px solid #e3e3e8;overflow:hidden;white-space:nowrap}
+.tel .row:last-child{border-bottom:0}
+.tel .row.hl{background:#dbeafe}
+.tel .sec{font-size:15px;color:#6d6d72;margin:22px 14px 8px;letter-spacing:.04em;font-weight:500}
+.tel .tgl{width:54px;height:33px;border-radius:17px;background:#34c759;position:relative;display:block}.tel .tgl::after{content:"";position:absolute;right:3px;top:3px;width:27px;height:27px;border-radius:50%;background:#fff}
+.tel .ri{display:flex;gap:10px;align-items:center;font-size:21px}
+.tel .ri svg{width:21px;height:21px}
+.tel .ptk{color:#0a84ff;font-weight:700}
+.tel .mt{font-size:22px;font-weight:700;text-align:center;margin:34px 10px 22px;line-height:1.3}
+.tel .fld{height:52px;border-radius:12px;background:#fff;border:2px solid #c7c7cc;display:flex;align-items:center;padding:0 14px;font-size:21px;font-family:Plex;font-weight:500;white-space:nowrap;overflow:hidden}
+.tel .fld.akt{border-color:#0a84ff}
+.tel .btns{display:flex;justify-content:space-between;margin:22px 6px 0;font-size:21px;color:#0a84ff;font-weight:500}
+.tel .btns .pri{font-weight:700;background:#0a84ff;color:#fff;border-radius:12px;padding:12px 22px}
+.tel .url{margin:2px 0 12px;background:#e3e3e8;border-radius:12px;height:44px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:19px;font-weight:700}
+.tel .www{background:#fff;border-radius:14px;padding:12px 14px 16px;font-family:Inter}
+.tel .wh{font-size:19px;font-weight:700;margin:6px 2px 10px}
+.tel .wl{display:flex;justify-content:space-between;align-items:center;height:46px;border:1.5px solid #d8dbe2;border-radius:10px;padding:0 12px;margin-bottom:8px;font-size:19px}
+.tel .wl.hl{background:#dbeafe;border-color:#0a84ff}
+.tel .wlab{font-size:15px;color:#555;margin:10px 2px 6px}
+.tel .wbtn{margin-top:14px;height:50px;border-radius:12px;background:#0a84ff;color:#fff;font-size:21px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.tap{position:absolute;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:rgba(10,132,255,.25);border:3px solid rgba(10,132,255,.85);opacity:0;z-index:6;pointer-events:none}
+/* Home Assistant (makieta, ciemny motyw) */
+.ha{position:absolute;border-radius:18px;overflow:hidden;background:#111418;border:2px solid #2a3142;box-shadow:0 40px 90px rgba(0,0,0,.55);font-family:Inter;color:#e3e5e8}
+.ha .side{position:absolute;left:0;top:0;bottom:0;width:250px;background:#1b1e23;border-right:1px solid #2a2f37;padding:16px 0;display:flex;flex-direction:column}
+.ha .hlogo{font-size:21px;font-weight:700;padding:8px 22px 22px;display:flex;gap:12px;align-items:center}
+.ha .hdot{width:30px;height:30px;border-radius:8px;background:#18bcf2;display:inline-block;position:relative}.ha .hdot::after{content:"";position:absolute;left:8px;top:7px;border:7px solid transparent;border-bottom:9px solid #fff;border-top:0}
+.ha .it{display:flex;align-items:center;gap:16px;height:54px;padding:0 22px;font-size:20px;color:#c9ccd1;overflow:hidden;white-space:nowrap}
+.ha .it svg{width:25px;height:25px;fill:#9aa0a6;color:#9aa0a6;flex:none}
+.ha .it.akt{background:rgba(3,169,244,.16);color:#29b6f6}.ha .it.akt svg{fill:#29b6f6;color:#29b6f6}
+.ha .sp{flex:1}
+.ha .main{position:absolute;left:250px;top:0;right:0;bottom:0;overflow:hidden}
+.ha .pg{position:absolute;inset:0;padding:0 34px}
+.ha .hh{height:76px;display:flex;align-items:center;font-size:27px;font-weight:500;border-bottom:1px solid #2a2f37;margin:0 -34px 26px;padding:0 34px;gap:18px;white-space:nowrap}
+.ha .hh .okr{font-size:18px;color:#8b9198}
+.ha .li{display:flex;align-items:center;gap:20px;height:84px;padding:0 20px;border-radius:14px;background:#1b1e23;margin-bottom:12px}
+.ha .li b{display:block;font-size:22px;font-weight:700}.ha .li small{display:block;font-size:17px;color:#8b9198;margin-top:4px}
+.ha .ic{width:44px;height:44px;border-radius:50%;background:#2a2f37;flex:none}.ha .ic.n{background:#03a9f4}.ha .ic.z{background:#43a047}.ha .ic.p{background:#fb8c00}.ha .ic.f{background:#7e57c2}
+.ha .tabs{display:flex;gap:30px;font-size:19px;color:#8b9198;margin:-8px 0 22px}.ha .tabs b{color:#29b6f6;border-bottom:3px solid #29b6f6;padding-bottom:8px}
+.ha .sec{font-size:17px;color:#8b9198;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:6px 0 12px}
+.ha .card{background:#1b1e23;border:1px solid #2a2f37;border-radius:14px;padding:18px 20px;font-size:20px}
+.ha .odkr{display:flex;align-items:center;justify-content:space-between;border:2px solid #29b6f6;margin-bottom:28px;height:104px;position:relative}
+.ha .cb{display:flex;align-items:center;gap:18px}.ha .cb b{display:block;font-size:24px}.ha .cb small{display:block;color:#8b9198;font-size:17px;margin-top:4px}
+.ha .esp{width:56px;height:56px;border-radius:12px;background:#0d1a2a;border:2px solid #2a3b55;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700;font-size:15px;color:#9ecbff}
+.ha .cbtn{background:#03a9f4;color:#04121d;font-weight:700;font-size:20px;border-radius:10px;padding:12px 24px}
+.ha .cdone{position:absolute;right:20px;top:50%;transform:translateY(-50%);display:flex;gap:10px;align-items:center;font-size:21px;font-weight:700;color:#2ee6a6;opacity:0}
+.ha .cdone svg{width:24px;height:24px}
+.ha .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.ha .grid .card{height:90px;display:flex;align-items:center;gap:14px}
+.ha .panelD{background:#1b1e23;border:1px solid #2a2f37;border-radius:16px;padding:26px 28px}
+.ha .lab{font-size:19px;color:#8b9198;margin-bottom:10px}
+.ha .fld{height:58px;border-radius:10px;background:#111418;border:2px solid #3a414c;display:flex;align-items:center;padding:0 16px;font-family:Plex;font-weight:500;font-size:22px;white-space:nowrap;overflow:hidden}
+.ha .fld.akt{border-color:#29b6f6}
+.ha .cbtn.duzy{display:inline-block;margin-top:22px;font-size:22px;padding:14px 30px}
+.ha .prog{margin-top:26px;display:flex;flex-direction:column;gap:14px}
+.ha .pr{display:flex;align-items:center;gap:14px;font-size:21px;opacity:0}.ha .pr svg{width:26px;height:26px}
+.ha .pas{height:8px;border-radius:4px;background:#2a2f37;margin-top:22px;overflow:hidden}.ha .pas i{display:block;height:100%;width:0;background:#29b6f6}
+.ha .dash{display:grid;grid-template-columns:1.25fr 1fr;gap:18px}
+.ha .tile{background:#1b1e23;border:1px solid #2a2f37;border-radius:16px;padding:16px 20px}
+.ha .tile small{display:block;font-size:17px;color:#8b9198}.ha .tile b{display:block;font-size:34px;font-weight:700;margin-top:4px;white-space:nowrap}
+.ha .tiles{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.kursor{position:absolute;left:0;top:0;width:40px;height:50px;z-index:8;opacity:0;pointer-events:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.6))}
+.klik{position:absolute;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;border:4px solid #ffb020;opacity:0;z-index:7;pointer-events:none}
+/* małe okno dodatku (wariant LAN) i panel instalatora */
+.okno{position:absolute;background:#15181d;border:2px solid #2a3142;border-radius:18px;box-shadow:0 30px 70px rgba(0,0,0,.55);font-family:Inter;color:#e3e5e8;padding:22px 26px;opacity:0}
+.okno .ot{font-size:24px;font-weight:700;display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.okno .ot i{width:28px;height:28px;border-radius:7px;background:#03a9f4;display:inline-block}
+.okno .ob{display:inline-flex;align-items:center;gap:10px;background:#03a9f4;color:#04121d;font-weight:700;font-size:21px;border-radius:10px;padding:12px 22px}
+.okno .ob.jas{background:transparent;color:#29b6f6;border:2px solid #29b6f6}
+.okno .wyn{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#1d2128;border:1px solid #2f3540;border-radius:12px;padding:12px 16px;margin-top:16px;font-size:20px;opacity:0}
+.okno .wyn small{display:block;color:#8b9198;font-size:16px;margin-top:2px}
+.okno .spin{width:26px;height:26px;border-radius:50%;border:4px solid #2a2f37;border-top-color:#29b6f6;display:inline-block;opacity:0}
+.okno .okk{display:flex;gap:10px;align-items:center;color:#2ee6a6;font-weight:700;font-size:21px;margin-top:14px;opacity:0}.okno .okk svg{width:24px;height:24px}
+.diag .rw{display:flex;align-items:center;gap:18px;height:84px;border-radius:14px;background:#1b1e23;border:2px solid #2a2f37;padding:0 22px;margin-bottom:14px;font-size:26px;font-weight:700;opacity:0}
+.diag .rw svg{width:38px;height:38px;flex:none}
+.diag .rw small{display:block;font-size:18px;color:#8b9198;font-weight:500;margin-top:3px}
+.diag .rw.zle{border-color:rgba(255,84,112,.9);background:#2a1219}
+</style></head><body>
+<div id="tlo"></div>
+<div id="gora"><div class="logo">POMPA<span>·HA</span></div><div class="gsep"></div><div class="gtyt">Instrukcja montażu</div><div class="gsp"></div><div class="gwole">projekt <b>woleOZE</b></div></div>
+<div id="sceny"></div>
+<div id="pasek"><i></i></div>
+<script src="rysunki.js"></script>
+<script src="sceny.js"></script>
+</body></html>
