@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/sprawdz/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/sprawdz/">
+<meta property="og:title" content="Czy Twoja pompa pasuje? Sprawdź po zdjęciu tabliczki">
+<meta property="og:description" content="Zrób zdjęcie tabliczki znamionowej albo sterownika. Odpowiedź w kilkanaście sekund: pasuje, w testach czy inna droga.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/sprawdz.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Sprawdź pompę po zdjęciu tabliczki">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/sprawdz.jpg">
+<title>Czy Twoja pompa pasuje? – Pompa w HA</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Wrzuć zdjęcie tabliczki znamionowej pompy ciepła albo sterownika. Odczytamy markę i model i od razu powiemy, czy moduł Pompa w HA do niej pasuje.">
+<style>
+  :root{--bg:#0d1117;--panel:#141b25;--line:#243041;--txt:#dde5f1;--mut:#8b9ab3;--acc:#5cb8ff;--ok:#3ecf8e;--bad:#ff6b7a;--warn:#f0b35a;--code:#0a0f16;--zl:linear-gradient(135deg,#ffe066,#ffb627 55%,#ff8f1f)}
+  *{box-sizing:border-box}
+  html{overflow-x:clip}
+  html,body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,system-ui,sans-serif}
+  main{max-width:760px;margin:0 auto;padding:22px 16px 60px}
+  .wroc{color:var(--mut);text-decoration:none;font-size:14px}.wroc:hover{color:var(--txt)}
+  h1{font-size:clamp(26px,6vw,38px);line-height:1.12;margin:14px 0 8px;letter-spacing:-.02em}
+  h1 em{font-style:normal;background:linear-gradient(90deg,#3cc8ff,#3fe08a);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lead{color:var(--mut);margin:0 0 20px}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}
+  .strefa{display:block;border:2px dashed #33465f;border-radius:14px;padding:26px 16px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s}
+  .strefa:hover,.strefa.nad{border-color:var(--acc);background:rgba(92,184,255,.06)}
+  .strefa b{display:block;font-size:18px;margin:6px 0 4px}
+  .strefa small{color:var(--mut)}
+  .strefa .ik{font-size:40px;line-height:1}
+  #pliki{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+  .miniatury{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .miniatury:empty{display:none}
+  .min{position:relative;width:92px;height:92px;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--code)}
+  .min img{width:100%;height:100%;object-fit:cover;display:block}
+  .min button{position:absolute;top:4px;right:4px;width:26px;height:26px;border-radius:50%;border:0;background:rgba(0,0,0,.7);color:#fff;font-size:15px;line-height:26px;padding:0;cursor:pointer}
+  .podpowiedzi{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:14px;font-size:14px;color:var(--mut)}
+  .podpowiedzi div{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+  .podpowiedzi b{color:var(--txt)}
+  label.opis{display:block;margin-top:16px;font-size:14px;color:var(--mut)}
+  textarea{width:100%;margin-top:6px;min-height:76px;resize:vertical;background:var(--code);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:15px;line-height:1.45}
+  textarea:focus{outline:none;border-color:var(--acc)}
+  .akcja{margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;border:0;border-radius:12px;padding:14px 22px;font-family:inherit;font-size:16px;line-height:1.2;font-weight:800;text-decoration:none;color:#1f1300;background:var(--zl);box-shadow:0 8px 24px rgba(255,170,40,.25)}
+  .btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+  .btn.drugi{background:#1b2534;color:var(--txt);border:1px solid var(--line);box-shadow:none;font-weight:700}
+  .btn.drugi:hover{border-color:var(--acc)}
+  .btn:focus-visible,textarea:focus-visible,.strefa:focus-within{outline:2px solid var(--acc);outline-offset:2px}
+  .info{font-size:13px;color:var(--mut);margin:12px 0 0}
+  .info a{color:var(--mut)}
+  .blad{color:var(--bad);font-size:15px;margin-top:12px}
+  .blad:empty{display:none}
+  .czeka{display:none;align-items:center;gap:12px;color:var(--mut);margin-top:14px}
+  .czeka.wid{display:flex}
+  .krec{width:22px;height:22px;border:3px solid #2b3a52;border-top-color:var(--acc);border-radius:50%;animation:k 0.8s linear infinite}
+  @keyframes k{to{transform:rotate(360deg)}}
+  #wynik{display:none;scroll-margin-top:16px}
+  #wynik.wid{display:block}
+  .werdykt{display:flex;gap:14px;align-items:flex-start}
+  .werdykt .ik{font-size:38px;line-height:1}
+  .werdykt h2{margin:0 0 4px;font-size:22px;line-height:1.2}
+  .werdykt p{margin:0;color:var(--txt)}
+  #wynik.pasuje{border-color:rgba(62,207,142,.6)}#wynik.powinno{border-color:rgba(62,207,142,.4)}
+  #wynik.testy{border-color:rgba(240,179,90,.6)}#wynik.integracja{border-color:rgba(92,184,255,.6)}
+  #wynik.nie{border-color:rgba(255,107,122,.5)}#wynik.nie_wiem{border-color:rgba(139,154,179,.6)}
+  dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:16px 0 0;font-size:14px}
+  dt{color:var(--mut)}dd{margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+  .brak{margin-top:12px;border-left:3px solid var(--warn);padding:8px 12px;background:rgba(240,179,90,.08);border-radius:6px;font-size:14px}
+  .brak:empty{display:none}
+  .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .pewnosc{font-size:12px;color:var(--mut);margin-top:12px}
+  footer{margin-top:28px;color:var(--mut);font-size:13px;text-align:center}
+  footer a{color:var(--mut)}
+  @media (max-width:520px){.btn{width:100%}.akcja{flex-direction:column;align-items:stretch}}
+</style>
+</head>
+<body>
+<main>
+  <a class="wroc" href="/">← Pompa w Home Assistant</a>
+  <h1>Czy Twoja pompa <em>pasuje?</em></h1>
+  <p class="lead">Zrób zdjęcie tabliczki znamionowej albo sterownika. Odczytamy markę i model i od razu powiemy, co dalej.</p>
+
+  <section>
+    <label class="strefa" id="strefa" for="pliki">
+      <span class="ik">📷</span>
+      <b>Dodaj zdjęcia (do 4)</b>
+      <small>Kliknij, przeciągnij albo zrób zdjęcie telefonem</small>
+      <input id="pliki" type="file" accept="image/*" multiple>
+    </label>
+    <div class="miniatury" id="miniatury"></div>
+    <div class="podpowiedzi">
+      <div><b>1. Tabliczka jednostki zewnętrznej</b><br>naklejka z boku lub z tyłu pompy</div>
+      <div><b>2. Sterownik ścienny</b><br>ekran z przodu, a jeśli możesz, także tył</div>
+      <div><b>3. Hydrobox</b><br>tabliczka jednostki wewnętrznej, jeśli ją masz</div>
+    </div>
+    <label class="opis" for="opis">Coś od siebie? (nieobowiązkowe)
+      <textarea id="opis" maxlength="1000" placeholder="np. Kaisai Arctic 10 kW, sterownik czarno-biały, mam Home Assistant na Raspberry"></textarea>
+    </label>
+    <div class="akcja">
+      <button class="btn" id="sprawdz" type="button" disabled>🔍 Sprawdź moją pompę</button>
+    </div>
+    <div class="czeka" id="czeka"><span class="krec"></span><span id="czekaTekst">Czytam tabliczkę…</span></div>
+    <div class="blad" id="blad" role="alert"></div>
+    <p class="info">Zdjęcia odczytuje model AI (Claude). Nie zapisujemy ich ani opisu, zostaje tylko marka, model i wynik, bez Twoich danych. <a href="/prywatnosc/">Prywatność</a></p>
+  </section>
+
+  <section id="wynik" aria-live="polite">
+    <div class="werdykt"><span class="ik" id="wIk"></span><div><h2 id="wTytul"></h2><p id="wTekst"></p></div></div>
+    <dl id="wDane"></dl>
+    <div class="brak" id="wBrak"></div>
+    <div class="cta" id="wCta"></div>
+    <div class="pewnosc" id="wPewnosc"></div>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">Grupa na Facebooku</a></footer>
+</main>
+<script>
+(() => {
+  const API = (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('api')) || 'https://pompa-api.woleoze.pl/pompa/sprawdz';
+  const MAKS = 4, BOK = 1568, JAKOSC = 0.85;
+  const $ = (id) => document.getElementById(id);
+  const zdjecia = []; // { typ, base64, url }
+
+  const LINK = {
+    wifi: ['https://buy.stripe.com/cNieVd2qg9sI7jK6aL3Je05', 'Zamawiam zestaw Wi-Fi · 499 zł', 'btn'],
+    lan: ['https://buy.stripe.com/28E00j4yofR633u7eP3Je06', 'Zestaw Wi-Fi + LAN · 549 zł', 'btn drugi'],
+    pro: ['https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03', 'Kupuję Pro · 149 zł', 'btn'],
+    tester: ['/#testy', 'Zgłaszam się na testera', 'btn'],
+    inne: ['/#inne-marki', 'Jak działa Pro na mojej integracji', 'btn drugi'],
+    grupa: ['https://www.facebook.com/groups/pompacieplahomeassistant', '👥 Zapytaj w grupie', 'btn drugi'],
+    lista: ['/#zgodnosc', 'Lista pomp, z którymi działa', 'btn drugi'],
+    znowu: ['#', '📷 Dodaj inne zdjęcie', 'btn drugi'],
+  };
+  const WERDYKT = {
+    pasuje: ['✅', 'Pasuje', ['wifi', 'lan']],
+    powinno: ['🟢', 'Powinno pasować', ['wifi', 'lan', 'grupa']],
+    testy: ['🧪', 'W testach: szukamy pierwszego testera', ['tester', 'grupa']],
+    integracja: ['🔌', 'Działa z Licencją Pro', ['pro', 'inne']],
+    nie: ['❌', 'Tej pompy na dziś nie obsługujemy', ['grupa', 'lista']],
+    nie_wiem: ['📷', 'Potrzebuję wyraźniejszego zdjęcia', ['znowu', 'lista']],
+  };
+
+  function stan() {
+    $('sprawdz').disabled = !zdjecia.length && $('opis').value.trim().length < 3;
+  }
+  function miniatury() {
+    const m = $('miniatury'); m.textContent = '';
+    zdjecia.forEach((z, i) => {
+      const d = document.createElement('div'); d.className = 'min';
+      const img = document.createElement('img'); img.src = z.url; img.alt = `Zdjęcie ${i + 1}`;
+      const x = document.createElement('button'); x.type = 'button'; x.textContent = '×'; x.setAttribute('aria-label', 'Usuń zdjęcie');
+      x.onclick = () => { URL.revokeObjectURL(z.url); zdjecia.splice(i, 1); miniatury(); stan(); };
+      d.append(img, x); m.append(d);
+    });
+  }
+  async function zmniejsz(plik) {
+    let obraz;
+    try { obraz = await createImageBitmap(plik, { imageOrientation: 'from-image' }); }
+    catch {
+      obraz = await new Promise((ok, zle) => { const i = new Image(); i.onload = () => ok(i); i.onerror = zle; i.src = URL.createObjectURL(plik); });
+    }
+    const w = obraz.width, h = obraz.height, s = Math.min(1, BOK / Math.max(w, h));
+    const c = document.createElement('canvas'); c.width = Math.round(w * s); c.height = Math.round(h * s);
+    c.getContext('2d').drawImage(obraz, 0, 0, c.width, c.height);
+    const blob = await new Promise((ok) => c.toBlob(ok, 'image/jpeg', JAKOSC));
+    const b64 = await new Promise((ok) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1]); r.readAsDataURL(blob); });
+    return { typ: 'image/jpeg', base64: b64, url: URL.createObjectURL(blob) };
+  }
+  async function dodaj(pliki) {
+    $('blad').textContent = '';
+    for (const p of [...pliki]) {
+      if (zdjecia.length >= MAKS) { $('blad').textContent = `Najwyżej ${MAKS} zdjęcia.`; break; }
+      if (!/^image\//.test(p.type) && !/\.(heic|heif|jpe?g|png|webp)$/i.test(p.name)) continue;
+      try { zdjecia.push(await zmniejsz(p)); }
+      catch { $('blad').textContent = 'Nie umiem otworzyć tego zdjęcia. Zrób zrzut ekranu albo zapisz je jako JPG.'; }
+    }
+    miniatury(); stan();
+  }
+
+  $('pliki').addEventListener('change', (e) => { dodaj(e.target.files); e.target.value = ''; });
+  $('opis').addEventListener('input', stan);
+  const strefa = $('strefa');
+  ['dragenter', 'dragover'].forEach((t) => strefa.addEventListener(t, (e) => { e.preventDefault(); strefa.classList.add('nad'); }));
+  ['dragleave', 'drop'].forEach((t) => strefa.addEventListener(t, (e) => { e.preventDefault(); strefa.classList.remove('nad'); }));
+  strefa.addEventListener('drop', (e) => dodaj(e.dataTransfer.files));
+  document.addEventListener('paste', (e) => { const f = [...(e.clipboardData?.files || [])]; if (f.length) dodaj(f); });
+
+  const ETAPY = ['Czytam tabliczkę…', 'Szukam modelu i sterownika…', 'Porównuję z listą zgodności…', 'Jeszcze chwila…'];
+  $('sprawdz').addEventListener('click', async () => {
+    const btn = $('sprawdz'); btn.disabled = true; $('blad').textContent = ''; $('wynik').className = '';
+    $('czeka').classList.add('wid'); let e = 0; $('czekaTekst').textContent = ETAPY[0];
+    const zegar = setInterval(() => { e = Math.min(e + 1, ETAPY.length - 1); $('czekaTekst').textContent = ETAPY[e]; }, 5000);
+    try {
+      const odp = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ zdjecia: zdjecia.map(({ typ, base64 }) => ({ typ, base64 })), opis: $('opis').value.trim() }) });
+      const j = await odp.json().catch(() => ({}));
+      if (!odp.ok || !j.wynik) throw new Error(j.blad || 'Nie udało się sprawdzić. Spróbuj za chwilę.');
+      pokaz(j.wynik);
+    } catch (err) {
+      $('blad').textContent = err.message && !/fetch|network/i.test(err.message) ? err.message : 'Brak połączenia. Sprawdź internet i spróbuj ponownie.';
+    } finally { clearInterval(zegar); $('czeka').classList.remove('wid'); stan(); }
+  });
+
+  function pokaz(r) {
+    const [ik, tytul, cta] = WERDYKT[r.werdykt] || WERDYKT.nie_wiem;
+    $('wIk').textContent = ik; $('wTytul').textContent = tytul; $('wTekst').textContent = r.wyjasnienie || '';
+    const dl = $('wDane'); dl.textContent = '';
+    [['Marka', r.marka], ['Model', r.model_jednostki], ['Jednostka wewn.', r.model_wewnetrzny], ['Sterownik', r.sterownik], ['Czynnik', r.czynnik]]
+      .filter(([, v]) => v && String(v).trim()).forEach(([k, v]) => { const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; dl.append(dt, dd); });
+    $('wBrak').textContent = r.czego_brakuje ? `📷 ${r.czego_brakuje}` : '';
+    const c = $('wCta'); c.textContent = '';
+    let lista = cta;
+    if (r.werdykt === 'pasuje' || r.werdykt === 'powinno') lista = r.rekomendacja === 'zestaw_lan' ? ['lan', 'wifi'] : cta;
+    lista.forEach((k) => {
+      const [href, txt, kl] = LINK[k]; const a = document.createElement('a'); a.href = href; a.textContent = txt; a.className = kl;
+      if (k === 'znowu') a.onclick = (ev) => { ev.preventDefault(); $('pliki').click(); };
+      if (/^https:\/\/www\.facebook/.test(href)) { a.target = '_blank'; a.rel = 'noopener'; }
+      c.append(a);
+    });
+    $('wPewnosc').textContent = r.pewnosc === 'niska' ? 'Odczyt niepewny: przed zakupem dodaj wyraźniejsze zdjęcie albo zapytaj w grupie.' : '';
+    const w = $('wynik'); w.className = `wid ${r.werdykt}`; w.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+})();
+</script>
+</body>
+</html>

@@ -69,13 +69,15 @@ th{font-size:13.5px;color:var(--mut);font-weight:700}
       <li>Kreator zapisuje w Twojej przeglądarce (localStorage) losowy identyfikator instalacji, potrzebny do licencji. Encje i ustawienia wpisane w kreatorze nie opuszczają przeglądarki; do serwera licencji trafia tylko klucz.</li>
       <li>Karty Pro zapisują w przeglądarce kopię swojego kodu na 7 dni, żeby działały przy przerwie w łączności.</li>
       <li>Serwer hostingu strony (GitHub Pages) zapisuje w logach techniczne dane połączeń, np. adres IP.</li>
+      <li>„Sprawdź, czy Twoja pompa pasuje” (/sprawdz/): zdjęcia i opis wysyłamy do odczytu do modelu AI Claude (Anthropic) przez nasz serwer w Cloudflare. Nie zapisujemy zdjęć ani opisu. Przez 120 dni zostaje tylko odczytana marka, model, sterownik i wynik, bez danych osobowych. Adres IP zapisujemy w postaci skrótu na 2 dni, żeby ograniczyć liczbę sprawdzeń.</li>
     </ul>
   </section>
 
   <section class="k"><h2>4. Komu powierzamy dane</h2>
     <ul>
       <li>Stripe: obsługa płatności;</li>
-      <li>Cloudflare: serwer licencji (klucze, identyfikatory instalacji, raporty);</li>
+      <li>Cloudflare: serwer licencji (klucze, identyfikatory instalacji, raporty) i serwer sprawdzania pomp;</li>
+      <li>Anthropic: odczyt zdjęć tabliczek w sprawdzaniu pomp (bez zapisu po naszej stronie);</li>
       <li>Brevo: wysyłka e-maili z kluczem i potwierdzeniem zamówienia;</li>
       <li>InPost albo kurier: dostawa Zestawu i odesłanie modułu;</li>
       <li>GitHub: hosting strony;</li>

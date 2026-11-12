@@ -4,7 +4,7 @@
 set -e
 cd "$(dirname "$0")"
 CH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-for s in instrukcja kreator instalator program-modulu regulamin prywatnosc; do
+for s in ${ZESTAW:-sprawdz instrukcja kreator instalator program-modulu regulamin prywatnosc}; do
   P=$(mktemp -d)
   "$CH" --headless=new --disable-gpu --hide-scrollbars --user-data-dir="$P" --allow-file-access-from-files \
     --force-device-scale-factor=1 --virtual-time-budget=3000 --window-size=1200,630 \
