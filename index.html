@@ -26,6 +26,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:70px}
 body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,"Segoe UI",Roboto,system-ui,-apple-system,sans-serif;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+html{overflow-x:clip}
 img{max-width:100%;height:auto}
 a{color:var(--hp)}
 .w{max-width:1140px;margin:0 auto;padding:0 16px}
@@ -45,6 +46,10 @@ nav .sp{flex:1}nav a.n{color:var(--mut);text-decoration:none;font-size:14px}nav 
 .b:focus-visible,.okno:focus-visible,.qb:focus-visible{outline:3px solid var(--warm);outline-offset:3px}
 .b1{background:linear-gradient(135deg,#39c0ff,#2ee6a6);color:#03121e;border:0;box-shadow:0 10px 30px rgba(57,192,255,.35)}
 .b1:hover{box-shadow:0 14px 40px rgba(46,230,166,.45)}
+.bzl{background:linear-gradient(135deg,#ffe066,#ffb627 55%,#ff8f1f);color:#1f1300;border:0;box-shadow:0 10px 30px rgba(255,182,39,.38)}
+.bzl:hover{box-shadow:0 14px 40px rgba(255,214,90,.55)}
+.bzl:focus-visible{outline:3px solid #fff3c4;outline-offset:2px}
+nav a.bzl{white-space:nowrap}
 .b2{background:var(--panel2);color:var(--txt)}
 .b2:hover{border-color:var(--hp)}
 .bm{padding:9px 14px;font-size:14px}
@@ -287,8 +292,10 @@ nav a.n.fbn{color:#7fb3ff;font-weight:700}nav a.n.fbn:hover{color:#fff}
 .grupa p{margin:0;color:var(--mut);font-size:17px;max-width:640px}
 .b.bfb{background:#1468e0;color:#fff;border:0;font-size:21px;font-weight:900;letter-spacing:.04em;padding:20px 36px;border-radius:14px;box-shadow:0 12px 34px rgba(20,104,224,.45);white-space:nowrap}
 .b.bfb:hover{background:#0d55bd;box-shadow:0 16px 44px rgba(20,104,224,.6)}
+.bfb.bzl{background:linear-gradient(135deg,#ffe066,#ffb627 55%,#ff8f1f);color:#1f1300;box-shadow:0 12px 34px rgba(255,182,39,.45)}
+.bfb.bzl:hover{background:linear-gradient(135deg,#fff08a,#ffc23d 55%,#ff9a2e);box-shadow:0 16px 44px rgba(255,214,90,.6)}
 @media (max-width:920px){nav a.n.fbn{display:inline}nav .w{gap:12px}}
-@media (max-width:369px){nav a.n.fbn{display:none}}
+@media (max-width:369px){nav a.bzl{display:none}}
 @media (max-width:760px){.grupa{grid-template-columns:1fr;padding:26px 18px}.b.bfb{width:100%}}
 /* stopka */
 footer{padding:34px 0 50px;color:var(--mut);font-size:14px;border-top:1px solid var(--line);margin-top:30px}
@@ -376,7 +383,7 @@ footer p{margin:6px 0}
 <a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
 <nav><div class="w">
   <a class="logo" href="#">POMPA<span>·HA</span></a><div class="sp"></div>
-  <a class="n" href="#wyniki">Wyniki</a><a class="n" href="#przed-po">Przed / po</a><a class="n" href="#jak">Jak to działa</a><a class="n" href="#ceny">Ceny</a><a class="n" href="#pytania">Pytania</a><a class="n fbn" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">Grupa FB</a>
+  <a class="n" href="#wyniki">Wyniki</a><a class="n" href="#przed-po">Przed / po</a><a class="n" href="#jak">Jak to działa</a><a class="n" href="#ceny">Ceny</a><a class="n" href="#pytania">Pytania</a><a class="b bm bzl" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">👥 Grupa FB</a>
   <a class="b b1 bm" href="#start">Zacznij za darmo</a>
 </div></nav>
 
@@ -577,6 +584,18 @@ footer p{margin:6px 0}
   </div>
   <p style="text-align:center;margin-top:14px"><a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/zgodnosc.md">Pełna lista z modelami i źródłami →</a> · <span style="color:var(--mut)">stan 12.11.2026</span></p>
 </section>
+
+<!-- GRUPA NA FACEBOOKU (2): pod zgodnością -->
+<section id="grupa-marki">
+  <div class="grupa pokaz">
+    <div>
+      <span class="nadt">Nie ma Twojej pompy?</span>
+      <h2>Zagłosuj w grupie na Facebooku</h2>
+      <p>W grupie „Pompa Ciepła – Home Assistant” wybieramy w ankiecie, którą markę obsłużyć następną, i szukamy pierwszych testerów: Haier, Samsung, LG, Gree, Kaisai KHX.</p>
+    </div>
+    <a class="b bfb bzl" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">👥 GRUPA NA FB</a>
+  </div>
+</section>
 <section id="ceny">
   <div class="nag pokaz"><span class="nadt">Cennik</span><h2>Gotowy zestaw albo zrób sam</h2><p>Ceny brutto. Start sprawdzisz za darmo, zanim wydasz złotówkę.</p></div>
 
@@ -697,7 +716,7 @@ footer p{margin:6px 0}
       <h2>Dołącz do grupy na Facebooku</h2>
       <p>„Pompa Ciepła – Home Assistant” to miejsce na pytania, zdjęcia instalacji i wykresy z Home Assistanta. Tam najpierw pokazujemy nowe marki w testach i pytamy w ankiecie, którą pompę obsłużyć następną.</p>
     </div>
-    <a class="b bfb" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">👥 GRUPA NA FB</a>
+    <a class="b bfb bzl" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">👥 GRUPA NA FB</a>
   </div>
 </section>
 
