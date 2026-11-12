@@ -4,6 +4,8 @@ Podgląd pomp ciepła na płycie **Midea M-Thermal** z czarno-białym sterowniki
 
 Sprawdzone na **Rotenso Aquami AQM120X3** (12 kW, 3 fazy, R32) ze sterownikiem ściennym **KJRH-120H** („Reni”). Działa od 9.11.2026.
 
+👥 **Grupa na Facebooku: [Pompa Ciepła – Home Assistant](https://www.facebook.com/groups/pompacieplahomeassistant).** Pytania, zdjęcia instalacji, nowe marki w testach i ankieta, którą pompę obsłużyć następną.
+
 [English summary below](#english-summary)
 
 ![Karta Start (przykładowe dane)](docs/zrzuty/start.png)
@@ -207,6 +209,8 @@ Ceny paliw, sprawności kotłów i kalkulatory pochodzą z [woleoze.pl](https://
 
 **Kontakt w sprawie konfiguracji i Pro:** [pompa@woleoze.pl](mailto:pompa@woleoze.pl)
 
+**Społeczność:** [grupa „Pompa Ciepła – Home Assistant” na Facebooku](https://www.facebook.com/groups/pompacieplahomeassistant). Pomoc innych użytkowników; w sprawie zamówienia i klucza pisz mailem.
+
 ## Wsparcie
 
 Wersja Start jest darmowa i taka zostanie. Jeśli zaoszczędziła ci godzin grzebania w rejestrach, możesz postawić kawę:
@@ -227,4 +231,4 @@ Licencja: [Licencja Start](LICENSE) (darmowe użycie w jednym domu, bez odsprzed
 
 ## English summary
 
-Home Assistant cards for **Rotenso Aquami / Midea M-Thermal** heat pumps. **Start (free):** a Lovelace card on top of the `midea_ac_lan` integration (no extra hardware: status, temperatures, energy and heat from Midea counters, COP, 14-day chart, zone/DHW/ECO/silent switches), plus a **read-only** ESPHome Modbus RTU config (ESP32-S3 with RS-485, wired to the **wall controller's H1/H2 terminals**, not the main board; 114 readings every 5 s) and a live preview card (refrigerant loop, COP, 24 h run chart, heating curve, installer settings). **Pro (149 PLN, private repo):** writes to installer settings, space heating / DHW split of energy and COP, DHW schedule for cheap tariff hours, cost comparison with other fuels, reports and alarms, setup wizard and updates. Polish UI. Wiring and pitfalls: `docs/podlaczenie.md`. License: "Licencja Start" (free use in one home, no resale); versions published before 11.11.2026 15:00 remain MIT.
+Home Assistant cards for **Rotenso Aquami / Midea M-Thermal** heat pumps. **Start (free):** a Lovelace card on top of the `midea_ac_lan` integration (no extra hardware: status, temperatures, energy and heat from Midea counters, COP, 14-day chart, zone/DHW/ECO/silent switches), plus a **read-only** ESPHome Modbus RTU config (ESP32-S3 with RS-485, wired to the **wall controller's H1/H2 terminals**, not the main board; 114 readings every 5 s) and a live preview card (refrigerant loop, COP, 24 h run chart, heating curve, installer settings). **Pro (149 PLN, private repo):** writes to installer settings, space heating / DHW split of energy and COP, DHW schedule for cheap tariff hours, cost comparison with other fuels, reports and alarms, setup wizard and updates. Polish UI. Wiring and pitfalls: `docs/podlaczenie.md`. License: "Licencja Start" (free use in one home, no resale); versions published before 11.11.2026 15:00 remain MIT. Community (Polish): [Facebook group](https://www.facebook.com/groups/pompacieplahomeassistant).

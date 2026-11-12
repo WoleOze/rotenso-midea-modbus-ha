@@ -24,3 +24,5 @@ Nikt nie łączy się z twoim Home Assistant z zewnątrz. To dodatek wysyła zap
 Wymaga Home Assistant OS (Raspberry Pi, Home Assistant Green, mini PC z HA OS). Instrukcja montażu: https://pompa.woleoze.pl/instrukcja/
 
 Pomoc: pompa@woleoze.pl (tylko mailowo).
+
+Grupa na Facebooku „Pompa Ciepła – Home Assistant” (pytania i pomoc innych użytkowników): https://www.facebook.com/groups/pompacieplahomeassistant
