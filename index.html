@@ -272,6 +272,24 @@ details .od b{color:var(--txt)}
 .koniec h2{font-size:clamp(28px,4.4vw,48px)}
 .koniec p{color:var(--mut);max-width:620px;margin:0 auto 24px;font-size:17px}
 .koniec .btns{justify-content:center}
+/* grupa na Facebooku */
+.fbpas{display:flex;justify-content:center;align-items:center;gap:10px;padding:8px 16px;background:#1468e0;color:#fff;text-decoration:none;font-size:14.5px;font-weight:700;line-height:1.3;white-space:nowrap;overflow:hidden}
+.fbpas:hover{background:#0d55bd}
+.fbpas:focus-visible{outline:3px solid var(--warm);outline-offset:-3px}
+.fbpas b{font-weight:900}
+.fbpas .dol{flex:none;background:#fff;color:#1468e0;border-radius:999px;padding:3px 12px;font-weight:900}
+.fbpas .kr{display:none}
+@media (max-width:640px){.fbpas .dl{display:none}.fbpas .kr{display:inline}}
+nav a.n.fbn{color:#7fb3ff;font-weight:700}nav a.n.fbn:hover{color:#fff}
+.grupa{display:grid;grid-template-columns:1fr auto;gap:22px 40px;align-items:center;background:radial-gradient(640px 320px at 100% 0,rgba(20,104,224,.3),transparent 65%),var(--panel);border:1px solid rgba(20,104,224,.6);border-radius:24px;padding:36px 40px}
+.grupa .nadt{color:#7fb3ff}
+.grupa h2{margin:0 0 10px}
+.grupa p{margin:0;color:var(--mut);font-size:17px;max-width:640px}
+.b.bfb{background:#1468e0;color:#fff;border:0;font-size:21px;font-weight:900;letter-spacing:.04em;padding:20px 36px;border-radius:14px;box-shadow:0 12px 34px rgba(20,104,224,.45);white-space:nowrap}
+.b.bfb:hover{background:#0d55bd;box-shadow:0 16px 44px rgba(20,104,224,.6)}
+@media (max-width:920px){nav a.n.fbn{display:inline}nav .w{gap:12px}}
+@media (max-width:369px){nav a.n.fbn{display:none}}
+@media (max-width:760px){.grupa{grid-template-columns:1fr;padding:26px 18px}.b.bfb{width:100%}}
 /* stopka */
 footer{padding:34px 0 50px;color:var(--mut);font-size:14px;border-top:1px solid var(--line);margin-top:30px}
 .stl{display:flex;flex-wrap:wrap;gap:8px 22px;margin-bottom:14px}
@@ -355,9 +373,10 @@ footer p{margin:6px 0}
 </head>
 <body>
 <div class="tlo"></div>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
 <nav><div class="w">
   <a class="logo" href="#">POMPA<span>·HA</span></a><div class="sp"></div>
-  <a class="n" href="#wyniki">Wyniki</a><a class="n" href="#przed-po">Przed / po</a><a class="n" href="#jak">Jak to działa</a><a class="n" href="#ceny">Ceny</a><a class="n" href="#pytania">Pytania</a>
+  <a class="n" href="#wyniki">Wyniki</a><a class="n" href="#przed-po">Przed / po</a><a class="n" href="#jak">Jak to działa</a><a class="n" href="#ceny">Ceny</a><a class="n" href="#pytania">Pytania</a><a class="n fbn" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">Grupa FB</a>
   <a class="b b1 bm" href="#start">Zacznij za darmo</a>
 </div></nav>
 
@@ -670,6 +689,18 @@ footer p{margin:6px 0}
   </div>
 </section>
 
+<!-- GRUPA NA FACEBOOKU -->
+<section id="grupa">
+  <div class="grupa pokaz">
+    <div>
+      <span class="nadt">Społeczność</span>
+      <h2>Dołącz do grupy na Facebooku</h2>
+      <p>„Pompa Ciepła – Home Assistant” to miejsce na pytania, zdjęcia instalacji i wykresy z Home Assistanta. Tam najpierw pokazujemy nowe marki w testach i pytamy w ankiecie, którą pompę obsłużyć następną.</p>
+    </div>
+    <a class="b bfb" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">👥 GRUPA NA FB</a>
+  </div>
+</section>
+
 <!-- FAQ -->
 <section id="pytania">
   <div class="nag pokaz"><span class="nadt">Pytania</span><h2>Zanim zapłacisz</h2><p>Najczęstsze wątpliwości. Krótko i wprost.</p></div>
@@ -710,6 +741,7 @@ footer p{margin:6px 0}
     <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a>
     <a href="https://buycoffee.to/woleoze">☕ Postaw kawę</a>
     <a href="https://woleoze.pl/pompa-ciepla/">Pompa w HA to projekt woleOZE</a>
+    <a href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">👥 Grupa na Facebooku <small>· Pompa Ciepła – Home Assistant</small></a>
     <a href="/regulamin/">Regulamin</a>
     <a href="/prywatnosc/">Polityka prywatności</a>
     <a href="/program-modulu/">Program modułu <small>· GPL v3, źródła</small></a>
