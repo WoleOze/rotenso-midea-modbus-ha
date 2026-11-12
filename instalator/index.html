@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Karta dla instalatora – Pompa w HA</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="canonical" href="https://pompa.woleoze.pl/instalator/">
+<meta name="description" content="Karta dla instalatora: podłączenie modułu Modbus do sterownika ściennego pompy Midea M-Thermal (H1/H2), ustawienia menu 17.2 i HMI SET, Rotenso Windmi i Heatmi, diagnostyka. Do wydruku na jednej stronie A4.">
+<style>
+:root{--bg:#f5f7fb;--karta:#fff;--txt:#17203a;--mut:#56627e;--lin:#dbe2ef;--ak:#1677d2;--zle:#c62f45;--warn:#9a6a00;--warnbg:#fff6dc;--ok:#138a5e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1524;--karta:#16203a;--txt:#e7edfb;--mut:#9fb0d0;--lin:#28365a;--ak:#5cb3ff;--zle:#ff7b8d;--warn:#f2c35a;--warnbg:#2c2410;--ok:#3fd09c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.w{max-width:900px;margin:0 auto;padding:18px 16px 50px}
+a{color:var(--ak)}
+.gora{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+h1{font-size:clamp(22px,4vw,28px);line-height:1.15;margin:4px 0 4px}
+.pod{color:var(--mut);margin:0}
+.qr{text-align:center;font-size:11.5px;color:var(--mut);flex:none}
+.qr img{width:96px;height:96px;background:#fff;border-radius:8px;padding:4px;display:block;margin:0 auto 2px}
+.siatka{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:700px){.siatka{grid-template-columns:1fr}.gora{flex-direction:column}}
+.k{background:var(--karta);border:1px solid var(--lin);border-radius:12px;padding:12px 14px}
+.k h2{font-size:15.5px;margin:0 0 6px}
+.k ul,.k ol{margin:0;padding-left:20px}.k li{margin:0 0 4px}
+.zle{color:var(--zle);font-weight:700}
+.ok{color:var(--ok);font-weight:700}
+.uw{background:var(--warnbg);border-left:4px solid var(--warn);padding:8px 10px;border-radius:8px;margin:10px 0}
+.schemat{width:100%;height:auto;border:1px solid var(--lin);border-radius:10px;background:#fff;margin:10px 0}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{border-bottom:1px solid var(--lin);padding:5px 4px;text-align:left;vertical-align:top}
+th{color:var(--mut);font-size:12.5px}
+.btn{display:inline-block;background:var(--ak);color:#fff;text-decoration:none;font-weight:700;padding:9px 14px;border-radius:10px;margin:0 8px 8px 0}
+.stopka{color:var(--mut);font-size:12.5px;margin-top:10px}
+@page{size:A4;margin:8mm}
+@media print{
+  body{background:#fff;color:#000;font-size:9.4pt;line-height:1.3}
+  .w{max-width:none;padding:0}
+  .nodruk{display:none}
+  .k{border:1px solid #bbb;padding:7px 9px;break-inside:avoid}
+  .siatka{gap:6px}
+  .schemat{margin:5px 0;height:66mm;width:100%;object-fit:contain}
+  a{color:#000;text-decoration:none}
+  h1{font-size:15pt}
+  .k h2{font-size:10.6pt;margin-bottom:3px}
+  .k li{margin-bottom:2px}
+  .qr img{width:78px;height:78px}
+  table{font-size:9pt}
+}
+</style>
+</head>
+<body>
+<div class="w">
+  <p class="nodruk"><a href="/">← pompa.woleoze.pl</a> · <a class="btn" href="karta-instalatora.pdf">Pobierz PDF</a><a class="btn" href="javascript:print()">Drukuj</a></p>
+  <div class="gora">
+    <div>
+      <h1>Karta dla instalatora: moduł Modbus do pompy ciepła</h1>
+      <p class="pod">Pompa w Home Assistant · płyta Midea M-Thermal (Rotenso Aquami, Kaisai Arctic, Galmet Prima i inne) · pełna instrukcja ze zdjęciami: kod QR obok.</p>
+    </div>
+    <div class="qr"><img src="qr-instrukcja.svg" alt="Kod QR: pompa.woleoze.pl/instrukcja">pompa.woleoze.pl/instrukcja</div>
+  </div>
+
+  <div class="siatka">
+    <div class="k"><h2>1. Czy pompa pasuje</h2>
+      <ul>
+        <li>Czarno-biały sterownik ścienny Midea KJRH-120x (Rotenso „Reni”) z zaciskami <b>H1/H2</b>.</li>
+        <li>W menu serwisanta (hasło zwykle 234) jest pozycja <b>17.2 „ADRES HMI DLA BMS”</b>.</li>
+        <li>Rotenso Windmi i Heatmi: inne złącze, patrz punkt 5.</li>
+        <li class="zle">Nie pasują: Rotenso Airmi, Kaisai KHX, Thermatec, Kospel, Hewalex, Galmet Airmax3.</li>
+      </ul>
+    </div>
+    <div class="k"><h2>2. Ustawienia na sterowniku</h2>
+      <ul>
+        <li><b>17.2 = 1</b> (fabrycznie). To adres Modbus pompy.</li>
+        <li><b>HMI SET = 0</b> (sterownik główny). Nie zmieniaj na podrzędny.</li>
+        <li>Po wyjściu z menu serwisanta pompa się wyłącza: włącz ją przyciskiem i sprawdź grzanie i CWU.</li>
+      </ul>
+    </div>
+  </div>
+
+  <img class="schemat" src="../docs/schemat-modbus-panel.png" alt="Schemat: A+ modułu do H2, B− do H1 na sterowniku ściennym; nie do płyty głównej">
+
+  <div class="siatka">
+    <div class="k"><h2>3. Podłączenie (ok. 10 min)</h2>
+      <ol>
+        <li>Wyłącz pompę na panelu i zdejmij sterownik ze ściany.</li>
+        <li><b>H2 → A+</b>, <b>H1 → B−</b> modułu. Dwie żyły (np. para ze skrętki), bez masy, bez terminatora.</li>
+        <li>Istniejących przewodów sterownika (E Y X B A) nie odpinasz.</li>
+        <li>Brak odczytów: najpierw <b>zamień A i B</b>.</li>
+      </ol>
+      <p class="zle" style="margin:6px 0 0">Nie podłączaj się do H1/H2 na płycie głównej jednostki (CN30). To magistrala panelu, nie Modbus.</p>
+    </div>
+    <div class="k"><h2>4. Zasilanie i sieć</h2>
+      <ul>
+        <li><b>Moduł Wi-Fi:</b> tylko 5 V przez USB-C (ładowarka od telefonu, min. 1 A). Sieć klient ustawia telefonem: Wi-Fi „pompa-setup”, hasło „pompa-setup”, strona 192.168.4.1.</li>
+        <li><b>Bramka LAN:</b> zasilacz 5 V z zestawu i kabel sieciowy do routera. Nic nie ustawiasz.</li>
+        <li class="zle">Nigdy nie podawaj zasilania na H1/H2.</li>
+      </ul>
+    </div>
+    <div class="k"><h2>5. Rotenso Windmi i Heatmi (płyta jednostki wewnętrznej)</h2>
+      <div class="uw" style="margin:0 0 6px"><b>230/400 V.</b> Przed zdjęciem obudowy odetnij zasilanie w rozdzielnicy.</div>
+      <table>
+        <tr><th>Pompa</th><th>Złącze</th><th>Adres</th><th class="zle">Nie tutaj</th></tr>
+        <tr><td>Windmi (ORIS)</td><td>CN67: A→A+, B→B−, ekran→E</td><td>11</td><td>CN63 (H1/H2)</td></tr>
+        <tr><td>Heatmi</td><td>J2: A2, B2 (brak odczytu: zamień)</td><td>16</td><td>A1/B1</td></tr>
+      </table>
+    </div>
+    <div class="k"><h2>6. Sprawdzenie i nastawy</h2>
+      <ul>
+        <li>Home Assistant → dodatek <b>„Pompa w HA”</b> → diagnostyka: <span class="ok">✓ zielone</span> = działa, ✗ czerwone = wskazówka, co poprawić.</li>
+        <li>Modbus RTU, 9600 bps, 8N1, funkcja 03, adres = 17.2.</li>
+        <li>Zmiana nastaw z Home Assistanta działa jak zmiana w menu serwisanta. Po zapisie nastawy serwisowej pompa wyłącza CWU; karta Pro włącza ją z powrotem.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="stopka">Pomoc wyłącznie mailowo: pompa@woleoze.pl (z raportem z dodatku: przycisk „Wyślij raport”). Bez połączeń zdalnych i bez haseł. WOLEOZE.PL Sp. z o.o., ul. Biasowicka 8E, 44-264 Jankowice, KRS 0001048206, NIP 6423246378. Stan 11.2026.</p>
+</div>
+</body>
+</html>
