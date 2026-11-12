@@ -6,7 +6,7 @@ Po kolei:
 1. **Zamień A i B.** To najczęstsza przyczyna. Oznaczenia polaryzacji RS‑485 nie są ujednolicone; w tym repo działa A+ → H2, B− → H1, ale spotyka się
    sterowniki z odwrotnym opisem. Zamiana niczego nie uszkodzi.
 2. **Właściwe zaciski.** H1/H2 muszą być na płytce **sterownika ściennego** (panelu z wyświetlaczem), nie na płycie głównej jednostki.
-3. **Adres.** Menu 17.2 „ADRES HMI DLA BMS” w sterowniku = `address:` w YAML (fabrycznie 1). HMI SET powinno być 0.
+3. **Adres.** Menu 17.2 „ADRES HMI DLA BMS” w sterowniku = `address:` w YAML (fabrycznie 1). 17.1 HMI SET ma być GŁÓWNA (w niektórych wersjach MASTER albo 0).
 4. **Piny.** Jeśli to nie Waveshare ESP32-S3-Relay-1CH, sprawdź `tx_pin`, `rx_pin` i `flow_control_pin` – przetwornik RS‑485 z osobnym DE/RE
    wymaga poprawnego pinu kierunku.
 5. **Log ESPHome** (`esphome logs esphome/pompa-modbus.yaml`): komunikaty `modbus_controller` pokażą, czy pompa w ogóle odpowiada (błędne
@@ -82,4 +82,4 @@ U nas (AQM120X3, sterownik KJRH-120H) działa **tylko przez zaciski H1/H2 sterow
 
 W instrukcjach Midea zaciski H1/H2 na płycie modułu hydraulicznego są zwykle opisane jako połączenie „równoległe”, czyli magistrala do kaskady kilku pomp albo drugiego sterownika, a nie wyjście Modbus dla BMS. To częsta przyczyna braku komunikacji. W części nowszych płyt (np. seria Arctic) Modbus bywa wyprowadzony także na płytę: zależy to od generacji płyty, nie od tego, czy masz monoblok, czy split.
 
-Zasada: podłącz do sterownika ściennego. Na płycie próbuj tylko wtedy, gdy instrukcja twojego modelu przy tych zaciskach wprost pisze „Modbus” albo „BMS”. Sterownik ścienny ma mieć wtedy HMI SET = 0.
+Zasada: podłącz do sterownika ściennego. Na płycie próbuj tylko wtedy, gdy instrukcja twojego modelu przy tych zaciskach wprost pisze „Modbus” albo „BMS”. Sterownik ścienny ma mieć wtedy 17.1 HMI SET = GŁÓWNA.

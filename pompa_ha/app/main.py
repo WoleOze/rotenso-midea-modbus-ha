@@ -30,7 +30,7 @@ import urllib.parse
 import urllib.request
 import zipfile
 
-WERSJA = "1.3.1"
+WERSJA = "1.3.2"
 SERWER = os.environ.get("POMPA_SERWER", "https://rotenso-licencje.strefa-tradingu.workers.dev")
 PRO_JS = os.environ.get(
     "POMPA_PRO_JS",
@@ -660,7 +660,7 @@ ALARMY_POMPY = tuple(f"binary_sensor.alarm_{n}" for n in (
 # Typ pompy z programu modułu (ESPHome project: „woleoze.pompa-<wariant>” → urządzenie HA: producent/model).
 PLATFORMY = {
     "midea": ("Midea M-Thermal (czarno-biały sterownik)",
-              "1) Zamień przewody A i B na module. 2) W menu serwisanta: 17.2 adres = 1, HMI SET = 0. "
+              "1) Zamień przewody A i B na module. 2) W menu serwisanta: 17.2 adres = 1, 17.1 HMI SET = GŁÓWNA. "
               "3) Przewody idą do zacisków H1/H2 sterownika ŚCIENNEGO, nie płyty głównej. 4) Pompa musi być zasilona."),
     "midea-120l": ("Midea z kolorowym panelem (wersja testowa)",
                    "1) Zamień przewody A i B na module. 2) W menu serwisanta sprawdź adres Modbus dla BMS = 1. "

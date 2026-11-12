@@ -292,7 +292,7 @@ class RotensoPompa extends HTMLElement {
     const prog = t1s != null && dT1SH != null ? t1s - dT1SH : null;
     let opis;
     if (!online) opis = 'Brak łączności z modułem Modbus przy sterowniku ściennym. Pompa pracuje normalnie na własnym sterowniku.'
-      + ' Sprawdź zamianę A/B i HMI SET = 0 (<a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/faq.md" target="_blank" rel="noopener" style="color:var(--hp)">FAQ</a>).'
+      + ' Sprawdź zamianę A/B i 17.1 HMI SET = GŁÓWNA (<a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/faq.md" target="_blank" rel="noopener" style="color:var(--hp)">FAQ</a>).'
       + (this._woleoze ? ' Dalej nic? Napisz na <a href="mailto:pompa@woleoze.pl" style="color:var(--hp)">pompa@woleoze.pl</a>; z Pro najpierw kliknij „Wyślij raport” w dodatku.' : '');
     else if (blad) opis = `Pompa zgłasza błąd <b>${kod}</b>.`;
     else if (odszr) opis = 'Odszranianie parownika: pompa na chwilę odwraca obieg i zabiera ciepło z wody.';

@@ -68,7 +68,7 @@ Liczniki Midea mają rozdzielczość 1 kWh, a po restarcie HA dane z chmury Mide
 
 1. **Sprzęt** (niżej) i podłączenie do H1/H2 sterownika ściennego.
 2. **ESPHome.** Skopiuj `esphome/secrets.yaml.example` do `secrets.yaml`, uzupełnij Wi-Fi i klucz API, wgraj `esphome/pompa-modbus.yaml`.
-3. **Sterownik ścienny.** Menu serwisanta: `17.2 ADRES HMI DLA BMS` = 1, `HMI SET` = 0 (główna). Po wyjściu z menu pompa się wyłącza, włącz ją z powrotem.
+3. **Sterownik ścienny.** Menu serwisanta: `17.2 ADRES HMI DLA BMS` = 1, `17.1 HMI SET` = GŁÓWNA (w niektórych wersjach MASTER albo 0). Po wyjściu z menu pompa się wyłącza, włącz ją z powrotem.
 4. **Karta Pompa.** Skopiuj `pompa.js` obok `start.js`, dodaj zasób `/local/rotenso/pompa.js?v=1` i widok „Pompa” z `widoki.yaml`. Sprawdź, czy „Moduł Modbus: online”.
 
 Szczegóły i pułapki: [docs/podlaczenie.md](docs/podlaczenie.md).

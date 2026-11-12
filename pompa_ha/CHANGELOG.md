@@ -1,5 +1,8 @@
 # Zmiany
 
+## 1.3.2
+- Podpowiedzi diagnostyki mówią „17.1 HMI SET = GŁÓWNA”, tak jak pokazuje sterownik (wcześniej „HMI SET = 0”).
+
 ## 1.3.1
 - Klucz kupiony z wyborem „wykonanie po 14 dniach” pokazuje w instalatorze jasny komunikat i datę z maila, zamiast „Nie znam tego klucza”.
 

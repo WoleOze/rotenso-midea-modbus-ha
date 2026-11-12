@@ -37,7 +37,7 @@ różnie oznaczają polaryzację RS‑485 i nic się nie zepsuje. Masy (GND) nie
 
 ## 3. Ustawienia w sterowniku
 
-1. **HMI SET → 0** (menu serwisowe, pozycja „HMI SET” / „ADRES HMI”): sterownik ma pracować jako HMI z adresem 0 – to ustawienie
+1. **17.1 HMI SET → GŁÓWNA** (w niektórych wersjach MASTER albo 0; menu serwisowe, pozycja „HMI SET”): sterownik ma pracować jako HMI z adresem 0 – to ustawienie
    fabryczne, sprawdź tylko, czy ktoś go nie zmienił.
 2. **Menu 17.2 „ADRES HMI DLA BMS”**: adres Modbus urządzenia, fabrycznie **1**. Taki sam adres jest w YAML (`address: 1` w każdym
    `modbus_controller`). Jeśli masz inny – zmień w YAML, nie w pompie.

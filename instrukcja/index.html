@@ -77,7 +77,7 @@ code{font:14px ui-monospace,Menlo,monospace;background:rgba(127,140,170,.15);pad
     <ol class="kroki">
       <li>Na sterowniku ściennym wejdź w menu serwisanta (hasło zwykle 234, sprawdź w instrukcji pompy).</li>
       <li>Pozycja <b>17.2 „ADRES HMI DLA BMS”</b> ma mieć wartość <b>1</b>. To ustawienie fabryczne.</li>
-      <li>Pozycja <b>HMI SET</b> ma mieć wartość <b>0</b> (sterownik główny). Nie zmieniaj jej na podrzędny.</li>
+      <li>Pozycja <b>17.1 HMI SET</b> ma mieć wartość <b>GŁÓWNA</b> (w niektórych wersjach MASTER albo 0). Nie zmieniaj jej na podrzędną.</li>
     </ol>
     <div class="uw"><b>Ważne.</b> Po wyjściu z menu serwisanta pompa się wyłącza. To normalne. Włącz ją przyciskiem zasilania na panelu i sprawdź, czy świeci się grzanie i ciepła woda.</div>
   </section>
@@ -165,7 +165,7 @@ code{font:14px ui-monospace,Menlo,monospace;background:rgba(127,140,170,.15);pad
     <table>
       <tr><th>Komunikat</th><th>Co zrobić</th></tr>
       <tr><td>Home Assistant nie widzi modułu pompy</td><td>Wi-Fi: dodaj „Pompa Modbus” w Urządzeniach i usługach (krok 5.1). Nie ma go? Sprawdź zasilanie i czy telefon nie widzi sieci „pompa-setup” (wtedy moduł nie zna twojej sieci, wróć do kroku 4). LAN: „Szukaj bramki LAN”.</td></tr>
-      <tr><td>Brak odczytów z pompy</td><td>1) Zamień przewody A i B. 2) Sprawdź 17.2 = 1 i HMI SET = 0. 3) Przewody muszą iść do sterownika ściennego, nie płyty głównej. 4) Pompa musi być włączona.</td></tr>
+      <tr><td>Brak odczytów z pompy</td><td>1) Zamień przewody A i B. 2) Sprawdź 17.2 = 1 i 17.1 HMI SET = GŁÓWNA. 3) Przewody muszą iść do sterownika ściennego, nie płyty głównej. 4) Pompa musi być włączona.</td></tr>
       <tr><td>Moduł jest offline</td><td>Sprawdź zasilanie modułu i zasięg Wi-Fi przy sterowniku.</td></tr>
       <tr><td>Pompa zgłasza błąd</td><td>Sprawdź kod w instrukcji pompy. Gdy nie wiesz, co dalej, wyślij raport (krok 7).</td></tr>
       <tr><td>Pakiety Pro nie są wczytane / brak pulpitu</td><td>Kliknij „Zainstaluj ponownie”.</td></tr>
