@@ -25,7 +25,7 @@
 :root{--bg:#050a16;--bg2:#081126;--panel:rgba(13,24,50,.78);--panel2:rgba(17,31,64,.9);--line:rgba(110,160,255,.18);--line2:rgba(110,160,255,.32);--txt:#eaf0ff;--mut:#97a8cc;--hp:#39c0ff;--hot:#ff5470;--warm:#ffb020;--ok:#2ee6a6;--vio:#b388ff;--r:18px}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:70px}
-body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,"Segoe UI",Roboto,system-ui,-apple-system,sans-serif;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,"Segoe UI",Roboto,system-ui,-apple-system,sans-serif;line-height:1.55;overflow-x:clip;-webkit-font-smoothing:antialiased}
 html{overflow-x:clip}
 img{max-width:100%;height:auto}
 a{color:var(--hp)}
@@ -376,6 +376,12 @@ footer p{margin:6px 0}
 .zg .zg-nie{grid-column:1/-1}
 .zg .zgo{width:100%;margin:0 0 4px;font-size:13.5px;color:var(--mut)}
 .zg .zg-nie b{margin-right:8px}.zg>div{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}.zg b{width:100%;font-size:16px;margin-bottom:4px}.zg span{font-size:14px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+.bsp{background:rgba(63,224,138,.12);color:#5af0a4;border:1px solid rgba(63,224,138,.6);box-shadow:0 0 22px rgba(63,224,138,.22);white-space:nowrap}
+.bsp:hover{background:rgba(63,224,138,.22);color:#fff;transform:translateY(-1px)}
+nav .w{min-width:0}
+@media (max-width:920px){nav a.bsp{display:inline-flex}}
+@media (max-width:520px){nav .dl{display:none}nav .w{gap:8px}nav .bm{padding:8px 11px;font-size:13.5px}}
+@media (max-width:369px){nav a.bzl{display:none}}
 </style>
 </head>
 <body>
@@ -383,7 +389,7 @@ footer p{margin:6px 0}
 <a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
 <nav><div class="w">
   <a class="logo" href="#">POMPA<span>·HA</span></a><div class="sp"></div>
-  <a class="n" href="#wyniki">Wyniki</a><a class="n" href="#przed-po">Przed / po</a><a class="n" href="#jak">Jak to działa</a><a class="n" href="#ceny">Ceny</a><a class="n" href="#pytania">Pytania</a><a class="b bm bzl" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">👥 Grupa FB</a>
+  <a class="n" href="#wyniki">Wyniki</a><a class="n" href="#przed-po">Przed / po</a><a class="n" href="#jak">Jak to działa</a><a class="n" href="#ceny">Ceny</a><a class="n" href="#pytania">Pytania</a><a class="b bm bsp" href="/sprawdz/">📷 Sprawdź<span class="dl"> pompę</span></a><a class="b bm bzl" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">👥 <span class="dl">Grupa </span>FB</a>
   <a class="b b1 bm" href="#start">Zacznij za darmo</a>
 </div></nav>
 
