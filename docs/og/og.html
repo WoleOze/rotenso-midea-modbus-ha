@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8">
+<title>Miniatury do udostępnień – Pompa w HA</title>
+<!-- Generator miniatur og:image 1200×630 dla podstron pompa.woleoze.pl. Użycie: bash docs/og/zrob.sh (Chrome bez okna). Podgląd: og.html?s=instrukcja -->
+<style>
+@font-face{font-family:Inter;font-weight:400;src:url(../../film/fonty/Inter-Regular.ttf)}
+@font-face{font-family:Inter;font-weight:500;src:url(../../film/fonty/Inter-Medium.ttf)}
+@font-face{font-family:Inter;font-weight:800;src:url(../../film/fonty/Inter-Bold.ttf)}
+@font-face{font-family:Plex;font-weight:500;src:url(../../film/fonty/IBMPlexMono-Medium.ttf)}
+*{box-sizing:border-box;margin:0}
+html,body{width:1200px;height:630px;overflow:hidden;background:#070d1a}
+body{font-family:Inter,system-ui,sans-serif;color:#eef3ff;position:relative}
+.tlo{position:absolute;inset:0;background:
+  radial-gradient(700px 420px at 8% 0%,rgba(40,140,255,.20),transparent 70%),
+  radial-gradient(600px 400px at 100% 100%,rgba(63,224,138,.12),transparent 70%),
+  linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/40px 40px,
+  linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/40px 40px,#070d1a}
+.lewa{position:absolute;left:64px;top:54px;width:560px;bottom:44px;display:flex;flex-direction:column}
+.znak{font-weight:800;font-size:22px;letter-spacing:.14em}.znak i{font-style:normal;color:#3cc8ff}
+.etyk{margin-top:34px;font:500 15px/1 Plex,monospace;letter-spacing:.16em;text-transform:uppercase;color:#3cc8ff}
+h1{margin-top:14px;font-weight:800;font-size:60px;line-height:1.04;letter-spacing:-.025em}
+h1 em{font-style:normal;background:linear-gradient(90deg,#3cc8ff,#3fe08a 55%,#f5c542);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pod{margin-top:20px;font-size:23px;line-height:1.42;color:#aab6d3}
+.pigu{margin-top:auto;display:flex;gap:12px;flex-wrap:wrap}
+.pig{padding:13px 22px;border-radius:999px;font-weight:800;font-size:20px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04)}
+.pig.g{background:linear-gradient(90deg,#3fe08a,#3cc8ff);color:#06101f;border:0}
+.stopka{margin-top:22px;font-size:18px;color:#8794b3}.stopka b{color:#eef3ff;font-weight:800}
+.prawa{position:absolute;left:662px;top:64px;width:490px;height:502px;border-radius:18px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 6px rgba(60,200,255,.05);background:#0d1628}
+.pasek{height:34px;display:flex;align-items:center;gap:8px;padding:0 14px;background:#111c33;border-bottom:1px solid rgba(255,255,255,.08)}
+.pasek i{width:11px;height:11px;border-radius:50%;background:#2b3a5c}.pasek span{margin-left:10px;font:500 13px Plex,monospace;color:#8794b3}
+#wnetrze{height:calc(100% - 34px)}
+.prawa img{display:block;width:100%;height:100%;object-fit:cover;object-position:left top}
+.prawa.biala img{object-fit:contain;background:#fff;padding:14px}
+.karta{padding:24px 24px;font-size:20px;line-height:1.45}
+.kod{font:500 16.5px/1.62 Plex,monospace;color:#c9d4ee;padding:24px 26px;white-space:pre}
+.kod .k{color:#6f7fa3}.kod .s{color:#3fe08a}.kod .n{color:#3cc8ff}.kod .w{color:#f5c542}
+table{width:100%;border-collapse:collapse;font-size:18px}
+td,th{padding:11px 6px;border-bottom:1px solid rgba(255,255,255,.08);text-align:right}
+th{font-size:12.5px;color:#8794b3;font-weight:500;text-transform:uppercase;letter-spacing:.08em}
+td:first-child,th:first-child{text-align:left}
+tr.raz td{font-weight:800;color:#fff}
+.lista{list-style:none;padding:0}.lista li{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.lista li b{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(63,224,138,.15);color:#3fe08a;font-size:18px}
+.znaczek{position:absolute;right:52px;bottom:40px;padding:10px 18px;border-radius:12px;background:#f5c542;color:#1a1300;font:800 17px Inter;letter-spacing:.06em;text-transform:uppercase;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+</style></head>
+<body><div class="tlo"></div>
+<div class="lewa">
+  <div class="znak">POMPA<i>·</i>HA</div>
+  <div class="etyk" id="etyk"></div>
+  <h1 id="h1"></h1>
+  <p class="pod" id="pod"></p>
+  <div class="pigu" id="pigu"></div>
+  <div class="stopka" id="stopka"></div>
+</div>
+<div class="prawa" id="prawa"><div class="pasek"><i></i><i></i><i></i><span id="adres"></span></div><div id="wnetrze"></div></div>
+<div class="znaczek" id="znaczek" hidden></div>
+<script>
+const KOD = `<span class="k"># program modułu · wariant midea · 1.2</span>
+<span class="k"># licencja: GNU GPL v3</span>
+<span class="n">esphome</span>:
+  name: pompa-modbus
+  project:
+    name: <span class="s">"woleoze.pompa-midea"</span>
+    version: <span class="s">"1.2"</span>
+<span class="n">update</span>:
+  - platform: http_request
+    name: <span class="s">"Program modułu"</span>
+<span class="n">modbus_controller</span>:
+  - address: <span class="w">1</span>   <span class="k"># menu 17.2</span>
+    update_interval: <span class="w">10s</span>`;
+const S = {
+  instrukcja: { etyk: 'Instrukcja montażu', h1: 'Montaż w&nbsp;15&nbsp;minut, <em>krok po kroku</em>',
+    pod: 'Dwie żyły do sterownika ściennego, Wi-Fi albo kabel, klucz w&nbsp;Home Assistant. Bez otwierania pompy.',
+    pig: ['▶ Film 2 min', 'Schemat H1/H2'], adres: 'pompa.woleoze.pl/instrukcja', img: 'src/film-przewody.jpg', pos: '90% 50%' },
+  kreator: { etyk: 'Kreator konfiguracji', h1: 'Twoja pompa w&nbsp;HA <em>w&nbsp;kilka kliknięć</em>',
+    pod: 'Wpisz swoje encje i taryfę, a dostaniesz gotowe pakiety, pulpit i listę kroków. Encje zostają w&nbsp;przeglądarce.',
+    pig: ['Start za darmo', 'W przeglądarce'], adres: 'pompa.woleoze.pl/kreator', img: 'src/kreator-encje.jpg', pos: 'left top' },
+  instalator: { etyk: 'Karta dla instalatora', h1: 'Moduł Modbus: <em>jedna strona A4</em>',
+    pod: 'Zaciski H1/H2 na sterowniku ściennym, menu 17.2, Windmi i&nbsp;Heatmi, diagnostyka. Do wydruku.',
+    pig: ['PDF do wydruku', 'Kod QR do instrukcji'], adres: 'pompa.woleoze.pl/instalator', img: '../schemat-modbus-panel.png', biala: true },
+  'program-modulu': { etyk: 'Program modułu', h1: 'Otwarty program: <em>GNU GPL&nbsp;v3</em>',
+    pod: 'Źródło każdej wersji, aktualizacje jednym kliknięciem w&nbsp;Home Assistant, własny program kablem USB-C.',
+    pig: ['Źródła wersji', 'Aktualizacje z HA'], adres: 'pompa.woleoze.pl/program-modulu', kod: true },
+  regulamin: { etyk: 'Regulamin', h1: 'Zasady jasno: <em>co kupujesz i za ile</em>',
+    pod: 'Zestaw to sprzęt, usługa przygotowania i licencja Pro. Odstąpienie, reklamacje, pomoc mailowo.',
+    pig: ['Od 11.11.2026', 'WOLEOZE.PL Sp. z o.o.'], adres: 'pompa.woleoze.pl/regulamin', tabela: true },
+  prywatnosc: { etyk: 'Polityka prywatności', h1: 'Twoje dane <em>zostają w&nbsp;domu</em>',
+    pod: 'Bez ciasteczek i analityki. Dane pompy działają lokalnie w&nbsp;Home Assistant.',
+    pig: ['RODO', 'Bez śledzenia'], adres: 'pompa.woleoze.pl/prywatnosc', lista: true },
+};
+const k = new URLSearchParams(location.search).get('s') || 'instrukcja', d = S[k];
+const $ = (id) => document.getElementById(id);
+$('etyk').textContent = d.etyk; $('h1').innerHTML = d.h1; $('pod').innerHTML = d.pod;
+$('pigu').innerHTML = d.pig.map((t, i) => `<span class="pig${i === 0 ? ' g' : ''}">${t}</span>`).join('');
+$('stopka').innerHTML = '<b>pompa.woleoze.pl</b> · pompy ciepła w Home Assistant, lokalnie';
+$('adres').textContent = d.adres;
+const w = $('wnetrze');
+if (d.img) { w.innerHTML = `<img src="${d.img}" alt="" style="object-position:${d.pos || 'left top'}">`; if (d.biala) $('prawa').classList.add('biala'); }
+if (d.kod) w.innerHTML = `<div class="kod">${KOD}</div>`;
+if (d.tabela) w.innerHTML = `<div class="karta"><table>
+  <tr><th>Zestaw</th><th>Sprzęt</th><th>Usługa</th><th>Licencja</th></tr>
+  <tr><td>Wi-Fi</td><td>120 zł</td><td>230 zł</td><td>149 zł</td></tr>
+  <tr><td>Wi-Fi + LAN</td><td>150 zł</td><td>250 zł</td><td>149 zł</td></tr>
+  <tr><td>Wgranie</td><td>–</td><td>150 zł</td><td>149 zł</td></tr>
+  <tr class="raz"><td>Licencja Pro</td><td>–</td><td>–</td><td>149 zł</td></tr></table>
+  <p style="margin-top:22px;color:#aab6d3;font-size:18px">14 dni na odstąpienie od sprzętu · rękojmia 2 lata · pomoc 30 dni mailem</p></div>`;
+if (d.lista) w.innerHTML = `<div class="karta"><ul class="lista">
+  <li><b>✓</b><span>Strona bez ciasteczek i bez analityki</span></li>
+  <li><b>✓</b><span>Encje i ustawienia z kreatora nie opuszczają przeglądarki</span></li>
+  <li><b>✓</b><span>Raport do wsparcia wysyłasz sam, bez haseł</span></li>
+  <li><b>✓</b><span>Nikt nie łączy się z Twoim Home Assistant</span></li>
+  <li><b>✓</b><span>Dane zamówień tylko do umowy i faktury</span></li></ul></div>`;
+</script>
+</body></html>
