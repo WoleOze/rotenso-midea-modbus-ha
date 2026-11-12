@@ -4,7 +4,7 @@ O zgodności decyduje **sterownik**, nie marka na obudowie. Pasują pompy z pły
 
 Szybki test u siebie: wejdź w menu serwisanta (hasło z instrukcji, zwykle 234) i poszukaj pozycji 17.2. Jest? Prawie na pewno zadziała. Za darmo sprawdzisz to w wersji Start.
 
-Stan badania: 11.11.2026. Źródła: instrukcje producentów i zgłoszenia użytkowników (GitHub, forum Home Assistant, ArturHome).
+Stan badania: 12.11.2026. Źródła: instrukcje producentów i zgłoszenia użytkowników (GitHub, forum Home Assistant, ArturHome).
 
 ## ✅ Potwierdzone
 
@@ -38,8 +38,23 @@ Program jest napisany, ale nikt go jeszcze nie podłączył do prawdziwej pompy.
 | Rotenso Windmi (sterownik ORIS) | złącze CN67 (A, B, E) na płycie jednostki wewnętrznej, adres 11 | inna płyta i własna mapa rejestrów, osobny program |
 | Rotenso Heatmi | złącze J2, zaciski A2/B2, adres 16 | własna mapa rejestrów, osobny program |
 | Midea Arctic R290, Kaysun Aquantia R290 (kolorowy panel KJRH-120L / L2) | H1/H2 sterownika, jak przy czarno-białym | te same numery rejestrów, inne skale; osobny program |
+| LG Therma V (R32, R290) | listwa „3rd Party Controller”: zaciski 21 (A) i 22 (B), w części R290 23/24; przełączniki SW1-1 i SW1-2 = ON | wbudowany Modbus LG, adres 1 albo 33; montaż przez instalatora (w R290 230 V w Control Unit) |
 
 Podłączenie Windmi i Heatmi: [instrukcja, punkt 3b](https://pompa.woleoze.pl/instrukcja/#rotenso-testy). Masz taką pompę i Home Assistant OS? Napisz na [pompa@woleoze.pl](mailto:pompa@woleoze.pl?subject=Czy%20moja%20pompa%20pasuje%3F).
+
+## 🔌 Inne marki: karty Pro na Twojej integracji (w testach)
+
+Bez naszego modułu. Dodatek „Pompa w HA” (od wersji 1.4) wykrywa integrację pompy w Home Assistant i podpina pod nią karty Pro: koszty w zł, COP, raport i alarmy po polsku. Sprawdzone na symulatorach, jeszcze nie u klienta. Zanim kupisz klucz, napisz, jaką masz integrację.
+
+| Pompa | Skąd dane | Czego brakuje |
+|---|---|---|
+| Panasonic Aquarea | HeishaMon (integracja Aquarea przez MQTT) | moc w krokach 200 W na seriach H/J |
+| NIBE seria S | integracja NIBE Heat Pump (Modbus TCP) | zapis nastaw, punkty krzywej; przepływ tylko z czujnikiem BF1 |
+| Mitsubishi Ecodan | moduł ESPHome Ecodan (CN105) albo MELCloud | MELCloud: odświeżanie co 1–2 h, bez odszraniania i kodu błędu |
+| Vaillant aroTHERM | ebusd (MQTT) albo myVAILLANT | myVAILLANT: bez stanu sprężarki i przepływu |
+| Daikin Altherma 4, Altherma 3 z EKRHH | wbudowany Modbus TCP (bez sprzętu) | liczniki kWh i częstotliwość sprężarki liczone w HA |
+
+Napisz na [pompa@woleoze.pl](mailto:pompa@woleoze.pl?subject=Inna%20marka%3A%20Pompa%20w%20HA): marka, model i integracja.
 
 ## ❄️ Klimatyzatory: w przygotowaniu
 
