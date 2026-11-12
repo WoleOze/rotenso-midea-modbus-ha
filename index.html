@@ -24,7 +24,7 @@
 <style>
 :root{--bg:#050a16;--bg2:#081126;--panel:rgba(13,24,50,.78);--panel2:rgba(17,31,64,.9);--line:rgba(110,160,255,.18);--line2:rgba(110,160,255,.32);--txt:#eaf0ff;--mut:#97a8cc;--hp:#39c0ff;--hot:#ff5470;--warm:#ffb020;--ok:#2ee6a6;--vio:#b388ff;--r:18px}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:70px}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--gora,104px) + 14px)}
 body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,"Segoe UI",Roboto,system-ui,-apple-system,sans-serif;line-height:1.55;overflow-x:clip;-webkit-font-smoothing:antialiased}
 html{overflow-x:clip}
 img{max-width:100%;height:auto}
@@ -36,7 +36,10 @@ a{color:var(--hp)}
  linear-gradient(rgba(80,130,255,.04) 1px,transparent 1px) 0 0/100% 34px,
  linear-gradient(90deg,rgba(80,130,255,.04) 1px,transparent 1px) 0 0/34px 100%,var(--bg)}
 /* nawigacja */
-nav{position:sticky;top:0;z-index:20;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:rgba(5,10,22,.72);border-bottom:1px solid var(--line)}
+/* baner grupy + menu = jeden przypięty blok */
+.gora{position:sticky;top:0;z-index:20;transition:box-shadow .3s}
+.gora.przew{box-shadow:0 10px 30px rgba(0,0,0,.45)}
+nav{position:relative;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:rgba(5,10,22,.72);border-bottom:1px solid var(--line)}
 nav .w{display:flex;align-items:center;gap:16px;height:58px}
 .logo{font-weight:900;letter-spacing:.06em;text-decoration:none;color:var(--txt);white-space:nowrap}.logo span{color:var(--hp)}
 nav .sp{flex:1}nav a.n{color:var(--mut);text-decoration:none;font-size:14px}nav a.n:hover{color:var(--txt)}
@@ -284,7 +287,7 @@ details .od b{color:var(--txt)}
 .fbpas b{font-weight:900}
 .fbpas .dol{flex:none;background:#fff;color:#1468e0;border-radius:999px;padding:3px 12px;font-weight:900}
 .fbpas .kr{display:none}
-@media (max-width:640px){.fbpas .dl{display:none}.fbpas .kr{display:inline}}
+@media (max-width:640px){.fbpas .dl{display:none}.fbpas .kr{display:inline}.fbpas{padding:6px 12px;font-size:13.5px;gap:8px;height:36px}.fbpas .dol{padding:2px 10px}}
 nav a.n.fbn{color:#7fb3ff;font-weight:700}nav a.n.fbn:hover{color:#fff}
 .grupa{display:grid;grid-template-columns:1fr auto;gap:22px 40px;align-items:center;background:radial-gradient(640px 320px at 100% 0,rgba(20,104,224,.3),transparent 65%),var(--panel);border:1px solid rgba(20,104,224,.6);border-radius:24px;padding:36px 40px}
 .grupa .nadt{color:#7fb3ff}
@@ -382,16 +385,21 @@ nav .w{min-width:0}
 @media (max-width:920px){nav a.bsp{display:inline-flex}}
 @media (max-width:520px){nav .dl{display:none}nav .w{gap:8px}nav .bm{padding:8px 11px;font-size:13.5px}}
 @media (max-width:369px){nav a.bzl{display:none}}
+/* menu w jednej linii: przyciski bez łamania; na telefonie „Zacznij za darmo” jest w hero i w dolnym pasku, więc w menu znika */
+nav .bm{white-space:nowrap}
+@media (max-width:640px){nav a.b1{display:none}}
 </style>
 </head>
 <body>
 <div class="tlo"></div>
+<div class="gora" id="gora">
 <a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
 <nav><div class="w">
   <a class="logo" href="#">POMPA<span>·HA</span></a><div class="sp"></div>
   <a class="n" href="#wyniki">Wyniki</a><a class="n" href="#przed-po">Przed / po</a><a class="n" href="#jak">Jak to działa</a><a class="n" href="#ceny">Ceny</a><a class="n" href="#pytania">Pytania</a><a class="b bm bsp" href="/sprawdz/">📷 Sprawdź<span class="dl"> pompę</span></a><a class="b bm bzl" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">👥 <span class="dl">Grupa </span>FB</a>
   <a class="b b1 bm" href="#start">Zacznij za darmo</a>
 </div></nav>
+</div>
 
 <div class="w">
 <header class="hero" id="hero">
@@ -848,6 +856,10 @@ function oblicz(){
 document.querySelectorAll('.py').forEach(p=>p.querySelectorAll('.qb').forEach(b=>b.addEventListener('click',()=>{
   st[p.dataset.py]=b.dataset.v;p.querySelectorAll('.qb').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));oblicz()})));
 
+// przypięty blok baner + menu: jego wysokość dla kotwic (scroll-padding-top) i cień po przewinięciu
+{const g=document.getElementById('gora'),de=document.documentElement;const ust=()=>de.style.setProperty('--gora',g.offsetHeight+'px');ust();addEventListener('resize',ust);
+ let cz=false;const cien=()=>{cz=false;g.classList.toggle('przew',scrollY>4)};addEventListener('scroll',()=>{if(!cz){cz=true;requestAnimationFrame(cien)}},{passive:true});cien()}
+
 // przyklejony pasek CTA na telefonie: po przewinięciu hero, chowa się przy końcowym CTA
 const pas=document.getElementById('pasekCTA'),hero=document.getElementById('hero'),kon=document.getElementById('koniec');
 let czeka=false;const odsw=()=>{czeka=false;const w=hero.getBoundingClientRect().bottom<0&&kon.getBoundingClientRect().top>innerHeight-40;
@@ -855,5 +867,6 @@ let czeka=false;const odsw=()=>{czeka=false;const w=hero.getBoundingClientRect()
 addEventListener('scroll',()=>{if(!czeka){czeka=true;requestAnimationFrame(odsw)}},{passive:true});addEventListener('resize',odsw);odsw();
 })();
 </script>
+<script src="/docs/czat.js?v=20261112" defer></script>
 </body>
 </html>
