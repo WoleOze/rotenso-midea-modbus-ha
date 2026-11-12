@@ -77,8 +77,17 @@ a{color:var(--ak)}
   </section>
 
   <section class="k">
-    <h2>Bramka LAN (zestaw Wi-Fi + LAN)</h2>
-    <p>Masz bramkę USR-DR404 podłączoną kablem do routera? Dodatek znajdzie ją w sieci.</p>
+    <h2>Inna marka pompy (bez naszego modułu)</h2>
+    <p>Panasonic (HeishaMon), NIBE seria S, Mitsubishi Ecodan, Vaillant (ebusd albo myVAILLANT): karty Pro działają na encjach Twojej integracji. Najpierw dodaj i uruchom integrację pompy, potem kliknij „Wykryj integrację”.</p>
+    <p class="drobne">Daikin Altherma 4 albo Altherma 3 z EKRHH: kliknij niżej „Szukaj bramki LAN”, dodatek rozpozna pompę w sieci.</p>
+    <div class="rz"><button id="bMarki">Wykryj integrację</button><button id="bModul" hidden>Wróć do modułu Midea</button></div>
+    <div id="marki"></div>
+    <div class="wynik" id="wMarki"></div>
+  </section>
+
+  <section class="k">
+    <h2>Bramka LAN (zestaw Wi-Fi + LAN) i Daikin</h2>
+    <p>Masz bramkę USR-DR404 podłączoną kablem do routera albo pompę Daikin z Modbus TCP? Dodatek znajdzie je w sieci.</p>
     <div class="rz"><button id="bSzukaj">Szukaj bramki LAN</button></div>
     <div id="bramki"></div>
     <div class="wynik" id="wBr"></div>
@@ -115,7 +124,9 @@ async function odswiezStan() {
   try {
     const s = await api('stan');
     $('naglowek').textContent = 'Wersja ' + s.wersja + (s.klucz ? ' · klucz ' + s.klucz : ' · brak klucza') +
-      (s.zainstalowano ? ' · zainstalowano ' + s.zainstalowano.replace('T', ' ') : '') + (s.bramka_host ? ' · bramka LAN ' + s.bramka_host : '');
+      (s.zainstalowano ? ' · zainstalowano ' + s.zainstalowano.replace('T', ' ') : '') + (s.bramka_host ? ' · bramka LAN ' + s.bramka_host : '') +
+      (s.marka_opis ? ' · pompa: ' + s.marka_opis : '');
+    $('bModul').hidden = !s.marka;
     $('bInst').textContent = s.klucz ? 'Zainstaluj ponownie' : 'Zainstaluj';
     $('auto').checked = !!s.auto_poprawki;
     $('log').textContent = (s.dziennik || []).slice().reverse().join('\n');
@@ -163,14 +174,41 @@ $('bSzukaj').onclick = () => zajety($('bSzukaj'), async () => {
     if (!r.bramki.length) { pokaz($('wBr'), 'Nie znalazłem bramki w sieci ' + r.sieci.join(', ') + '. Sprawdź kabel sieciowy i zasilanie bramki.', 'b'); return; }
     pokaz($('wBr'), '');
     $('bramki').innerHTML = r.bramki.map((b) => '<div class="bramka"><span><b>' + esc(b.host) + '</b> – ' +
-      (b.pompa_odpowiada ? 'pompa odpowiada' : 'bramka jest, pompa nie odpowiada (' + esc(b.odczyt) + ')') +
-      '</span><button data-h="' + esc(b.host) + '"' + (b.pompa_odpowiada ? ' class="g"' : '') + '>Użyj</button></div>').join('');
+      (b.daikin ? esc(b.daikin_opis) + ' odpowiada' : b.pompa_odpowiada ? 'pompa odpowiada' : 'bramka jest, pompa nie odpowiada (' + esc(b.odczyt) + ')') +
+      '</span><button data-h="' + esc(b.host) + '"' + (b.daikin ? ' data-m="' + esc(b.daikin) + '"' : '') + (b.pompa_odpowiada ? ' class="g"' : '') + '>' +
+      (b.daikin ? 'Użyj (Daikin)' : 'Użyj') + '</button></div>').join('');
     $('bramki').querySelectorAll('button').forEach((btn) => btn.onclick = () => zajety(btn, async () => {
-      try { const x = await api('bramka/uzyj', { host: btn.dataset.h }); pokaz($('wBr'), x.kroki.join('\n'), 'o'); }
+      try {
+        const x = btn.dataset.m ? await api('marka/uzyj', { id: btn.dataset.m, host: btn.dataset.h }) : await api('bramka/uzyj', { host: btn.dataset.h });
+        pokaz($('wBr'), x.kroki.join('\n'), 'o');
+      }
       catch (e) { pokaz($('wBr'), e.message, 'b'); }
       odswiezStan();
     }));
   } catch (e) { pokaz($('wBr'), e.message, 'b'); }
+});
+$('bMarki').onclick = () => zajety($('bMarki'), async () => {
+  $('marki').innerHTML = ''; pokaz($('wMarki'), 'Sprawdzam integracje w Home Assistant…');
+  try {
+    const r = await api('marki');
+    if (r.modul) { pokaz($('wMarki'), 'W Home Assistant działa moduł „Pompa Modbus” (ESPHome). Adapter innej marki nadpisałby te same encje, więc zostań przy module albo najpierw usuń urządzenie Pompa Modbus.', 'b'); }
+    else if (!r.kandydaci.length) { pokaz($('wMarki'), 'Nie widzę integracji Panasonic (HeishaMon), NIBE, Mitsubishi ani Vaillant. Dodaj integrację pompy, poczekaj na odczyty i spróbuj ponownie.', 'b'); return; }
+    else pokaz($('wMarki'), r.obecna_opis ? 'Teraz: ' + r.obecna_opis + '.' : '');
+    $('marki').innerHTML = r.kandydaci.map((k) => '<div class="bramka"><span><b>' + esc(k.opis) + '</b>' +
+      (k.uwagi.length ? '<br><span class="drobne">' + k.uwagi.map(esc).join('<br>') + '</span>' : '') +
+      '</span><button class="g" data-m="' + esc(k.id) + '"' + (r.modul ? ' disabled' : '') + '>Użyj</button></div>').join('');
+    $('marki').querySelectorAll('button').forEach((btn) => btn.onclick = () => zajety(btn, async () => {
+      try { const x = await api('marka/uzyj', { id: btn.dataset.m }); pokaz($('wMarki'), x.kroki.join('\n'), 'o'); }
+      catch (e) { pokaz($('wMarki'), e.message, 'b'); }
+      odswiezStan();
+    }));
+  } catch (e) { pokaz($('wMarki'), e.message, 'b'); }
+});
+$('bModul').onclick = () => zajety($('bModul'), async () => {
+  if (!confirm('Wrócić do modułu Pompa Modbus (Midea, LG, bramka LAN)? Pakiet innej marki zostanie usunięty.')) return;
+  try { const x = await api('marka/uzyj', { id: null }); pokaz($('wMarki'), x.kroki.join('\n'), 'o'); }
+  catch (e) { pokaz($('wMarki'), e.message, 'b'); }
+  odswiezStan();
 });
 $('bOdin').onclick = () => zajety($('bOdin'), async () => {
   if (!confirm('Usunąć pakiety, karty i pulpit „Pompa”? Kopia zostanie w folderze pompa_ha_kopia.')) return;

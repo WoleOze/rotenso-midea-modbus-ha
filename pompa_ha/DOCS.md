@@ -17,6 +17,8 @@ Dodatek instaluje „Pompa w Home Assistant” bez kopiowania plików i bez edyc
 
 **Program modułu (zestawy):** nowa wersja programu modułu pojawia się w Home Assistant jako aktualizacja **„Program modułu”** (Ustawienia → Urządzenia i usługi → Pompa Modbus albo na górze strony Ustawienia, przy aktualizacjach). Instalujesz ją jednym kliknięciem „Zainstaluj”. Moduł sam się zrestartuje po 1–2 minutach. Nie odłączaj wtedy zasilania. Dotyczy zestawów i modułów wgranych przez nas od tej wersji programu. Starszy moduł trzeba raz wgrać przez USB (https://web.esphome.io), potem aktualizacje przychodzą już same.
 
+**Inna marka pompy (bez naszego modułu):** Panasonic Aquarea (HeishaMon), NIBE seria S (integracja NIBE Heat Pump, Modbus TCP), Mitsubishi Ecodan (ESPHome Ecodan albo MELCloud) i Vaillant aroTHERM (ebusd albo myVAILLANT). Najpierw dodaj integrację pompy i poczekaj na odczyty. Potem w panelu kliknij **Wykryj integrację** i **Użyj**. Dodatek zapisze adapter `packages/pompa_ha/pompa_ha_adapter.yaml`, który z encji integracji robi encje `pompa_modbus_*`, więc karty Pro i alarmy działają jak przy module. **Daikin Altherma 4** i **Altherma 3 z EKRHH** (Modbus TCP): kliknij **Szukaj bramki LAN**, a przy pompie **Użyj (Daikin)**. W jednym Home Assistant działa jedno źródło danych: moduł, bramka albo integracja innej marki. Nowe marki są w testach: po instalacji wyślij raport.
+
 Nikt nie łączy się z twoim Home Assistant z zewnątrz. To dodatek wysyła zapytania do serwera licencji, tak jak aktualizacje w telefonie.
 
 Wymaga Home Assistant OS (Raspberry Pi, Home Assistant Green, mini PC z HA OS). Instrukcja montażu: https://pompa.woleoze.pl/instrukcja/

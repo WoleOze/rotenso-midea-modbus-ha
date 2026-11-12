@@ -1,5 +1,13 @@
 # Zmiany
 
+## 1.4.0
+- Inne marki bez naszego modułu: Panasonic Aquarea (HeishaMon), NIBE seria S, Mitsubishi Ecodan (ESPHome Ecodan albo MELCloud), Vaillant aroTHERM (ebusd albo myVAILLANT). Przycisk „Wykryj integrację” znajduje integrację w Home Assistant, a „Użyj” instaluje adapter: karty Pro i alarmy działają na jej encjach. Na start w testach: prosimy o raport z dodatku.
+- Daikin Altherma 4 i Altherma 3 z EKRHH przez Modbus TCP: „Szukaj bramki LAN” rozpoznaje pompę Daikin w sieci i odróżnia ją od bramki do Midea.
+- NIBE: instalacja włącza wyłączone encje integracji potrzebne kartom.
+- Marki bez zapisu zadanej CWU (NIBE, MELCloud, myVAILLANT) nie dostają harmonogramu CWU.
+- Diagnostyka i podpowiedzi dla nowych marek oraz LG Therma V (wersja testowa modułu).
+- Zmiana marki albo powrót do modułu usuwa pakiet poprzedniego źródła danych (z kopią w pompa_ha_kopia).
+
 ## 1.3.2
 - Podpowiedzi diagnostyki mówią „17.1 HMI SET = GŁÓWNA”, tak jak pokazuje sterownik (wcześniej „HMI SET = 0”).
 

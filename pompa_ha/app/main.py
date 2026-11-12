@@ -30,7 +30,7 @@ import urllib.parse
 import urllib.request
 import zipfile
 
-WERSJA = "1.3.2"
+WERSJA = "1.4.0"
 SERWER = os.environ.get("POMPA_SERWER", "https://rotenso-licencje.strefa-tradingu.workers.dev")
 PRO_JS = os.environ.get(
     "POMPA_PRO_JS",
@@ -79,6 +79,8 @@ USTAWIENIA_DOMYSLNE = {
 ENCJE_KART = ("prad_moc", "prad_licznik", "cieplo_licznik", "temp_zew", "cwu_zadana_zapis", "workday")
 SZABLON_BRAMKI = "pompa_bramka_lan.szablon.yaml"
 PLIK_BRAMKI = f"{KAT_PAK}/pompa_ha_bramka.yaml"
+PLIK_ADAPTERA = f"{KAT_PAK}/pompa_ha_adapter.yaml"   # Panasonic, NIBE, Mitsubishi, Vaillant: encje kanoniczne z cudzej integracji
+PLIK_DAIKIN = f"{KAT_PAK}/pompa_ha_daikin.yaml"       # Daikin Altherma 4 / Altherma 3 + EKRHH: Modbus TCP bez naszego sprzętu
 LINIA_PAKIETOW = "packages: !include_dir_named packages"
 
 blokada = threading.Lock()
@@ -581,14 +583,46 @@ def instaluj(klucz, tryb_lan_host=None):
             krok("Pakiety dopasowane do twoich ustawień (licznik, powiadomienia, taryfa).")
         else:
             krok("Ustawienia domyślne (serwer nie wydał szablonów).")
-        host = tryb_lan_host or stan.get("bramka_host")
-        if host:
+        marka = None if tryb_lan_host else stan.get("marka")
+        host = tryb_lan_host or (None if marka else stan.get("bramka_host"))
+        zostaw = None
+        if marka:
+            szablon, opis_m, _ = MARKI[marka["id"]]
+            if szablon not in nazwy:
+                raise Blad(f"Serwer nie ma jeszcze pakietu dla marki {opis_m}. Napisz na pompa@woleoze.pl.")
+            t = z.read(szablon).decode("utf-8")
+            if marka["id"].startswith("daikin"):
+                t, zostaw = t.replace("__DAIKIN_HOST__", marka["host"]), PLIK_DAIKIN
+            else:
+                for ph in PLACEHOLDERY:
+                    t = t.replace(ph, (marka.get("placeholdery") or {}).get(ph) or "brak")
+                zostaw = PLIK_ADAPTERA
+            sc = os.path.join(CFG, zostaw)
+            kopia.zabezpiecz(sc)
+            zapisz_plik(sc, t)
+            krok(f"Pakiet dla marki {opis_m} zapisany" + (f" (pompa {marka['host']})." if marka.get("host") else "."))
+            if marka["id"] == "nibe":
+                krok(wlacz_encje_nibe())
+            if not zapis_cwu(marka):
+                sc = os.path.join(CFG, SZABLONY_DO_PLIKOW["cwu_harmonogram"])
+                if os.path.exists(sc):
+                    kopia.zabezpiecz(sc)
+                    os.remove(sc)
+                krok("Harmonogram CWU pominięty: ta integracja nie daje zapisu zadanej CWU.")
+        elif host:
+            zostaw = PLIK_BRAMKI
             if SZABLON_BRAMKI not in nazwy:
                 raise Blad("Serwer nie ma jeszcze pakietu dla bramki LAN. Napisz na pompa@woleoze.pl.")
             sc = os.path.join(CFG, PLIK_BRAMKI)
             kopia.zabezpiecz(sc)
             zapisz_plik(sc, z.read(SZABLON_BRAMKI).decode("utf-8").replace("__BRAMKA_HOST__", host))
             krok(f"Pakiet bramki LAN ustawiony na {host}.")
+        for cel in (PLIK_BRAMKI, PLIK_ADAPTERA, PLIK_DAIKIN):  # jeden dostawca danych: stare pliki po zmianie marki albo trybu
+            sc = os.path.join(CFG, cel)
+            if cel != zostaw and os.path.exists(sc):
+                kopia.zabezpiecz(sc)
+                os.remove(sc)
+                krok(f"Usunięto poprzedni pakiet {os.path.basename(cel)}.")
         krok("Pakiety Pro zapisane w packages/pompa_ha/.")
 
         st_js, js = zapytanie("GET", PRO_JS, surowe=True, timeout=30)
@@ -614,6 +648,7 @@ def instaluj(klucz, tryb_lan_host=None):
     stan.update({"klucz": klucz, "zainstalowano": datetime.datetime.now().isoformat(timespec="seconds"), "wersja_inst": WERSJA})
     if tryb_lan_host:
         stan["bramka_host"] = tryb_lan_host
+        stan.pop("marka", None)
     zapisz_stan()
     krok("Restart Home Assistant za chwilę. Po ok. minucie otwórz „Pompa” w pasku bocznym.")
     restart_ha()
@@ -671,10 +706,177 @@ PLATFORMY = {
     "heatmi": ("Rotenso Heatmi (wersja testowa)",
                "1) Przewody idą do złącza J2, zaciski A2/B2 na płycie jednostki wewnętrznej, NIE A1/B1 (tam jest sterownik). "
                "2) Adres Modbus = 16 (przełącznik SW3 na 0 albo 1). 3) Zamień A i B. 4) Pompa musi być zasilona. Wyślij raport: to wersja testowa."),
+    "lg": ("LG Therma V (wersja testowa)",
+           "1) Przewody idą do listwy „3rd Party Controller” (DC 5 V): zacisk 21 = A, 22 = B (w części R290 23/24), NIE do 28/29. "
+           "2) Na płycie przełącznik SW1-1 = ON (i SW1-2 = ON), potem wyłącz i włącz zasilanie pompy: pompa czyta je tylko przy starcie. "
+           "3) Menu instalatora → Modbus Address = 1. Jeśli pompa pokazuje 33, napisz do nas: wgramy program na adres 33. "
+           "4) Zamień A i B. 5) CH 03 na sterowniku = moduł milczał ponad 5 min: sprawdź zasilanie modułu, błąd kasuje wyłączenie zasilania pompy. "
+           "Wyślij raport: to wersja testowa."),
+    # inne marki bez naszego sprzętu (adapter albo pakiet Daikin; dane z ich integracji)
+    "panasonic": ("Panasonic Aquarea (HeishaMon)",
+                  "Dane idą z HeishaMon przez MQTT. Sprawdź, czy integracja Aquarea ma świeże odczyty (Ustawienia → Urządzenia i usługi). "
+                  "Zmieniony prefiks MQTT? W dodatku kliknij „Wykryj integrację” i „Użyj” jeszcze raz."),
+    "nibe": ("NIBE seria S (integracja NIBE Heat Pump)",
+             "Integracja NIBE tworzy encje wyłączone. „Zainstaluj ponownie” włącza potrzebne; sprawdź też połączenie Modbus TCP pompy (menu 7.5.9)."),
+    "mitsubishi": ("Mitsubishi Ecodan",
+                   "Sprawdź, czy moduł ESPHome Ecodan (gekkekoe) albo integracja MELCloud ma świeże odczyty. MELCloud odświeża dane co 1–2 h."),
+    "vaillant": ("Vaillant aroTHERM",
+                 "ebusd: sprawdź dodatek ebusd i filtr MQTT (docs: filter-name z state|flow|consumption|speed|desired). "
+                 "myVAILLANT: włącz pobieranie energii w opcjach integracji; częste odpytywanie grozi blokadą konta na 1–3 dni."),
+    "daikin-a4": ("Daikin Altherma 4 (Modbus TCP)",
+                  "1) Pompa w sieci (kabel LAN) i Modbus TCP włączony w menu. 2) Adres IP pompy stały (rezerwacja w routerze). "
+                  "3) Najwyżej 3 połączenia Modbus naraz: wyłącz inne systemy, które czytają pompę. 4) Zmiana IP: „Szukaj bramki LAN” → „Użyj”."),
+    "daikin-ekrhh": ("Daikin Altherma 3 + EKRHH (Modbus)",
+                     "1) HomeHub EKRHH w sieci (gniazdo LAN1) i Modbus włączony w aplikacji ONECTA. 2) Stały adres IP. "
+                     "3) Najwyżej 3 połączenia Modbus naraz. 4) Zmiana IP: „Szukaj bramki LAN” → „Użyj”."),
 }
+
+# Inne marki: id → (szablon w ZIP z serwera, opis, zapis zadanej CWU: True/False/None = zależy od integracji)
+MARKI = {
+    "panasonic": ("adaptery/panasonic.szablon.yaml", "Panasonic Aquarea (HeishaMon)", True),
+    "nibe": ("adaptery/nibe.szablon.yaml", "NIBE seria S", False),
+    "mitsubishi": ("adaptery/mitsubishi.szablon.yaml", "Mitsubishi Ecodan", None),
+    "vaillant": ("adaptery/vaillant.szablon.yaml", "Vaillant aroTHERM", None),
+    "daikin-a4": ("daikin_altherma4.szablon.yaml", "Daikin Altherma 4", True),
+    "daikin-ekrhh": ("daikin_ekrhh.szablon.yaml", "Daikin Altherma 3 + EKRHH", True),
+}
+PLACEHOLDERY = ("__HEISHA__", "__ECODAN__", "__MELCLOUD__", "__EBUSD_HMU__", "__EBUSD_CTL__", "__MV_DOM__", "__MV_URZ__")
+# NIBE (nibe_heatpump) tworzy wszystkie encje wyłączone; te czytają adapter i karty (docs/adaptery.md w repo Pro)
+NIBE_ENCJE = (
+    "sensor.current_outdoor_temperature_bt1_30002", "sensor.supply_line_bt2_30006", "sensor.external_supply_line_bt25_30040",
+    "sensor.condenser_sensor_supply_line_eb101_bt12_31479", "sensor.condenser_bt12_30013", "sensor.condenser_sensor_supply_line_bt12_30013",
+    "sensor.return_line_bt3_30008", "sensor.return_line_eb101_bt3_31476", "sensor.hot_water_top_bt7_30009", "sensor.hot_water_charging_bt6_30010",
+    "sensor.calculated_supply_climate_system_1_31018", "sensor.compressor_frequency_current_31047", "sensor.current_compressor_frequency_eb101_31804",
+    "sensor.total_run_time_compressor_31088", "sensor.compressor_oper_time_total_eb101_ep14_31492", "sensor.compressor_oper_time_total_eb100_ep14_31537",
+    "sensor.flow_sensor_bf1_30041", "sensor.priority_31029", "sensor.defrosting_eb101_31806", "sensor.defrosting_eb100_ep14_31820",
+    "sensor.energy_log_current_power_consumption_32306", "sensor.instantaneous_used_power_32167", "sensor.current_power_32177",
+    "sensor.tot_production_33822", "sensor.tot_consumption_33824", "sensor.alarm_number_31976", "number.auto_mode_stop_temperature_for_heating_40185",
+)
+
+
+def zapis_cwu(m):
+    """Czy marka ma encję zapisu zadanej CWU (wtedy instalujemy harmonogram CWU)."""
+    z = MARKI[m["id"]][2]
+    if z is not None:
+        return z
+    ph = m.get("placeholdery") or {}
+    klucz = "__ECODAN__" if m["id"] == "mitsubishi" else "__EBUSD_HMU__"
+    return (ph.get(klucz) or "brak") != "brak"
+
+
+def rejestr_encji():
+    ws = WS()
+    try:
+        return ws.wywolaj("config/entity_registry/list") or []
+    finally:
+        ws.zamknij()
+
+
+def wykryj_marki():
+    """Inne marki po encjach ich integracji (reguły: docs/adaptery.md w repo Pro). Daikin wykrywa „Szukaj bramki LAN”."""
+    rej = rejestr_encji()
+    po_id = {e.get("entity_id"): e for e in rej}
+    modul = any(e.get("entity_id") == "binary_sensor.pompa_modbus_modul_online" and e.get("platform") == "esphome" for e in rej)
+
+    def prefiksy(platforma, wzor):
+        rx = re.compile(wzor)
+        out = []
+        for e in rej:
+            if platforma in (None, e.get("platform")):
+                m = rx.match(e.get("entity_id") or "")
+                if m and m.group(1) not in out:
+                    out.append(m.group(1))
+        return out
+
+    kand = []
+    heisha = prefiksy("aquarea", r"^sensor\.(.+)_main_main_outlet_temp$")
+    if heisha:
+        kand.append({"id": "panasonic", "opis": "Panasonic Aquarea · HeishaMon", "placeholdery": {"__HEISHA__": heisha[0]}, "uwagi": []})
+    if "sensor.current_outdoor_temperature_bt1_30002" in po_id and po_id["sensor.current_outdoor_temperature_bt1_30002"].get("platform") == "nibe_heatpump":
+        wyl = sum(1 for e in NIBE_ENCJE if e in po_id and po_id[e].get("disabled_by"))
+        kand.append({"id": "nibe", "opis": "NIBE seria S · NIBE Heat Pump (Modbus TCP)", "placeholdery": {},
+                     "uwagi": [f"Przy instalacji włączę wyłączone encje NIBE potrzebne kartom (liczba: {wyl})."] if wyl else []})
+    ecodan = [x for x in prefiksy("esphome", r"^sensor\.(.+)_(?:feed_temp|temperatura_zasilania)$")
+              if f"sensor.{x}_dhw_current_temp" in po_id or f"sensor.{x}_aktualna_temperatura_cwu" in po_id]
+    melcloud = prefiksy("melcloud", r"^sensor\.(.+)_tank_temperature$")
+    if ecodan or melcloud:
+        uw = [] if ecodan else ["MELCloud odświeża dane co 1–2 h, bez odszraniania i kodu błędu. Dokładniej: moduł ESPHome Ecodan (CN105)."]
+        kand.append({"id": "mitsubishi", "opis": "Mitsubishi Ecodan · " + " + ".join((["ESPHome Ecodan"] if ecodan else []) + (["MELCloud"] if melcloud else [])),
+                     "placeholdery": {"__ECODAN__": ecodan[0] if ecodan else "brak", "__MELCLOUD__": melcloud[0] if melcloud else "brak"}, "uwagi": uw})
+    hmu = prefiksy("mqtt", r"^sensor\.(.+_hmu)_(?:currentconsumedpower|rundataflowtemp|flowtemp)$")
+    ctl = prefiksy("mqtt", r"^sensor\.(.+_(?:ctlv2|ctlv3|720))_(?:outsidetemp|hwcstoragetemp)(?:_tempv)?$")
+    mv_dom = [e["entity_id"][len("sensor."):-len("_outdoor_temperature")] for e in rej
+              if e.get("platform") == "mypyllant" and str(e.get("unique_id") or "").endswith("_home_outdoor_temperature")
+              and (e.get("entity_id") or "").endswith("_outdoor_temperature")]
+    mv_urz = [e["entity_id"][len("sensor."):-len("_consumed_electrical_energy_heating")] for e in rej
+              if e.get("platform") == "mypyllant" and (e.get("entity_id") or "").endswith("_consumed_electrical_energy_heating")]
+    if hmu or mv_dom:
+        uw = []
+        if hmu:
+            uw.append("ebusd: w opcjach dodatku ebusd poszerz filtr MQTT: --mqttvar=filter-name=status|temp|yield|count|energy|power|runtime|hours|starts|mode|curve|state|flow|consumption|speed|desired")
+        if mv_dom and not mv_urz:
+            uw.append("myVAILLANT: włącz pobieranie energii w opcjach integracji, inaczej nie będzie liczników prądu i ciepła.")
+        kand.append({"id": "vaillant", "opis": "Vaillant aroTHERM · " + " + ".join((["ebusd"] if hmu else []) + (["myVAILLANT"] if mv_dom else [])),
+                     "placeholdery": {"__EBUSD_HMU__": hmu[0] if hmu else "brak", "__EBUSD_CTL__": ctl[0] if ctl else "brak",
+                                      "__MV_DOM__": mv_dom[0] if mv_dom else "brak", "__MV_URZ__": mv_urz[0] if mv_urz else "brak"}, "uwagi": uw})
+    m = stan.get("marka") or {}
+    return {"modul": modul, "kandydaci": kand, "obecna": m.get("id"),
+            "obecna_opis": MARKI[m["id"]][1] if m.get("id") in MARKI else None}
+
+
+def wlacz_encje_nibe():
+    ws = WS()
+    try:
+        rej = {e.get("entity_id"): e for e in (ws.wywolaj("config/entity_registry/list") or [])}
+        n = 0
+        for eid in NIBE_ENCJE:
+            e = rej.get(eid)
+            if e and e.get("platform") == "nibe_heatpump" and e.get("disabled_by"):
+                ws.wywolaj("config/entity_registry/update", entity_id=eid, disabled_by=None)
+                n += 1
+    finally:
+        ws.zamknij()
+    return f"NIBE: włączone encje potrzebne kartom (liczba: {n})." if n else "NIBE: potrzebne encje już włączone."
+
+
+def uzyj_marki(mid, host=None):
+    """Wybór innej marki (albo powrót do modułu: mid = None). Zapisuje w stanie i od razu instaluje, jeśli jest klucz."""
+    if mid is None:
+        stan.pop("marka", None)
+        zapisz_stan()
+        if stan.get("klucz"):
+            return instaluj(stan["klucz"])
+        return ["Wrócono do modułu Pompa Modbus."]
+    if mid not in MARKI:
+        raise Blad("Nie znam tej marki.")
+    if mid.startswith("daikin"):
+        ipaddress.ip_address(str(host or ""))
+        typ = rozpoznaj_daikin(host)
+        if not typ:
+            raise Blad(f"Pod {host} nie odpowiada Daikin (Modbus TCP, rejestry 21–23). Sprawdź, czy Modbus jest włączony w pompie albo EKRHH.")
+        m = {"id": mid, "host": host}
+    else:
+        w = wykryj_marki()
+        if w["modul"]:
+            raise Blad("W Home Assistant działa moduł „Pompa Modbus” (ESPHome). Dwa źródła danych nadpisałyby te same encje: "
+                       "usuń urządzenie Pompa Modbus albo zostań przy module.")
+        k = next((x for x in w["kandydaci"] if x["id"] == mid), None)
+        if not k:
+            raise Blad("Nie widzę integracji tej marki w Home Assistant. Najpierw dodaj i uruchom jej integrację, potem „Wykryj integrację”.")
+        m = {"id": mid, "placeholdery": k["placeholdery"]}
+    stan["marka"] = m
+    stan.pop("bramka_host", None)  # jeden dostawca danych
+    zapisz_stan()
+    log(f"Wybrano markę: {MARKI[mid][1]}")
+    if not stan.get("klucz"):
+        return [f"Zapamiętano: {MARKI[mid][1]}. Teraz wklej klucz i zainstaluj."]
+    return instaluj(stan["klucz"])
 
 
 def platforma():
+    m = (stan.get("marka") or {}).get("id")
+    if m in PLATFORMY:
+        return m
     try:
         ws = WS()
         try:
@@ -725,7 +927,14 @@ def diagnostyka():
             "Bramka LAN: kliknij niżej „Szukaj bramki LAN”.")
     else:
         online = nasze.get("binary_sensor.pompa_modbus_modul_online")
-        if online and online.get("state") != "on" and not stan.get("bramka_host"):
+        marka = stan.get("marka")
+        if marka:
+            zr = nasze.get("sensor.pompa_modbus_zrodlo_danych")
+            if online and online.get("state") != "on":
+                zle("Brak świeżych danych z integracji pompy.", PLATFORMY.get(marka["id"], ("", ""))[1])
+            else:
+                ok("Dane z integracji: " + str((zr or {}).get("state") or MARKI[marka["id"]][1]) + ".")
+        elif online and online.get("state") != "on" and not stan.get("bramka_host"):
             zle("Moduł jest offline.", "Sprawdź zasilanie modułu i Wi-Fi (sieć „pompa-setup” oznacza, że moduł nie zna twojej sieci).")
         else:
             ok("Moduł połączony z Home Assistant.")
@@ -734,11 +943,17 @@ def diagnostyka():
         ok(f"Pompa: {PLATFORMY[plat][0]}.")
         liczbowe = [e for e in modbus if "kod_bledu" not in e]
         martwe = [e for e in liczbowe if str(nasze[e].get("state")) in NIEDOSTEPNE]
-        if liczbowe and len(martwe) / len(liczbowe) > 0.7:
+        if marka:  # adapter: część encji kanonicznych celowo pusta (marka ich nie podaje); liczą się kluczowe
+            kluczowe = [e for e in ("sensor.pompa_modbus_t4_temperatura_zewnetrzna", "sensor.pompa_modbus_moc_elektryczna_szacowana") if e in nasze]
+            if not kluczowe or all(str(nasze[e].get("state")) in NIEDOSTEPNE for e in kluczowe):
+                zle("Brak odczytów z integracji pompy (temperatura zewnętrzna i moc bez wartości).", PLATFORMY[plat][1])
+            else:
+                ok(f"Pompa odpowiada ({len(liczbowe) - len(martwe)} z {len(liczbowe)} encji ma wartość; puste = marka ich nie podaje).")
+        elif liczbowe and len(martwe) / len(liczbowe) > 0.7:
             zle(f"Brak odczytów z pompy ({len(martwe)} z {len(liczbowe)} encji bez wartości).", PLATFORMY[plat][1])
         else:
             ok(f"Pompa odpowiada ({len(liczbowe) - len(martwe)} z {len(liczbowe)} odczytów ma wartość).")
-        if stan.get("klucz") and not any(e.startswith("number.pompa_modbus_") for e in nasze):
+        if stan.get("klucz") and not marka and not any(e.startswith("number.pompa_modbus_") for e in nasze):
             zle("Moduł ma program bez zapisu nastaw (wersja Start).",
                 "Żeby zmieniać nastawy i harmonogram CWU z HA, wgraj raz program Pro: dodatek ESPHome Device Builder → "
                 "pompa-modbus-pro.yaml → Install (zapisaliśmy go przy instalacji klucza). Zestawy mają go już wgranego.")
@@ -899,6 +1114,32 @@ def modbus_tcp_odczyt(host, rejestr=0, ile=1, unit=1, timeout=1.5):
     return "brak odpowiedzi Modbus"
 
 
+def modbus_tcp(host, funkcja, rejestr, ile, unit=1, timeout=1.5):
+    """Odczyt Modbus TCP dowolną funkcją 01–04. Zwraca bajty danych albo None (wyjątek, brak odpowiedzi)."""
+    try:
+        with socket.create_connection((host, 502), timeout=timeout) as s:
+            s.settimeout(timeout)
+            s.sendall(struct.pack(">HHHBBHH", 0x5051, 0, 6, unit, funkcja, rejestr, ile))
+            b = s.recv(260)
+    except OSError:
+        return None
+    if len(b) >= 9 and b[7] == funkcja and len(b) >= 9 + b[8]:
+        return b[9: 9 + b[8]]
+    return None
+
+
+def rozpoznaj_daikin(host):
+    """Daikin: input 21–23 (stan błędu 0–2, kod ASCII, podkod 32766 albo 0–99). A4 ma cewki (funkcja 01), EKRHH nie (docs/daikin.md)."""
+    d = modbus_tcp(host, 4, 20, 3)
+    if not d or len(d) < 6:
+        return None
+    st, kod, pod = struct.unpack(">HHH", d[:6])
+    znaki = bytes([kod >> 8, kod & 0xFF]).decode("ascii", "replace")
+    if st not in (0, 1, 2) or not (pod == 32766 or pod <= 99) or not all(c.isdigit() or c.isupper() or c in "- " for c in znaki):
+        return None
+    return "daikin-a4" if modbus_tcp(host, 1, 0, 3) else "daikin-ekrhh"
+
+
 def szukaj_bramki():
     sieci = podsieci()
     if not sieci:
@@ -921,7 +1162,9 @@ def szukaj_bramki():
             pompa = isinstance(r, list)
         except OSError as e:
             r, pompa = f"błąd: {e}", False
-        wynik.append({"host": h, "pompa_odpowiada": pompa, "odczyt": r if pompa else str(r)})
+        daikin = rozpoznaj_daikin(h)
+        wynik.append({"host": h, "pompa_odpowiada": pompa or bool(daikin), "odczyt": r if pompa else str(r),
+                      "daikin": daikin, "daikin_opis": MARKI[daikin][1] if daikin else None})
     log(f"Szukanie bramki: sieci {sieci}, port 502 otwarty na {len(kand)} adresach.")
     return {"sieci": sieci, "bramki": wynik}
 
@@ -939,6 +1182,8 @@ def stan_publiczny():
         "auto_poprawki": stan.get("auto_poprawki"),
         "ostatnia_poprawka": stan.get("ostatnia_poprawka"),
         "bramka_host": stan.get("bramka_host"),
+        "marka": (stan.get("marka") or {}).get("id"),
+        "marka_opis": MARKI[stan["marka"]["id"]][1] if (stan.get("marka") or {}).get("id") in MARKI else None,
         "dziennik": stan.get("dziennik", [])[-25:],
     }
 
@@ -986,6 +1231,8 @@ class Obsluga(http.server.BaseHTTPRequestHandler):
                 return self._odp(200, diagnostyka())
             if akcja == "ustawienia":
                 return self._odp(200, {"ustawienia": ustawienia(), "domyslne": USTAWIENIA_DOMYSLNE, "propozycje": propozycje()})
+            if akcja == "marki":
+                return self._odp(200, wykryj_marki())
         except Blad as e:
             return self._odp(400, {"blad": str(e)})
         except Exception as e:
@@ -1025,11 +1272,16 @@ class Obsluga(http.server.BaseHTTPRequestHandler):
                 stan["auto_poprawki"] = bool(dane.get("wl"))
                 zapisz_stan()
                 return self._odp(200, stan_publiczny())
+            if akcja == "marka/uzyj":
+                mid = dane.get("id")
+                return self._odp(200, {"ok": True, "kroki": uzyj_marki(str(mid) if mid else None, (str(dane.get("host") or "").strip() or None))})
             if akcja == "bramka/szukaj":
                 return self._odp(200, szukaj_bramki())
             if akcja == "bramka/uzyj":
                 host = str(dane.get("host") or "").strip()
                 ipaddress.ip_address(host)
+                if rozpoznaj_daikin(host):
+                    raise Blad(f"Pod {host} jest pompa Daikin, nie bramka do Midea. Kliknij przy niej przycisk „Użyj (Daikin)”.")
                 r = modbus_tcp_odczyt(host, 0, 10)
                 if not isinstance(r, list):
                     raise Blad(f"Bramka {host} nie przekazuje odczytów z pompy ({r}). Sprawdź przewody A/B i ustawienia bramki.")

@@ -1,5 +1,5 @@
 name: "Pompa w HA"
-version: "1.3.2"
+version: "1.4.0"
 slug: pompa_ha
 description: "Instalator, diagnostyka i poprawki dla „Pompa w Home Assistant” (pompy na płycie Midea M-Thermal)."
 url: "https://pompa.woleoze.pl"
