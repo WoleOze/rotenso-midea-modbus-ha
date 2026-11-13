@@ -29,7 +29,7 @@
       "<b>Start</b> jest za darmo: sprawdzasz, czy to dla Ciebie, bez sprzętu. <b>Pro</b> to 149 zł, płacisz raz.<br>Gotowy zestaw do podpięcia: <b>Wi-Fi 499 zł</b> albo <b>Wi-Fi + LAN 549 zł</b>, z licencją Pro i wysyłką paczkomatem w cenie.<br>Masz własny moduł ESP32 z RS-485? <b>Wgranie i konfiguracja 299 zł</b> z licencją Pro: wysyłasz moduł, wraca wgrany i sprawdzony.",
       [["Zobacz cennik", "/#ceny", "g"], ["Start za darmo", "/#start", ""]]],
     ["montaz", "Jak wygląda montaż?",
-      "Dwie żyły do zacisków <b>H1/H2</b> w sterowniku ściennym, ok. <b>15 minut</b>. Pompy nie otwierasz: pracujesz tylko przy sterowniku na ścianie.<br>Robisz to sam albo Twój instalator. W instrukcji jest film (2 min) i schemat.",
+      "Dwie żyły do zacisków <b>H1/H2</b> w sterowniku ściennym, ok. <b>15 minut</b>. Pompy nie otwierasz: pracujesz tylko przy sterowniku na ścianie. Zacisków H1/H2 na płycie pompy nie używasz, bo służą do kaskady.<br>Robisz to sam albo Twój instalator. W instrukcji jest film (2 min) i schemat.",
       [["Instrukcja krok po kroku", "/instrukcja/", "g"]]],
     ["zwrot", "Co, jeśli nie zadziała?",
       "Na sprzęt masz <b>14 dni</b> na odstąpienie od umowy bez podania przyczyny. Przy licencji Pro i usłudze przygotowania wybierasz przy płatności w polu „Zgoda”.<br>Nie masz pewności, czy pompa pasuje? Zapytaj przed zakupem albo zacznij od darmowego Startu.",

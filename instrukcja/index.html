@@ -119,7 +119,7 @@ code{font:14px ui-monospace,Menlo,monospace;background:rgba(127,140,170,.15);pad
       <li>Załóż sterownik z powrotem i włącz pompę na panelu.</li>
     </ol>
     <img class="schemat" src="../docs/schemat-modbus-panel.png" alt="Schemat: zacisk A+ modułu do H2, B− do H1 na sterowniku ściennym; nie na płycie głównej jednostki" loading="lazy">
-    <div class="uw"><b>Tylko sterownik ścienny.</b> Na płycie głównej jednostki też są zaciski H1/H2, ale to magistrala do panelu, nie Modbus. Nie podłączaj się tam.</div>
+    <div class="uw"><b>Tylko sterownik ścienny.</b> Na płycie głównej jednostki też są zaciski H1/H2, ale służą do łączenia kilku pomp w kaskadę. Dane, które czyta moduł, są w sterowniku ściennym, więc z płyty nic nie odczytasz. Nie podłączaj się tam.</div>
   </section>
 
   <section class="k" id="rotenso-testy">
@@ -215,6 +215,6 @@ code{font:14px ui-monospace,Menlo,monospace;background:rgba(127,140,170,.15);pad
 
   <p class="stopka">Pompa w Home Assistant · <a href="https://pompa.woleoze.pl">pompa.woleoze.pl</a> · <a href="/regulamin/">Regulamin</a> · projekt <a href="https://woleoze.pl" target="_blank" rel="noopener">woleOZE</a> (<a href="https://woleoze.pl/kalkulator-pompy-ciepla/" target="_blank" rel="noopener">kalkulator pompy ciepła</a>, <a href="https://woleoze.pl/firmy/pompy-ciepla/" target="_blank" rel="noopener">firmy od pomp</a>). Projekt niezwiązany z Rotenso ani Midea.</p>
 </div>
-<script src="/docs/czat.js?v=20261112b" defer></script>
+<script src="/docs/czat.js?v=20261113a" defer></script>
 </body>
 </html>
