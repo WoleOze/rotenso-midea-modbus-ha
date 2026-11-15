@@ -18,6 +18,7 @@ Stan badania: 12.11.2026. Źródła: instrukcje producentów i zgłoszenia użyt
 | York | YKF (6, 9, 14 kW R32) | zgłoszenia użytkowników (sterownik YKF-KJRH-120F) |
 | Immergas | Magis M (M14T, M30) | zgłoszenia użytkowników |
 | Mitsui, Vivax / Hyundai, Kosner | monobloki na płycie Midea | zgłoszenia użytkowników |
+| Netsu (importer Klima-Therm) | split, np. S-NET-100-IDU; producent na tabliczce: GD Midea; sterownik KJRH-120H/F | tabliczka klienta, 15.11.2026 |
 
 ## 🟡 Powinno działać (ta sama płyta, ale nikt jeszcze nie potwierdził; mogą być różnice w rejestrach)
 

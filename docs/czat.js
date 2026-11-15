@@ -23,7 +23,7 @@
   /* [id, pytanie, odpowiedź (HTML z tego pliku), [[etykieta, adres, styl]]] */
   var ODP = [
     ["pasuje", "Czy działa z moją pompą?",
-      "Decyduje sterownik, nie marka: płyta <b>Midea M-Thermal</b> i czarno-biały panel z zaciskami <b>H1/H2</b> oraz menu <b>17.2</b>. Potwierdzone są m.in. Rotenso Aquami, Kaisai Arctic, Galmet Prima i De Dietrich Modena.<br>Najszybciej: wrzuć zdjęcie tabliczki, odpowiedź dostaniesz od razu.",
+      "Decyduje sterownik, nie marka: płyta <b>Midea M-Thermal</b> i czarno-biały panel z zaciskami <b>H1/H2</b> oraz menu <b>17.2</b>. Potwierdzone są m.in. Rotenso Aquami, Kaisai Arctic, Galmet Prima, De Dietrich Modena i Netsu (Klima-Therm, produkuje Midea).<br>Najszybciej: wrzuć zdjęcie tabliczki, odpowiedź dostaniesz od razu.",
       [["📷 Wrzuć zdjęcie tabliczki", "/sprawdz/", "g"], ["Lista zgodności", "/#zgodnosc", ""]]],
     ["cena", "Ile to kosztuje?",
       "<b>Start</b> jest za darmo: sprawdzasz, czy to dla Ciebie, bez sprzętu. <b>Pro</b> to 149 zł, płacisz raz.<br>Gotowy zestaw do podpięcia: <b>Wi-Fi 499 zł</b> albo <b>Wi-Fi + LAN 549 zł</b>, z licencją Pro i wysyłką paczkomatem w cenie.<br>Masz własny moduł ESP32 z RS-485? <b>Wgranie i konfiguracja 299 zł</b> z licencją Pro: wysyłasz moduł, wraca wgrany i sprawdzony.",

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/netsu-pompa-ciepla-home-assistant/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/netsu-pompa-ciepla-home-assistant/">
+<meta property="og:title" content="Pompa ciepła Netsu w Home Assistant: co to za pompa i jak ją podłączyć">
+<meta property="og:description" content="Netsu (Klima-Therm) to pompa Midea. Jak rozpoznać sterownik H1/H2, co zobaczysz w Home Assistant i jak podłączyć moduł bez otwierania jednostki.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-netsu-pompa-ciepla-home-assistant.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-netsu-pompa-ciepla-home-assistant.jpg">
+<title>Pompa ciepła Netsu w Home Assistant: producent i podłączenie – Pompa w HA</title>
+<meta name="description" content="Netsu (Klima-Therm) to pompa Midea. Jak rozpoznać sterownik H1/H2, co zobaczysz w Home Assistant i jak podłączyć moduł bez otwierania jednostki.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Pompa ciepła Netsu w Home Assistant: producent i podłączenie","description":"Netsu (Klima-Therm) to pompa Midea. Jak rozpoznać sterownik H1/H2, co zobaczysz w Home Assistant i jak podłączyć moduł bez otwierania jednostki.","datePublished":"2026-11-15","dateModified":"2026-11-15","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/netsu-pompa-ciepla-home-assistant/","image":"https://pompa.woleoze.pl/docs/og/blog-netsu-pompa-ciepla-home-assistant.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Czy Netsu to Midea?", "acceptedAnswer": {"@type": "Answer", "text": "Tak. Na tabliczce znamionowej pomp Netsu producentem jest GD Midea Heating & Ventilating Equipment, a Klima-Therm jest importerem."}}, {"@type": "Question", "name": "Czy moduł działa z pompą Netsu?", "acceptedAnswer": {"@type": "Answer", "text": "Tak, jeśli pompa ma sterownik ścienny z zaciskami H1/H2 (czarno-biały KJRH-120H/F). Moduł podłącza się dwiema żyłami do sterownika."}}, {"@type": "Question", "name": "Czy trzeba otwierać jednostkę zewnętrzną?", "acceptedAnswer": {"@type": "Answer", "text": "Nie. Moduł podpina się do sterownika ściennego w domu, więc jednostki zewnętrznej nie ruszasz."}}, {"@type": "Question", "name": "Ile kosztuje podłączenie Netsu do Home Assistant?", "acceptedAnswer": {"@type": "Answer", "text": "Zestaw Wi-Fi kosztuje 499 zł, a zestaw Wi-Fi z LAN 549 zł. Kartę Start z podstawowymi odczytami możesz sprawdzić za darmo."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Pompa ciepła Netsu w Home Assistant: kto ją produkuje i jak ją podłączyć</h1>
+    <p class="meta">15 listopada 2026 · 3 min czytania</p>
+    <p class="lead">Netsu to marka importera Klima-Therm, a pompę produkuje Midea. Na tabliczce jednostki wewnętrznej stoi wprost: „Manufacturer: GD Midea Heating &amp; Ventilating Equipment Co., Ltd.”. Dlatego Netsu da się podpiąć do Home Assistant tak samo jak Rotenso Aquami czy Kaisai Arctic: dwiema żyłami do sterownika ściennego.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>Netsu = pompa z rodziny Midea M-Thermal, sprzedawana w Polsce pod marką Klima-Therm.</li><li>Sterownik ścienny ma zaciski H1/H2 (Modbus RTU), więc moduł ESP32 z RS-485 czyta temperatury, przepływ, sprężarkę i tryby.</li><li>Zanim kupisz cokolwiek: zrób zdjęcie tabliczki i sterownika, sprawdzimy za darmo.</li></ul></div>
+
+    <h2>Kto produkuje pompy Netsu</h2>
+    <p>Netsu („czyste ciepło”) to marka, pod którą pompy powietrze-woda sprzedaje warszawski Klima-Therm. Producentem jest Midea, a dokładnie jej oddział GD Midea Heating &amp; Ventilating z Foshan. Widać to na tabliczce znamionowej, obok danych importera.</p>
+    <p>Przykład z tabliczki, którą przysłał nam właściciel: <b>S-NET-100-IDU</b>. To jednostka wewnętrzna splitu (hydroboks) o mocy 10 kW, na czynniku R32, zasilana z trzech faz, z grzałką 6 kW. Litery IDU oznaczają jednostkę wewnętrzną (indoor unit), a liczba 100 moc w setkach watów.</p>
+    <p>To ważne, bo w pompach ciepła o tym, co da się podpiąć do Home Assistant, decyduje płyta sterująca i sterownik, nie logo na obudowie. Ta sama płyta Midea siedzi w Rotenso Aquami, Kaisai Arctic, Galmet Prima i kilku innych markach.</p>
+
+    <h2>Jak rozpoznać, że Twoja Netsu pasuje</h2>
+    <p>Sprawdź trzy rzeczy:</p>
+    <ul>
+      <li><b>Tabliczka</b>: w polu „Manufacturer” jest GD Midea. Wtedy masz pewność co do rodziny.</li>
+      <li><b>Sterownik ścienny</b>: czarno-biały ekran LCD i osiem przycisków (MENU, OK, BACK, ON/OFF, UNLOCK i strzałki). Tak wygląda sterownik KJRH-120H/F.</li>
+      <li><b>Tył sterownika</b>: zaciski oznaczone H1 i H2. Tu podłącza się moduł.</li>
+    </ul>
+    <p>Kolorowy panel dotykowy (seria KJRH-120L) to nowsza generacja. Program dla niej jest gotowy, ale czeka na pierwszego testera.</p>
+
+    <div class="ramka"><b>Nie wiesz, czy to Twoja wersja?</b> <a href="/sprawdz/?src=blog-netsu">Wrzuć zdjęcie tabliczki albo sterownika</a>, odpowiedź dostaniesz od razu, a wynik możesz dostać na e-mail.</div>
+
+    <h2>Split czy monoblok: czy to coś zmienia</h2>
+    <p>Dla podłączenia do Home Assistant nie. W splicie sterownik ścienny jest przy hydroboksie w domu, więc moduł ma zwykle dobry zasięg Wi-Fi i krótkie przewody. W monobloku sterownik też jest w domu, tylko płyta siedzi na zewnątrz. W obu przypadkach moduł podpina się do sterownika, nie do jednostki zewnętrznej, więc nie trzeba niczego otwierać.</p>
+
+    <h2>Co zobaczysz w Home Assistant</h2>
+    <ul>
+      <li>temperatury: zewnętrzna, zasilania, powrotu, ciepłej wody i bufora,</li>
+      <li>przepływ wody, częstotliwość sprężarki, pracę grzałki i odszraniania,</li>
+      <li>tryb pracy (ogrzewanie, ciepła woda), błędy i ostrzeżenia,</li>
+      <li>w wersji Pro: COP, koszt ogrzewania w złotówkach, raport i zmianę nastaw z telefonu, w tym krzywej grzewczej.</li>
+    </ul>
+    <p>Odczyty nie wychodzą z domu. Moduł rozmawia z pompą po kablu i wysyła dane tylko do Twojego Home Assistant.</p>
+
+    <h2>Jak podłączyć moduł</h2>
+    <ol>
+      <li>W menu serwisowym sterownika ustaw adres Modbus (HMI ADDRESS SET).</li>
+      <li>Podłącz dwie żyły: H2 do A+, H1 do B− modułu RS-485.</li>
+      <li>Zasil moduł z 5 V przez USB-C. Nie podawaj zasilania na H1/H2.</li>
+      <li>Połącz moduł z domowym Wi-Fi, a Home Assistant sam go wykryje.</li>
+    </ol>
+    <p>Gotowy zestaw przyjeżdża wgrany i sprawdzony. Szczegóły krok po kroku są w <a href="/instrukcja/">instrukcji</a>.</p>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Czy Netsu to Midea?</h3><p>Tak. Na tabliczce znamionowej pomp Netsu producentem jest GD Midea Heating &amp; Ventilating Equipment, a Klima-Therm jest importerem.</p>
+    <h3>Czy moduł działa z pompą Netsu?</h3><p>Tak, jeśli pompa ma sterownik ścienny z zaciskami H1/H2 (czarno-biały KJRH-120H/F). Moduł podłącza się dwiema żyłami do sterownika.</p>
+    <h3>Czy trzeba otwierać jednostkę zewnętrzną?</h3><p>Nie. Moduł podpina się do sterownika ściennego w domu, więc jednostki zewnętrznej nie ruszasz.</p>
+    <h3>Ile kosztuje podłączenie Netsu do Home Assistant?</h3><p>Zestaw Wi-Fi kosztuje 499 zł, a zestaw Wi-Fi z LAN 549 zł. Kartę Start z podstawowymi odczytami możesz sprawdzić za darmo.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla"><li>Tabliczka znamionowa Netsu S-NET-100-IDU (zdjęcie właściciela, 15.11.2026): producent GD Midea Heating &amp; Ventilating, importer Klima-Therm</li><li><a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/zgodnosc.md">Lista zgodności Pompa w HA</a></li></ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/krzywa-grzewcza-midea-rotenso/">Krzywa grzewcza w pompie Midea i Rotenso</a></li><li><a href="/blog/temperatura-zasilania-a-cop/">Temperatura zasilania a COP</a></li><li><a href="/blog/grzalka-w-pompie-ciepla/">Grzałka w pompie ciepła: kiedy się włącza</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>
