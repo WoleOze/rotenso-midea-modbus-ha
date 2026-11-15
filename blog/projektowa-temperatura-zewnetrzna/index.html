@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/projektowa-temperatura-zewnetrzna/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/projektowa-temperatura-zewnetrzna/">
+<meta property="og:title" content="Projektowa temperatura zewnętrzna w Polsce i co z niej wynika dla pompy ciepła">
+<meta property="og:description" content="Strefy klimatyczne w Polsce: −16, −18, −20, −22 i −24°C. Ile godzin w roku jest tak zimno, co to punkt biwalentny i jak dobrać moc pompy ciepła.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-projektowa-temperatura-zewnetrzna.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-projektowa-temperatura-zewnetrzna.jpg">
+<title>Projektowa temperatura zewnętrzna: strefy w Polsce – Pompa w HA</title>
+<meta name="description" content="Strefy klimatyczne w Polsce: −16, −18, −20, −22 i −24°C. Ile godzin w roku jest tak zimno, co to punkt biwalentny i jak dobrać moc pompy ciepła.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Projektowa temperatura zewnętrzna: strefy w Polsce","description":"Strefy klimatyczne w Polsce: −16, −18, −20, −22 i −24°C. Ile godzin w roku jest tak zimno, co to punkt biwalentny i jak dobrać moc pompy ciepła.","datePublished":"2026-11-15","dateModified":"2026-11-15","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/projektowa-temperatura-zewnetrzna/","image":"https://pompa.woleoze.pl/docs/og/blog-projektowa-temperatura-zewnetrzna.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Jaka jest projektowa temperatura zewnętrzna dla Warszawy?", "acceptedAnswer": {"@type": "Answer", "text": "Według podziału na strefy z załącznika krajowego do PN-EN 12831 Warszawa leży w III strefie, czyli −20°C. Opracowanie Politechniki Warszawskiej na danych z lat 1991–2020 wyznaczyło dla Warszawy −15,3°C, ale to wynik opracowania, a nie wartość z normy. Którą wartość przyjąć, ustal z projektantem."}}, {"@type": "Question", "name": "Ile jest stref klimatycznych w Polsce?", "acceptedAnswer": {"@type": "Answer", "text": "Pięć: I −16°C, II −18°C, III −20°C, IV −22°C i V −24°C. Najłagodniejsza jest strefa I na północnym zachodzie (m.in. Szczecin i Gdańsk), a najzimniejsza strefa V (m.in. Suwałki i Zakopane)."}}, {"@type": "Question", "name": "Czy pompa ciepła musi sama pokryć zapotrzebowanie przy temperaturze projektowej?", "acceptedAnswer": {"@type": "Answer", "text": "Nie musi. Często dobiera się ją tak, żeby grzała sama do punktu biwalentnego, a przy większym mrozie pomagała jej grzałka albo drugie źródło. Takich godzin jest w roku niewiele, ale grzałka ma COP równy 1, więc punkt biwalentny nie powinien wypadać za wysoko."}}, {"@type": "Question", "name": "Co to jest punkt biwalentny pompy ciepła?", "acceptedAnswer": {"@type": "Answer", "text": "To temperatura zewnętrzna, przy której moc grzewcza pompy zrównuje się z zapotrzebowaniem domu na ciepło. Powyżej niej pompa grzeje sama, poniżej potrzebuje wsparcia grzałki albo innego źródła ciepła."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Projektowa temperatura zewnętrzna w Polsce: strefy klimatyczne i co z nich wynika dla pompy ciepła</h1>
+    <p class="meta">15 listopada 2026 · 6 min czytania</p>
+    <p class="lead">Projektowa temperatura zewnętrzna to mróz, dla którego liczy się potrzebną moc ogrzewania domu. Załącznik krajowy do normy PN-EN 12831 dzieli Polskę na pięć stref: −16, −18, −20, −22 i −24°C. Dla pompy ciepła ta liczba wyznacza najzimniejszy punkt krzywej grzewczej i moc potrzebną w największy mróz, choć tak zimnych godzin jest w roku niewiele.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>Strefa I: −16°C (np. Szczecin, Gdańsk), II: −18°C (Poznań, Wrocław), III: −20°C (Warszawa, Kraków, Łódź), IV: −22°C (Białystok), V: −24°C (Suwałki, Zakopane).</li><li>W typowym roku meteorologicznym dla Warszawy nie ma ani jednej godziny poniżej −15°C, a poniżej −10°C jest ich 18 na 8760.</li><li>Punkt biwalentny to temperatura, poniżej której sama pompa przestaje wystarczać. Brakującą moc daje wtedy grzałka albo drugie źródło ciepła.</li><li>Strefa podpowiada też, jaką temperaturę zewnętrzną wpisać jako punkt „mróz” w krzywej grzewczej.</li></ul></div>
+
+    <h2>Co to jest projektowa temperatura zewnętrzna</h2>
+    <p>To umowna temperatura powietrza na zewnątrz, którą przyjmuje się w obliczeniach strat ciepła budynku. Nie jest to rekord mrozu, tylko wartość projektowa dla danego regionu.</p>
+    <p>Projektant liczy, ile ciepła dom traci przy różnicy między temperaturą w środku (zwykle 20°C w pokojach) a projektową temperaturą zewnętrzną. Wynik to projektowe obciążenie cieplne, czyli moc, jaką musi dać ogrzewanie w najzimniejszych warunkach.</p>
+    <p>Metodę podaje norma PN-EN 12831. Wartości dla Polski są w załączniku krajowym, a sam podział na strefy pochodzi jeszcze z normy PN-82/B-02403.</p>
+
+    <h2>Strefy klimatyczne w Polsce według PN-EN 12831</h2>
+    <div class="tabwrap"><table>
+      <tr><th>Strefa</th><th>Projektowa temperatura zewnętrzna</th><th>Średnia roczna</th><th>Przykładowe miasta</th></tr>
+      <tr><td>I</td><td>−16°C</td><td>7,7°C</td><td>Szczecin, Koszalin, Gdańsk</td></tr>
+      <tr><td>II</td><td>−18°C</td><td>7,9°C</td><td>Poznań, Wrocław, Zielona Góra</td></tr>
+      <tr><td>III</td><td>−20°C</td><td>7,6°C</td><td>Warszawa, Kraków, Łódź, Katowice</td></tr>
+      <tr><td>IV</td><td>−22°C</td><td>6,9°C</td><td>Białystok i północny wschód</td></tr>
+      <tr><td>V</td><td>−24°C</td><td>5,5°C</td><td>Suwałki, Zakopane</td></tr>
+    </table></div>
+    <p>Miasta przy granicach stref sprawdź na mapie (link w źródłach). Jeśli mieszkasz blisko granicy, projektant przyjmie wartość dla strefy, w której leży budynek.</p>
+    <p>Średnią roczną temperaturę norma wykorzystuje m.in. do liczenia strat ciepła przez grunt. Przy doborze pompy liczy się przede wszystkim temperatura projektowa.</p>
+
+    <h2>Normy się starzeją: nowe temperatury z danych 1991–2020</h2>
+    <p>Podział na strefy ma kilkadziesiąt lat. Autorzy artykułu w czasopiśmie Energies (2024) piszą, że parametry klimatyczne stosowane w Polsce do doboru ogrzewania mają około 50 lat i nie odpowiadają obecnemu klimatowi.</p>
+    <p>Opracowanie Politechniki Warszawskiej na danych z lat 1991–2020 wyznaczyło dla Warszawy −15,3°C zamiast −20°C. Na razie to wynik opracowania, a nie wartość z normy, którą stosuje projektant.</p>
+    <p>Co z tego wynika dla Ciebie? Dom policzony na −20°C ma w praktyce zapas mocy. To dobrze w rekordową zimę, ale przy łagodnej pogodzie za duża pompa częściej się włącza i wyłącza.</p>
+
+    <h2>Ile godzin w roku jest naprawdę tak zimno</h2>
+    <p>Ministerstwo udostępnia typowe lata meteorologiczne: godzinowe dane pogodowe dla stacji w Polsce, używane w obliczeniach energetycznych budynków. Policzyliśmy w nich godziny poniżej kilku progów.</p>
+    <div class="tabwrap"><table>
+      <tr><th>Stacja</th><th>Najniższa temperatura w typowym roku</th><th>Godziny poniżej −15°C</th><th>poniżej −10°C</th><th>poniżej −5°C</th><th>poniżej 0°C</th></tr>
+      <tr><td>Szczecin</td><td>−13,5°C</td><td>0</td><td>9</td><td>178</td><td>1176</td></tr>
+      <tr><td>Poznań</td><td>−15,6°C</td><td>5</td><td>54</td><td>456</td><td>1661</td></tr>
+      <tr><td>Warszawa (Okęcie)</td><td>−12,3°C</td><td>0</td><td>18</td><td>282</td><td>1347</td></tr>
+      <tr><td>Kraków (Balice)</td><td>−20,2°C</td><td>17</td><td>108</td><td>540</td><td>1868</td></tr>
+      <tr><td>Białystok</td><td>−17,6°C</td><td>42</td><td>192</td><td>802</td><td>1991</td></tr>
+    </table></div>
+    <p>Rok ma 8760 godzin. W Warszawie godzin poniżej −5°C jest w typowym roku 282, czyli około 3%.</p>
+    <p>Ważne zastrzeżenie: typowy rok składa się z „typowych” miesięcy wybranych z wielolecia 1971–2000, więc nie pokazuje najostrzejszych zim. W mroźny rok takich godzin będzie więcej. Proporcja zostaje jednak ta sama: mróz bliski temperatury projektowej to w większości Polski dziesiątki godzin, a nie tysiące.</p>
+
+    <div class="ramka"><b>Policz krzywą dla swojej strefy.</b> <a href="/kalkulator-krzywej-grzewczej/">Darmowy kalkulator krzywej grzewczej</a>: wybierasz strefę, robisz test na stałej wodzie i dostajesz wykres oraz nastawy do sterownika.</div>
+
+    <h2>Punkt biwalentny: od kiedy pompa potrzebuje pomocy</h2>
+    <p>Punkt biwalentny to temperatura zewnętrzna, przy której moc pompy zrównuje się z zapotrzebowaniem domu na ciepło. Powyżej niego pompa grzeje sama. Poniżej brakującą część daje grzałka albo drugie źródło, np. kocioł.</p>
+    <p>Dwie linie przecinają się z prostego powodu: im zimniej, tym dom potrzebuje więcej ciepła, a pompa powietrzna daje go mniej.</p>
+    <p>Przykład liczbowy (uproszczony, bez zysków od słońca i ludzi): dom ma 8 kW obciążenia przy −20°C i 20°C w środku. Na każdy stopień różnicy temperatur przypada więc 0,2 kW.</p>
+    <div class="tabwrap"><table>
+      <tr><th>Na dworze</th><th>Potrzebna moc</th></tr>
+      <tr><td>−20°C</td><td>8,0 kW</td></tr>
+      <tr><td>−10°C</td><td>6,0 kW</td></tr>
+      <tr><td>0°C</td><td>4,0 kW</td></tr>
+      <tr><td>+7°C</td><td>2,6 kW</td></tr>
+    </table></div>
+    <p>Jeśli pompa przy −10°C i potrzebnej temperaturze wody daje 6 kW, punkt biwalentny wypada przy około −10°C. W typowym roku dla Warszawy takich godzin jest 18, więc grzałka dokładałaby tylko w czasie największych mrozów.</p>
+    <p>Moc pompy przy niskich temperaturach i przy Twojej temperaturze wody sprawdzisz w danych technicznych producenta. Nie wystarczy moc przy +7°C, bo przy mrozie bywa wyraźnie niższa.</p>
+
+    <h2>Dobór mocy pompy: za mała i za duża</h2>
+    <p>Pompę dobiera się do obciążenia cieplnego z obliczeń, a nie do metrażu. Obie skrajności kosztują:</p>
+    <ul>
+      <li><b>Za mała pompa</b> wcześnie potrzebuje wsparcia. Punkt biwalentny wypada wysoko, a grzałka pracuje często. Grzałka ma COP równy 1: z 1 kWh prądu daje 1 kWh ciepła, a sprężarka więcej (według karty pompy AQM80X1 przy +7°C od 3,18 do 5,15 kWh, zależnie od temperatury wody).</li>
+      <li><b>Za duża pompa</b> przy plusowych temperaturach ma za dużo mocy. W przykładzie wyżej przy +7°C dom potrzebuje tylko 2,6 kW. Jeśli pompa nie potrafi zejść tak nisko, zaczyna taktować, czyli często się włączać i wyłączać.</li>
+    </ul>
+    <p>Rozsądny dobór to kompromis: pompa pokrywa większość sezonu sama, a na kilkadziesiąt najzimniejszych godzin zostaje wsparcie. Punkt biwalentny ustala instalator z projektantem na podstawie obliczeń i charakterystyki konkretnej pompy.</p>
+
+    <h2>Projektowa temperatura a krzywa grzewcza</h2>
+    <p>Krzywa grzewcza mówi pompie, jak ciepłą wodę dawać przy danej pogodzie. Jej najzimniejszy punkt warto oprzeć na projektowej temperaturze zewnętrznej, bo dla niej liczono grzejniki i podłogówkę.</p>
+    <p>W sterownikach Midea i Rotenso własną krzywą (nr 9) ustawia się dwoma punktami: T4H1 i T1SetH1 (temperatura na dworze i woda przy mrozie) oraz T4H2 i T1SetH2 (przy cieple). Szczegóły opisujemy w poradniku o <a href="/blog/krzywa-grzewcza-midea-rotenso/">krzywej grzewczej w Midea i Rotenso</a>.</p>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Jaka jest projektowa temperatura zewnętrzna dla Warszawy?</h3><p>Według podziału na strefy z załącznika krajowego do PN-EN 12831 Warszawa leży w III strefie, czyli −20°C. Opracowanie Politechniki Warszawskiej na danych z lat 1991–2020 wyznaczyło dla Warszawy −15,3°C, ale to wynik opracowania, a nie wartość z normy. Którą wartość przyjąć, ustal z projektantem.</p>
+    <h3>Ile jest stref klimatycznych w Polsce?</h3><p>Pięć: I −16°C, II −18°C, III −20°C, IV −22°C i V −24°C. Najłagodniejsza jest strefa I na północnym zachodzie (m.in. Szczecin i Gdańsk), a najzimniejsza strefa V (m.in. Suwałki i Zakopane).</p>
+    <h3>Czy pompa ciepła musi sama pokryć zapotrzebowanie przy temperaturze projektowej?</h3><p>Nie musi. Często dobiera się ją tak, żeby grzała sama do punktu biwalentnego, a przy większym mrozie pomagała jej grzałka albo drugie źródło. Takich godzin jest w roku niewiele, ale grzałka ma COP równy 1, więc punkt biwalentny nie powinien wypadać za wysoko.</p>
+    <h3>Co to jest punkt biwalentny pompy ciepła?</h3><p>To temperatura zewnętrzna, przy której moc grzewcza pompy zrównuje się z zapotrzebowaniem domu na ciepło. Powyżej niej pompa grzeje sama, poniżej potrzebuje wsparcia grzałki albo innego źródła ciepła.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla">
+      <li><a href="https://www.purmo.com/docs/Poradnik-Purmo-nowa-metoda-obliczania_12831_01_2012.pdf" rel="nofollow noopener" target="_blank">Norma PN-EN 12831. Nowa metoda obliczania projektowego obciążenia cieplnego, poradnik Purmo (PDF)</a>: mapa stref (rys. 2.1), tabela 2.1 z temperaturami projektowymi i średnimi rocznymi, przykłady dla Gdańska, Krakowa, Poznania i Białegostoku.</li>
+      <li><a href="https://www.mdpi.com/1996-1073/17/16/3905" rel="noopener" target="_blank">New External Design Temperatures and Geospatial Models for Poland and Central Europe for Building Heat Load Calculations, Energies 17(16), 2024</a>: stan i wiek obowiązujących parametrów.</li>
+      <li><a href="https://globenergia.pl/nowe-temperatury-obliczeniowe-dla-ogrzewnictwa-klimatyzacji-i-wentylacji/" rel="noopener" target="_blank">Nowe temperatury obliczeniowe dla ogrzewnictwa, klimatyzacji i wentylacji, Globenergia, 9.06.2023</a>: −15,3°C dla Warszawy z danych 1991–2020.</li>
+      <li><a href="https://www.gov.pl/web/archiwum-inwestycje-rozwoj/dane-do-obliczen-energetycznych-budynkow" rel="noopener" target="_blank">Dane do obliczeń energetycznych budynków, gov.pl</a>: typowe lata meteorologiczne dla stacji (dane 1971–2000). Liczby godzin w tabeli: wyliczenie własne z plików stacji Szczecin, Poznań, Warszawa-Okęcie, Kraków-Balice i Białystok.</li>
+    </ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/krzywa-grzewcza-pompy-ciepla/">Krzywa grzewcza pompy ciepła: co to jest i jak ją ustawić</a></li><li><a href="/blog/grzalka-w-pompie-ciepla/">Grzałka w pompie ciepła: kiedy się włącza i jak nie przepłacać</a></li><li><a href="/blog/taktowanie-pompy-ciepla/">Taktowanie pompy ciepła: skąd się bierze i jak je ograniczyć</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/glowice-termostatyczne-a-pompa-ciepla/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/glowice-termostatyczne-a-pompa-ciepla/">
+<meta property="og:title" content="Głowice termostatyczne a pompa ciepła: odkręcać czy nie">
+<meta property="og:description" content="Odkręcać głowice przy pompie ciepła czy nie? Regulacja pogodowa a głowice, pomieszczenie referencyjne, równoważenie i wpływ na przepływ oraz taktowanie.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-glowice-termostatyczne-a-pompa-ciepla.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-glowice-termostatyczne-a-pompa-ciepla.jpg">
+<title>Głowice termostatyczne a pompa ciepła: odkręcać czy nie? – Pompa w HA</title>
+<meta name="description" content="Odkręcać głowice przy pompie ciepła czy nie? Regulacja pogodowa a głowice, pomieszczenie referencyjne, równoważenie i wpływ na przepływ oraz taktowanie.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Głowice termostatyczne a pompa ciepła: odkręcać czy nie?","description":"Odkręcać głowice przy pompie ciepła czy nie? Regulacja pogodowa a głowice, pomieszczenie referencyjne, równoważenie i wpływ na przepływ oraz taktowanie.","datePublished":"2026-11-15","dateModified":"2026-11-15","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/glowice-termostatyczne-a-pompa-ciepla/","image":"https://pompa.woleoze.pl/docs/og/blog-glowice-termostatyczne-a-pompa-ciepla.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Czy przy pompie ciepła trzeba zdjąć głowice termostatyczne?", "acceptedAnswer": {"@type": "Answer", "text": "Nie trzeba ich zdejmować. Na czas ustawiania krzywej grzewczej odkręć je do końca, a potem zostaw otwarte w pomieszczeniu referencyjnym. W pozostałych pokojach mogą przycinać temperaturę, byle nie zamykały większości grzejników jednocześnie."}}, {"@type": "Question", "name": "Dlaczego pompa ciepła często się włącza i wyłącza po przykręceniu głowic?", "acceptedAnswer": {"@type": "Answer", "text": "Przykręcone głowice zmniejszają przepływ i objętość wody w obiegu. Pompa szybciej dogrzewa małą ilość wody, wyłącza się i zaraz startuje ponownie. To taktowanie sprężarki."}}, {"@type": "Question", "name": "Co to jest pomieszczenie referencyjne?", "acceptedAnswer": {"@type": "Answer", "text": "To pokój, według którego oceniasz krzywą grzewczą. Grzejniki są w nim otwarte, a jeśli masz termostat pokojowy, to stoi właśnie tam. Wybierz pokój bez kominka i bez mocnego słońca."}}, {"@type": "Question", "name": "Czy głowice termostatyczne obniżają zużycie prądu przez pompę ciepła?", "acceptedAnswer": {"@type": "Answer", "text": "Mogą, jeśli tylko przycinają nadwyżkę ciepła w części pokoi. W badaniu Uniwersytetu Salford dało to 6–8% mniej energii na ogrzewanie, ale przy otwartym przynajmniej jednym grzejniku i z zaworem obejściowym."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Głowice termostatyczne a pompa ciepła: odkręcać czy nie</h1>
+    <p class="meta">15 listopada 2026 · 7 min czytania</p>
+    <p class="lead">Odkręcać, przynajmniej na czas ustawiania krzywej grzewczej i w pomieszczeniu, według którego regulujesz dom. Przy pompie ciepła temperaturą wody steruje krzywa pogodowa, a głowice mają tylko przycinać ciepło w pokojach, które mają być chłodniejsze. Gdy przykręcone głowice zamykają większość grzejników, pompie spada przepływ i częściej się włącza i wyłącza.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul>
+      <li>Na czas ustawiania krzywej odkręć wszystkie głowice do oporu. Tak radzi poradnik Polskiej Organizacji Rozwoju Technologii Pomp Ciepła (PORT PC).</li>
+      <li>Krzywą ustaw tak, żeby było ciepło w najzimniejszym pokoju. Dopiero potem przycinaj głowicami pokoje za ciepłe.</li>
+      <li>Jedno pomieszczenie (referencyjne) zostaw bez przykręconych głowic. Tam mierzysz, czy krzywa jest dobra.</li>
+      <li>Nierówne grzanie pokoi naprawia równoważenie hydrauliczne, a nie przykręcanie głowic.</li>
+      <li>Za dużo zamkniętych grzejników naraz to mniejszy przepływ, krótsze cykle sprężarki i ryzyko błędu przepływu.</li>
+    </ul></div>
+
+    <h2>Regulacja pogodowa a regulacja głowicami</h2>
+    <p>W domu z pompą ciepła działają zwykle dwa regulatory naraz.</p>
+    <p><b>Regulacja pogodowa</b> (krzywa grzewcza) ustawia temperaturę wody w całej instalacji na podstawie temperatury na dworze. Im zimniej, tym cieplejsza woda. Pompa nie wie, ile stopni masz w pokoju, ale jeśli krzywa jest dobrze dobrana, w domu i tak robi się tyle, ile trzeba.</p>
+    <p><b>Głowica termostatyczna</b> pilnuje jednego grzejnika. Gdy w pokoju robi się cieplej niż nastawa, przymyka zawór i przez grzejnik płynie mniej wody.</p>
+    <p>Kłopot zaczyna się, gdy oba regulatory chcą robić to samo. Jeśli krzywa daje za ciepłą wodę, a głowice przykręcają grzejniki, dom ma właściwą temperaturę, ale pompa pracuje na zbyt gorącej wodzie. A im cieplejsza woda, tym niższy COP (współczynnik efektywności, czyli ile ciepła pompa daje z 1 kWh prądu). Więcej o tym w artykule <a href="/blog/temperatura-zasilania-a-cop/">temperatura zasilania a COP</a>.</p>
+    <p>Kolejność jest więc taka: najpierw krzywa robi większość pracy, a głowice tylko przycinają.</p>
+
+    <h2>Odkręcić głowice: kiedy i po co</h2>
+    <p>Poradnik PORT PC „Pompuj ciepło z głową” (część II, 2024) radzi, żeby przy instalacji grzejnikowej na początku sezonu odkręcić głowice termostatyczne do końca i co kilka dni porównywać temperaturę w pomieszczeniach z zadaną. Dopiero na tej podstawie poprawia się krzywą.</p>
+    <p>Powód jest prosty. Jeśli głowice są przykręcone, nie widać, czy w pokoju jest ciepło dzięki krzywej, czy dzięki temu, że zawór się otworzył albo zamknął. Krzywej nie da się wtedy ocenić.</p>
+    <p>Tak samo działa test na stałej wodzie, od którego zaczyna się wyznaczanie krzywej: głowice odkręcone, siłowniki podłogówki otwarte, termostat pokojowy ustawiony tak wysoko, żeby nie wyłączał grzania. Szczegóły są w artykule <a href="/blog/jak-wyznaczyc-krzywa-grzewcza/">jak wyznaczyć krzywą grzewczą</a>.</p>
+
+    <div class="ramka"><b>Masz odkręcone głowice? To dobry moment na test.</b> <a href="/kalkulator-krzywej-grzewczej/">Darmowy kalkulator krzywej grzewczej</a>: wpisujesz temperatury z kilku dni na stałej wodzie i dostajesz krzywą oraz nastawy do sterownika.</div>
+
+    <h2>Pomieszczenie referencyjne</h2>
+    <p>Pomieszczenie referencyjne to pokój, według którego oceniasz, czy krzywa jest dobra. Grzejniki w nim są otwarte (bez głowic albo z głowicami odkręconymi do końca). Jeśli masz termostat pokojowy albo czujnik temperatury, to właśnie tam.</p>
+    <p>Jak je wybrać:</p>
+    <ul>
+      <li>Pokój, w którym spędzasz dużo czasu i chcesz mieć stałą temperaturę, najczęściej salon.</li>
+      <li>Bez dodatkowego źródła ciepła: kominka, piekarnika, mocnego słońca przez duże okna. Inaczej pokój nagrzeje się sam, a pompa uzna, że cały dom jest ciepły.</li>
+      <li>Najlepiej z kilkoma grzejnikami albo kilkoma pętlami podłogówki. Wtedy nawet przy przykręconych innych pokojach woda ma którędy płynąć.</li>
+    </ul>
+    <p>Taki dobór opisuje raport EA Technology dla brytyjskiego Energy Saving Trust (2011). W domu testowym autorzy zaproponowali przeniesienie strefy referencyjnej z przedpokoju do salonu z jadalnią. Najmniejsza moc oddawana przez otwarte grzejniki wzrosłaby wtedy z 745 W do 1738 W, a najmniejsza objętość wody w obiegu z około 21 do około 40 litrów. Jednocześnie ostrzegli, żeby nie wybierać pokoju z kominkiem.</p>
+    <p>Instrukcja pomp Midea i Rotenso mówi to samo o termostacie pokojowym: trzymać go z dala od źródeł ciepła.</p>
+
+    <h2>Przykręcone głowice a przepływ i taktowanie</h2>
+    <p>Gdy kolejne pokoje osiągają nastawę, głowice przymykają zawory. Spada wtedy ilość ciepła, którą instalacja może oddać, i objętość wody, która krąży w obiegu. Pompa szybciej dogrzewa tę małą ilość wody, wyłącza się i po chwili znów startuje. To taktowanie, czyli zbyt częste włączanie i wyłączanie sprężarki (więcej w artykule <a href="/blog/taktowanie-pompy-ciepla/">taktowanie pompy ciepła</a>).</p>
+    <p>Raport EA Technology mierzył to na pompie ze sprężarką o stałej prędkości. Gdy sprężarka pracowała w jednym cyklu krócej niż 3,5 minuty, COP spadał. Przy cyklach dłuższych niż 8 minut był zbliżony do pracy ciągłej. Autorzy piszą też, że producenci zwykle ograniczają liczbę startów do około 6 na godzinę, żeby chronić sprężarkę.</p>
+    <p>Nowsze badanie Uniwersytetu Salford (2026), prowadzone w domu testowym w komorze klimatycznej na pompie z grzejnikami, pokazało, że głowice przycinające temperaturę w pokojach obniżyły zużycie energii na ogrzewanie o 6–8% bez pogorszenia sprawności pompy. Ale z zastrzeżeniem: przynajmniej jeden grzejnik ma zostać otwarty albo instalacja potrzebuje zaworu obejściowego (bypassu), bo pompa potrzebuje stałego przepływu.</p>
+    <p>Wniosek z obu badań: głowice nie są wrogiem pompy, dopóki nie zamykają większości grzejników jednocześnie.</p>
+
+    <h3>Minimalny przepływ w pompach Midea i Rotenso</h3>
+    <p>Instrukcja montażu monobloku Rotenso Aquami (Midea M-Thermal) podaje zakres przepływu wody dla każdej mocy, na przykład:</p>
+    <div class="tabwrap"><table>
+      <thead><tr><th>Moc pompy</th><th>Przepływ wody</th></tr></thead>
+      <tbody>
+        <tr><td>4 kW</td><td>0,40–0,85 m³/h</td></tr>
+        <tr><td>8 kW</td><td>0,40–1,65 m³/h</td></tr>
+        <tr><td>12 kW</td><td>0,70–2,50 m³/h</td></tr>
+        <tr><td>16 kW</td><td>0,70–3,00 m³/h</td></tr>
+      </tbody>
+    </table></div>
+    <p>Ta sama instrukcja wymaga co najmniej 40 litrów wody w instalacji (bez wody w samej jednostce). Dodaje, że gdy obiegi są zamykane zaworami sterowanymi zdalnie, tę minimalną objętość trzeba zachować nawet wtedy, gdy wszystkie zawory są zamknięte.</p>
+    <p>Gdy przepływ spadnie za nisko, pompa zgłasza błąd przepływu wody. Wśród przyczyn instrukcja wymienia między innymi zamknięte zawory, zapchany filtr i powietrze w instalacji.</p>
+    <p>Aktualny przepływ (w m³/h) sterownik pokazuje w menu PARAMETR OPERACJI. Producent zaznacza, że to wartość wyliczana, z odchyłką do 15%.</p>
+
+    <h2>Równoważenie hydrauliczne zamiast przykręcania głowic</h2>
+    <p>Jeśli jeden pokój jest za ciepły, a drugi za zimny, kusi, żeby przykręcić głowicę w ciepłym i podnieść krzywą dla zimnego. Tak pompa pracuje na cieplejszej wodzie niż potrzeba, a głowice cały czas dławią przepływ.</p>
+    <p>Właściwe rozwiązanie to równoważenie hydrauliczne. Polega na takim ustawieniu zaworów, żeby każdy grzejnik dostawał tyle wody, ile potrzebuje. W grzejnikach robi się to nastawami na wkładkach zaworów termostatycznych albo na zaworach powrotnych, w podłogówce na rozdzielaczu.</p>
+    <p>Portal GLOBEnergia pisze wprost: bez równoważenia część grzejników może być przegrzewana, a inne niedogrzane, a równoważenie wymaga obliczeń projektowych i często specjalistycznych narzędzi pomiarowych. To zadanie dla instalatora.</p>
+    <p>Badanie z Salford podsumowuje to podobnie: głowice to dodatek do dobrze dobranej temperatury wody i zrównoważonej instalacji, a nie ich zamiennik.</p>
+
+    <h2>Jak ustawić głowice przy pompie ciepła, krok po kroku</h2>
+    <ol>
+      <li><b>Odkręć wszystkie głowice do końca.</b> Siłowniki podłogówki zdejmij albo otwórz.</li>
+      <li><b>Ustaw krzywą</b> tak, żeby w najzimniejszym pokoju, w którym chcesz mieć ciepło, była właściwa temperatura. Zmieniaj ją po trochu i oceniaj po dobie lub dwóch.</li>
+      <li><b>Sprawdź pokoje za ciepłe.</b> Jeśli różnica jest stała, poproś instalatora o zrównoważenie instalacji.</li>
+      <li><b>Załóż głowice z powrotem</b> w pokojach, które mają być chłodniejsze (sypialnie, pomieszczenia rzadko używane). Ustaw je trochę powyżej temperatury, którą chcesz tam mieć, żeby tylko przycinały nadwyżkę ciepła od słońca czy gotowania.</li>
+      <li><b>W pomieszczeniu referencyjnym</b> zostaw grzejniki otwarte.</li>
+      <li><b>Obserwuj sprężarkę.</b> Jeśli po założeniu głowic liczba startów wyraźnie rośnie, zbyt wiele grzejników zamyka się jednocześnie.</li>
+    </ol>
+    <p>Liczbę startów sprężarki i przepływ najłatwiej śledzić w historii. Bez tego zostaje obserwacja jednostki zewnętrznej i zapisywanie godzin.</p>
+
+    <h2>Podłogówka: siłowniki i termostaty w pokojach</h2>
+    <p>Przy podłogówce rolę głowic grają siłowniki na rozdzielaczu sterowane termostatami w pokojach. Zasada jest ta sama.</p>
+    <p>Podłoga reaguje wolno. Termostat zamyka pętlę, gdy pokój jest już nagrzany, a wylewka i tak oddaje jeszcze przez pewien czas zgromadzone ciepło. Tym bardziej obowiązuje tu kolejność z grzejników: temperaturę ustala krzywa, termostaty przycinają tylko tam, gdzie ma być chłodniej, a pętle w pomieszczeniu referencyjnym zostają otwarte. O różnicach między podłogówką a grzejnikami piszemy w artykule <a href="/blog/krzywa-grzewcza-podlogowka-grzejniki/">krzywa grzewcza: podłogówka a grzejniki</a>.</p>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Czy przy pompie ciepła trzeba zdjąć głowice termostatyczne?</h3><p>Nie trzeba ich zdejmować. Na czas ustawiania krzywej grzewczej odkręć je do końca, a potem zostaw otwarte w pomieszczeniu referencyjnym. W pozostałych pokojach mogą przycinać temperaturę, byle nie zamykały większości grzejników jednocześnie.</p>
+    <h3>Dlaczego pompa ciepła często się włącza i wyłącza po przykręceniu głowic?</h3><p>Przykręcone głowice zmniejszają przepływ i objętość wody w obiegu. Pompa szybciej dogrzewa małą ilość wody, wyłącza się i zaraz startuje ponownie. To taktowanie sprężarki.</p>
+    <h3>Co to jest pomieszczenie referencyjne?</h3><p>To pokój, według którego oceniasz krzywą grzewczą. Grzejniki są w nim otwarte, a jeśli masz termostat pokojowy, to stoi właśnie tam. Wybierz pokój bez kominka i bez mocnego słońca.</p>
+    <h3>Czy głowice termostatyczne obniżają zużycie prądu przez pompę ciepła?</h3><p>Mogą, jeśli tylko przycinają nadwyżkę ciepła w części pokoi. W badaniu Uniwersytetu Salford dało to 6–8% mniej energii na ogrzewanie, ale przy otwartym przynajmniej jednym grzejniku i z zaworem obejściowym.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla">
+      <li>PORT PC, <a href="https://budujemydom.pl/files/bry/17410-portpc.PDF" rel="noopener">Poradnik „Pompuj ciepło z głową”, część II: Jak optymalnie obsługiwać pompę ciepła?</a>, marzec 2024 (punkt 3: dopasowanie krzywej grzewczej, rozkręcenie głowic).</li>
+      <li>R. Green, T. Knowles, EA Technology dla Energy Saving Trust, <a href="https://assets.publishing.service.gov.uk/media/5a78de7840f0b62b22cbd718/3531-effect-radiator-valves-heat-pump-perf.pdf" rel="noopener">The effect of Thermostatic Radiator Valves on heat pump performance</a>, raport nr 6507, czerwiec 2011.</li>
+      <li>pv magazine, <a href="https://www.pv-magazine.com/2026/04/17/thermostatic-radiator-valves-can-reduce-energy-consumption-in-air-source-heat-pumps-by-6-8/" rel="noopener">Thermostatic radiator valves can reduce energy consumption in air source heat pumps by 6-8%</a>, 17.04.2026 (omówienie raportu University of Salford i BEAMA).</li>
+      <li>GLOBEnergia, <a href="https://globenergia.pl/cieplo-w-domu-pod-kontrola-glowice-termostatyczne-i-rownowazenie-hydrauliczne/" rel="noopener">Ciepło w domu pod kontrolą: głowice termostatyczne i równoważenie hydrauliczne</a>, 10.04.2026.</li>
+      <li>Instrukcja montażu i obsługi Rotenso Aquami AQM120X3 R13 (Midea M-Thermal): zakres przepływu wody, rozdz. 9.4.2 (objętość wody), kody błędów (rozdz. 13.4), termostat pokojowy.</li>
+    </ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul>
+    <li><a href="/blog/taktowanie-pompy-ciepla/">Taktowanie pompy ciepła</a></li>
+    <li><a href="/blog/jak-wyznaczyc-krzywa-grzewcza/">Jak wyznaczyć krzywą grzewczą</a></li>
+    <li><a href="/blog/temperatura-zasilania-a-cop/">Temperatura zasilania a COP</a></li>
+  </ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>

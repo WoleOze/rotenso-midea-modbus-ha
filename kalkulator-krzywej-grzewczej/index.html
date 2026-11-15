@@ -129,11 +129,11 @@
         <input id="ti" type="text" inputmode="decimal" autocomplete="off" value="21"><small>°C</small></label>
       <label class="pole">Najzimniejszy dzień w Twojej okolicy
         <select id="tz">
-          <option value="-16">I strefa (zachód, Szczecin, Wrocław): −16°C</option>
-          <option value="-18">II strefa (Poznań, Gdańsk, Łódź): −18°C</option>
-          <option value="-20" selected>III strefa (Warszawa, Kraków, Katowice): −20°C</option>
-          <option value="-22">IV strefa (Białystok, Olsztyn, Rzeszów): −22°C</option>
-          <option value="-24">V strefa (Suwałki, góry): −24°C</option>
+          <option value="-16">I strefa (Szczecin, Koszalin, Gdańsk): −16°C</option>
+          <option value="-18">II strefa (Poznań, Wrocław): −18°C</option>
+          <option value="-20" selected>III strefa (Warszawa, Kraków, Łódź): −20°C</option>
+          <option value="-22">IV strefa (Białystok): −22°C</option>
+          <option value="-24">V strefa (Suwałki, Zakopane): −24°C</option>
         </select><small>projektowa temperatura zewnętrzna</small></label>
       <label class="pole">Teraz na dworze (nieobowiązkowe)
         <input id="tn" type="text" inputmode="decimal" autocomplete="off" placeholder="np. 0"><small>°C, pokażemy punkt na krzywej</small></label>
@@ -288,6 +288,6 @@
   if (new URLSearchParams(location.search).has('przyklad')) $('przyklad').click();
 })();
 </script>
-<script src="/docs/czat.js?v=20261115a" defer></script>
+<script src="/docs/czat.js?v=20261115b" defer></script>
 </body>
 </html>

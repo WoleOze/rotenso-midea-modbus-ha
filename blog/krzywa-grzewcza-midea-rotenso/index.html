@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/krzywa-grzewcza-midea-rotenso/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/krzywa-grzewcza-midea-rotenso/">
+<meta property="og:title" content="Krzywa grzewcza w pompie Midea i Rotenso: krzywe 1–8, krzywa 9 i tryb EKO">
+<meta property="og:description" content="Gdzie w sterowniku Midea i Rotenso włączyć krzywą grzewczą, czym różnią się krzywe 1–8 od krzywej 9 (T1SetH1, T4H1…) i jak działa tryb EKO.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-krzywa-grzewcza-midea-rotenso.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-krzywa-grzewcza-midea-rotenso.jpg">
+<title>Krzywa grzewcza Midea i Rotenso: krzywe 1–8, 9 i tryb EKO – Pompa w HA</title>
+<meta name="description" content="Gdzie w sterowniku Midea i Rotenso włączyć krzywą grzewczą, czym różnią się krzywe 1–8 od krzywej 9 (T1SetH1, T4H1…) i jak działa tryb EKO.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Krzywa grzewcza Midea i Rotenso: krzywe 1–8, 9 i tryb EKO","description":"Gdzie w sterowniku Midea i Rotenso włączyć krzywą grzewczą, czym różnią się krzywe 1–8 od krzywej 9 (T1SetH1, T4H1…) i jak działa tryb EKO.","datePublished":"2026-11-15","dateModified":"2026-11-15","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/krzywa-grzewcza-midea-rotenso/","image":"https://pompa.woleoze.pl/docs/og/blog-krzywa-grzewcza-midea-rotenso.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Gdzie w sterowniku Midea włączyć krzywą grzewczą?", "acceptedAnswer": {"@type": "Answer", "text": "W menu NASTAWA TEMP., w funkcji pogodowej (w instrukcji UST.TEMP. OTOCZ.). Wybierz wiersz NISKA TEMP. TRYB-G STREFA1, naciśnij ON/OFF i wybierz numer krzywej od 1 do 9."}}, {"@type": "Question", "name": "Która krzywa jest najcieplejsza: 1 czy 8?", "acceptedAnswer": {"@type": "Answer", "text": "Krzywa 1 daje najcieplejszą wodę, krzywa 8 najchłodniejszą. Na niskiej temperaturze krzywa 1 to 38°C przy −20°C na dworze, a krzywa 8 to 29°C."}}, {"@type": "Question", "name": "Co oznaczają T1SetH1, T1SetH2, T4H1 i T4H2?", "acceptedAnswer": {"@type": "Answer", "text": "To dwa punkty krzywej 9. T1SetH1 to temperatura wody przy temperaturze zewnętrznej T4H1 (mróz), a T1SetH2 to temperatura wody przy T4H2 (cieplej). Fabrycznie 35°C przy −5°C i 28°C przy +7°C."}}, {"@type": "Question", "name": "Dlaczego po zmianie nastaw serwisowych pompa przestała grzać?", "acceptedAnswer": {"@type": "Answer", "text": "Instrukcja sterownika mówi, że po wyjściu z menu serwisanta jednostka zostaje wyłączona. Włącz grzanie i ciepłą wodę klawiszem ON/OFF na ekranie głównym."}}, {"@type": "Question", "name": "Dlaczego po wyłączeniu trybu EKO pompa nie trzyma krzywej?", "acceptedAnswer": {"@type": "Answer", "text": "Gdy działa EKO, funkcja pogodowa nie jest używana, a po wyłączeniu EKO trzeba ją włączyć ponownie w menu NASTAWA TEMP."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Krzywa grzewcza w pompie Midea i Rotenso: krzywe 1–8, krzywa 9 i tryb EKO</h1>
+    <p class="meta">15 listopada 2026 · 8 min czytania</p>
+    <p class="lead">W pompach Midea M-Thermal i ich bliźniakach (Rotenso Aquami, Kaisai Arctic i inne) ze sterownikiem przewodowym KJRH-120 krzywą grzewczą włączasz w menu <b>NASTAWA TEMP.</b>, w funkcji pogodowej. Masz do wyboru 9 krzywych: 1–8 to gotowe tabele z instrukcji, a krzywa 9 to prosta wyznaczona przez cztery parametry instalatora: T1SetH1, T1SetH2, T4H1 i T4H2. Tryb EKO to druga krzywa, która może działać całą dobę albo tylko w wybranych godzinach.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul>
+      <li>Ścieżka: MENU › NASTAWA TEMP. › funkcja pogodowa (w instrukcji „UST.TEMP. OTOCZ.”), potem numer krzywej od 1 do 9.</li>
+      <li>Krzywe 1–8 są płaskie: na niskiej temperaturze krzywa 1 daje 38°C przy −20°C i 32°C przy +20°C na dworze.</li>
+      <li>Krzywa 9 to dwa punkty: T1SetH1 przy T4H1 (mróz) i T1SetH2 przy T4H2 (cieplej). Fabrycznie 35°C przy −5°C i 28°C przy +7°C.</li>
+      <li>Parametry krzywej 9 leżą w menu DLA SERWISANTA. Po wyjściu z niego sterownik wyłącza jednostkę, więc trzeba ją włączyć ponownie.</li>
+      <li>Tryb EKO ma najwyższy priorytet. Po jego wyłączeniu funkcję pogodową trzeba ustawić od nowa.</li>
+    </ul></div>
+
+    <h2>Czym jest krzywa grzewcza w pompie Midea</h2>
+    <p>Krzywa grzewcza mówi pompie, jak ciepłą wodę ma wysyłać do grzejników albo podłogówki przy danej temperaturze na dworze. W sterowniku Midea temperatura wody zadana to <b>T1S</b>, a temperatura zewnętrzna to <b>T4</b>.</p>
+    <p>T4 mierzy czujnik w jednostce zewnętrznej. Instrukcja montażu zaleca postawić jednostkę w cieniu albo pod daszkiem, bo słońce na czujniku zawyża odczyt i pompa liczy wodę dla cieplejszej pogody, niż jest naprawdę.</p>
+    <p>Gdy krzywa jest włączona, nie zmienisz T1S strzałkami na ekranie głównym. Sterownik zapyta wtedy, czy wyłączyć funkcję pogodową. To normalne zachowanie, nie usterka.</p>
+    <p>Ogólnie o krzywej, jej nachyleniu i przesunięciu piszemy w artykule <a href="/blog/krzywa-grzewcza-pompy-ciepla/">Krzywa grzewcza pompy ciepła</a>. Tutaj tylko to, co dotyczy sterownika Midea.</p>
+
+    <h2>Gdzie w menu włączyć krzywą grzewczą (Midea, Rotenso)</h2>
+    <p>Nazwy pozycji podajemy tak, jak w polskiej instrukcji sterownika. Polskie tłumaczenie bywa niekonsekwentne: ta sama funkcja nazywa się w tekście „UST.TEMP. OTOCZ.”, a na ekranie „POGODA UST. TEMP.”. W wersji angielskiej to WEATHER TEMP. SET.</p>
+    <ol>
+      <li>Na ekranie głównym naciśnij <b>MENU</b> i wybierz <b>NASTAWA TEMP.</b> (w tekście instrukcji „OBECNA TEMP.”).</li>
+      <li>Przejdź do zakładki z funkcją pogodową, czyli <b>UST.TEMP. OTOCZ.</b>, i naciśnij OK.</li>
+      <li>Wybierz wiersz <b>NISKA TEMP. TRYB-G STREFA1</b> (grzanie, strefa 1). Wiersze z „TRYB-C” dotyczą chłodzenia.</li>
+      <li>Naciśnij <b>ON/OFF</b>. Pojawi się okno <b>TYP UST.TEMP. OTOCZ.</b> z numerami 1–9.</li>
+      <li>Strzałkami ◄ ► wybierz numer krzywej i zatwierdź klawiszem OK.</li>
+    </ol>
+    <p>To menu użytkownika, bez hasła. Numer krzywej zmienisz tu sam w każdej chwili.</p>
+    <p>Pompa przelicza zadaną wodę z krzywej co pewien czas, a nie bez przerwy. Odstęp ustawia parametr serwisowy <b>3.2 t_T4_FRESH_H</b> (od 0,5 do 6 godzin). Po zmianie krzywej daj domowi dobę, zanim ocenisz efekt.</p>
+
+    <h2>Krzywe 1–8: gotowe tabele z instrukcji</h2>
+    <p>Krzywe 1–8 to tabele: dla każdej temperatury na dworze od −20°C do +20°C sterownik ma wpisaną temperaturę wody. Krzywa 1 jest najcieplejsza, krzywa 8 najchłodniejsza.</p>
+    <p>Są dwa komplety tabel: dla niskiej temperatury grzania (podłogówka) i dla wysokiej (grzejniki). Sterownik pokazuje tylko komplet pasujący do konfiguracji ustawionej przez instalatora w menu serwisanta (instrukcja odsyła tu do sekcji <b>KONF. TRYB GRZANIA</b>).</p>
+    <div class="tabwrap"><table>
+      <thead><tr><th>Krzywa</th><th>−20°C</th><th>−10°C</th><th>0°C</th><th>+10°C</th><th>+20°C</th></tr></thead>
+      <tbody>
+        <tr><td>1, niska temp.</td><td>38</td><td>37</td><td>35</td><td>33</td><td>32</td></tr>
+        <tr><td>4, niska temp.</td><td>35</td><td>33</td><td>32</td><td>30</td><td>28</td></tr>
+        <tr><td>8, niska temp.</td><td>29</td><td>28</td><td>26</td><td>25</td><td>24</td></tr>
+        <tr><td>1, wysoka temp.</td><td>55</td><td>54</td><td>52</td><td>51</td><td>50</td></tr>
+        <tr><td>4, wysoka temp.</td><td>50</td><td>49</td><td>47</td><td>46</td><td>45</td></tr>
+        <tr><td>8, wysoka temp.</td><td>40</td><td>39</td><td>37</td><td>36</td><td>35</td></tr>
+      </tbody>
+    </table></div>
+    <p>Wartości w tabeli to temperatura wody T1S w °C, odczytana z tabel 1 i 2 instrukcji sterownika. W polskim wydaniu obie tabele podpisano „wysokiej temperatury grzania”. W angielskim pierwsza to niska temperatura i tak też wynika z liczb.</p>
+    <p>Zwróć uwagę, jak płaskie są te krzywe. Między −20°C a +20°C na dworze woda zmienia się tylko o 5–7 stopni. Jeśli Twój dom potrzebuje większej różnicy, przy mrozie będzie w nim chłodno albo w łagodne dni za ciepło.</p>
+    <p>Jeśli żadna z ośmiu krzywych nie pasuje, zostaje krzywa 9.</p>
+
+    <h2>Krzywa 9: T1SetH1, T1SetH2, T4H1 i T4H2</h2>
+    <p>Instrukcja nazywa ją „automatyczną krzywą konfiguracji”. To prosta przez dwa punkty, które ustawia się w menu <b>DLA SERWISANTA › 3. KONF. TRYB GRZANIA</b>:</p>
+    <div class="tabwrap"><table>
+      <thead><tr><th>Nr</th><th>Parametr</th><th>Co oznacza</th><th>Fabrycznie</th><th>Zakres</th></tr></thead>
+      <tbody>
+        <tr><td>3.8</td><td>T1SetH1</td><td>temperatura wody w punkcie „mróz”</td><td>35°C</td><td>25–65°C</td></tr>
+        <tr><td>3.9</td><td>T1SetH2</td><td>temperatura wody w punkcie „cieplej”</td><td>28°C</td><td>25–60°C</td></tr>
+        <tr><td>3.10</td><td>T4H1</td><td>temperatura na dworze dla punktu „mróz”</td><td>−5°C</td><td>−25–35°C</td></tr>
+        <tr><td>3.11</td><td>T4H2</td><td>temperatura na dworze dla punktu „cieplej”</td><td>7°C</td><td>−25–35°C</td></tr>
+      </tbody>
+    </table></div>
+    <p>Poniżej T4H1 woda zostaje na poziomie T1SetH1. Powyżej T4H2 zostaje na poziomie T1SetH2. Pomiędzy nimi sterownik rysuje prostą. Tak wygląda wykres w instrukcji.</p>
+    <p>Fabryczne wartości oznaczają: przy −5°C i zimniej woda 35°C, przy +7°C i cieplej 28°C. Przy 0°C wychodzi mniej więcej 32°C.</p>
+    <p>Jeśli wpiszesz punkty odwrotnie (T4H2 niższe niż T4H1 albo T1SetH1 niższe niż T1SetH2), sterownik sam zamieni wartości miejscami.</p>
+    <p>Odpowiednikami do chłodzenia są parametry 2.8 T1SetC1, 2.9 T1SetC2, 2.10 T4C1 i 2.11 T4C2 w menu <b>2. KONF. TRYB CHŁODZENIA</b>.</p>
+
+    <h3>Jak dobrać punkty krzywej 9</h3>
+    <p>Dobrze jest ustawić T4H1 na projektową temperaturę zewnętrzną dla Twojej okolicy (od −16°C do −24°C w Polsce, zobacz <a href="/blog/projektowa-temperatura-zewnetrzna/">projektowa temperatura zewnętrzna</a>), a T4H2 w okolice granicy grzania. Wtedy prosta obejmuje cały zakres, w którym dom naprawdę grzejesz.</p>
+    <p>Przy fabrycznym T4H1 = −5°C pompa przy −15°C daje tę samą wodę co przy −5°C. Jeśli przy mrozie robi się chłodno, to pierwsze miejsce do sprawdzenia.</p>
+    <p>Dwa inne parametry z tej samej strony też wpływają na grzanie: <b>3.3 T4HMAX</b> to temperatura na dworze, powyżej której pompa przestaje grzać dom, a <b>3.4 T4HMIN</b> to dolna granica grzania pompą.</p>
+
+    <div class="ramka"><b>Policz krzywą 9 dla swojego domu.</b> <a href="/kalkulator-krzywej-grzewczej/">Darmowy kalkulator krzywej grzewczej</a>: test na stałej wodzie, wykres i gotowe dwa punkty do wpisania jako T1SetH1/T4H1 i T1SetH2/T4H2.</div>
+
+    <h2>Menu serwisanta: hasło i ponowne włączenie pompy</h2>
+    <p>Parametry krzywej 9 są w menu <b>DLA SERWISANTA</b>. Instrukcja sterownika podaje do niego hasło 234 i zaznacza, że to menu dla montera lub serwisanta, a nie dla właściciela.</p>
+    <div class="uwaga"><b>Zmiana nastaw serwisowych to zadanie dla instalatora.</b> Jeśli robisz to sam, robisz to na własną odpowiedzialność i z instrukcją w ręku. Przed zmianą zrób zdjęcie każdej strony menu, żeby móc wrócić do poprzednich wartości. Zmieniaj jeden parametr naraz.</div>
+    <p>Wyjście wygląda tak: klawisz BACK, pytanie „Aktywować ustawienie i wyjść?”, wybór TAK i OK. Instrukcja sterownika (punkt 6.9.3) mówi wprost: po wyjściu z menu serwisanta jednostka zostanie wyłączona.</p>
+    <p>Dlatego po każdej wizycie w tym menu sprawdź na ekranie głównym, czy grzanie domu i ciepła woda użytkowa (CWU) są włączone. Jeśli nie, włącz je klawiszem ON/OFF. Bez tego dom i bojler stygną, choć pompa wygląda na sprawną.</p>
+    <p>Sam numer krzywej (1–9) i tryb EKO zmieniasz w menu użytkownika, więc tam hasło nie jest potrzebne.</p>
+
+    <h2>Tryb EKO: druga krzywa na noc albo na cały dzień</h2>
+    <p>Tryb EKO włączasz w <b>MENU › NASTAWA TEMP. › TRYB EKO</b>. Po naciśnięciu ON/OFF pojawia się okno <b>UST. TRYBU EKO</b>, w którym wybierasz numer krzywej, tak samo jak przy funkcji pogodowej. EKO działa tylko w grzaniu.</p>
+    <p>Pod spodem jest <b>MINUTNIK EKO</b> z godzinami URUCHOM i ZAKOŃCZ:</p>
+    <ul>
+      <li>EKO włączone, minutnik wyłączony: pompa cały czas pracuje na krzywej EKO.</li>
+      <li>EKO włączone, minutnik włączony: krzywa EKO działa tylko między godziną startu a końca. W pozostałych godzinach obowiązuje zwykła krzywa.</li>
+    </ul>
+    <p>Typowe użycie to chłodniejsza krzywa w nocy. Czy to się opłaca, zależy od domu: rano pompa musi oddać to, co dom stracił w nocy. Sprawdź to na swoich odczytach, zanim zostawisz na stałe.</p>
+
+    <h3>Priorytety: EKO, harmonogram i krzywa</h3>
+    <p>Instrukcja sterownika ustala kolejność:</p>
+    <ol>
+      <li><b>EKO</b> ma najwyższy priorytet.</li>
+      <li><b>MINUTNIK</b> i <b>TYGODNIOWY HARMONOGRAM</b> są drugie. Między sobą mają równy priorytet, obowiązuje ten ustawiony później.</li>
+      <li><b>WSTĘPNIE UST. TEMP.</b> i funkcja pogodowa (krzywa) są na końcu.</li>
+    </ol>
+    <p>Ważna pułapka: gdy EKO działa, funkcja pogodowa nie jest używana. Po wyłączeniu EKO trzeba ją ustawić ponownie. W angielskiej wersji instrukcji jest to napisane jasno, polskie tłumaczenie tego zdania jest mylące.</p>
+    <p>Druga pułapka: w trybie urlopowym (URLOP POZA DOMEM) krzywe nie działają. Wracają same po zakończeniu urlopu.</p>
+
+    <h2>Jak skorygować krzywą w Midea</h2>
+    <p>Sterownik Midea nie ma osobnego przesunięcia krzywej o ±1°C. Korygujesz ją tak:</p>
+    <ul>
+      <li><b>Krzywe 1–8:</b> wybierasz sąsiedni numer. Niższy numer to cieplejsza woda.</li>
+      <li><b>Krzywa 9, cała krzywa za zimna albo za ciepła:</b> podnosisz albo obniżasz T1SetH1 i T1SetH2 o tę samą wartość.</li>
+      <li><b>Krzywa 9, za zimno tylko przy mrozie:</b> podnosisz samo T1SetH1.</li>
+      <li><b>Krzywa 9, za ciepło w łagodne dni:</b> obniżasz samo T1SetH2.</li>
+    </ul>
+    <p>Zmieniaj po 1–2°C i czekaj co najmniej dobę. Więcej o tym w artykule <a href="/blog/korekta-krzywej-grzewczej/">korekta krzywej grzewczej</a>.</p>
+    <p>Aktualną zadaną z krzywej sterownik pokazuje w menu <b>PARAMETR OPERACJI</b> (bez hasła) jako „KRZYW. TEMP. KLIM.” (C1 dla strefy 1). Tam też odczytasz T1 (woda wychodząca) i T4 (temperatura na dworze) i porównasz je z tabelą.</p>
+    <p>Wygodniej robi się to w Home Assistant. Moduł Pompa w HA czyta te temperatury z pompy przez Modbus i zapisuje ich historię, a w wersji Pro zmienisz krzywą z telefonu zamiast przez menu serwisanta. Czy Twoja pompa pasuje, sprawdzisz w <a href="/sprawdz/?src=blog">teście zgodności</a>.</p>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Gdzie w sterowniku Midea włączyć krzywą grzewczą?</h3><p>W menu NASTAWA TEMP., w funkcji pogodowej (w instrukcji UST.TEMP. OTOCZ.). Wybierz wiersz NISKA TEMP. TRYB-G STREFA1, naciśnij ON/OFF i wybierz numer krzywej od 1 do 9.</p>
+    <h3>Która krzywa jest najcieplejsza: 1 czy 8?</h3><p>Krzywa 1 daje najcieplejszą wodę, krzywa 8 najchłodniejszą. Na niskiej temperaturze krzywa 1 to 38°C przy −20°C na dworze, a krzywa 8 to 29°C.</p>
+    <h3>Co oznaczają T1SetH1, T1SetH2, T4H1 i T4H2?</h3><p>To dwa punkty krzywej 9. T1SetH1 to temperatura wody przy temperaturze zewnętrznej T4H1 (mróz), a T1SetH2 to temperatura wody przy T4H2 (cieplej). Fabrycznie 35°C przy −5°C i 28°C przy +7°C.</p>
+    <h3>Dlaczego po zmianie nastaw serwisowych pompa przestała grzać?</h3><p>Instrukcja sterownika mówi, że po wyjściu z menu serwisanta jednostka zostaje wyłączona. Włącz grzanie i ciepłą wodę klawiszem ON/OFF na ekranie głównym.</p>
+    <h3>Dlaczego po wyłączeniu trybu EKO pompa nie trzyma krzywej?</h3><p>Gdy działa EKO, funkcja pogodowa nie jest używana, a po wyłączeniu EKO trzeba ją włączyć ponownie w menu NASTAWA TEMP.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla">
+      <li>Instrukcja obsługi sterownika przewodowego Rotenso Reni (Midea KJRH-120H), wersja polska i angielska: rozdz. 6.2 (UST.TEMP. OTOCZ., TRYB EKO), 6.9.3 (wyjście z menu serwisanta), struktura menu oraz tabele 1–2 i wykres krzywej 9 (s. 24–25).</li>
+      <li>Instrukcja montażu i obsługi Rotenso Aquami AQM120X3 R13 (Midea M-Thermal): rozdz. 10.5.2–10.5.3 (KONF. TRYB CHŁODZENIA, KONF. TRYB GRZANIA), tabela parametrów serwisowych (wartości domyślne i zakresy), rozdz. 7 (montaż jednostki zewnętrznej, czujnik temperatury zewnętrznej).</li>
+    </ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul>
+    <li><a href="/blog/jak-wyznaczyc-krzywa-grzewcza/">Jak wyznaczyć krzywą grzewczą</a></li>
+    <li><a href="/blog/korekta-krzywej-grzewczej/">Korekta krzywej grzewczej</a></li>
+    <li><a href="/blog/krzywa-grzewcza-podlogowka-grzejniki/">Krzywa grzewcza: podłogówka a grzejniki</a></li>
+  </ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/cwu-pompa-ciepla-nastawy/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/cwu-pompa-ciepla-nastawy/">
+<meta property="og:title" content="Ciepła woda z pompy ciepła: jaka temperatura, harmonogram i legionella">
+<meta property="og:description" content="Jaką temperaturę ciepłej wody ustawić w pompie ciepła, jak często robić dezynfekcję przeciw legionelli i jak grzać CWU w tańszych godzinach G12.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-cwu-pompa-ciepla-nastawy.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-cwu-pompa-ciepla-nastawy.jpg">
+<title>CWU z pompy ciepła: temperatura, harmonogram i legionella – Pompa w HA</title>
+<meta name="description" content="Jaką temperaturę ciepłej wody ustawić w pompie ciepła, jak często robić dezynfekcję przeciw legionelli i jak grzać CWU w tańszych godzinach G12.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"CWU z pompy ciepła: temperatura, harmonogram i legionella","description":"Jaką temperaturę ciepłej wody ustawić w pompie ciepła, jak często robić dezynfekcję przeciw legionelli i jak grzać CWU w tańszych godzinach G12.","datePublished":"2026-11-15","dateModified":"2026-11-15","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/cwu-pompa-ciepla-nastawy/","image":"https://pompa.woleoze.pl/docs/og/blog-cwu-pompa-ciepla-nastawy.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Jaką temperaturę ciepłej wody ustawić w pompie ciepła?", "acceptedAnswer": {"@type": "Answer", "text": "Możliwie niską, która wystarcza domownikom. Poradnik PORT PC podaje, że potrzebna temperatura to zwykle 40–46°C, i jako przykład nastawy 42–44°C. Przy niskiej temperaturze włącz okresową dezynfekcję termiczną."}}, {"@type": "Question", "name": "Jak często robić dezynfekcję termiczną CWU?", "acceptedAnswer": {"@type": "Answer", "text": "PORT PC podaje przykład raz w tygodniu, z podgrzaniem wody powyżej 60°C, oraz dodatkowo po dłuższej nieobecności w domu. W pompach Midea i Rotenso fabryczna temperatura dezynfekcji to 65°C."}}, {"@type": "Question", "name": "W jakiej temperaturze rozwija się Legionella?", "acceptedAnswer": {"@type": "Answer", "text": "Według WHO bakterie Legionella żyją i namnażają się w wodzie o temperaturze 20–50°C, najlepiej w około 35°C."}}, {"@type": "Question", "name": "W jakich godzinach grzać CWU w taryfie G12?", "acceptedAnswer": {"@type": "Answer", "text": "W tańszej strefie. W TAURON Dystrybucja w 2026 roku to 22:00–6:00 i 13:00–15:00, a w G12w dodatkowo całe weekendy i święta. U innych operatorów godziny mogą być inne."}}, {"@type": "Question", "name": "Dlaczego dezynfekcja w pompie Midea nie działa?", "acceptedAnswer": {"@type": "Answer", "text": "Instrukcja wymaga do niej grzałki zbiornika (TBH) albo dodatkowego źródła ciepła (AHS). Bez nich zaleca wyłączyć funkcję dezynfekcji."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Ciepła woda z pompy ciepła: jaka temperatura, harmonogram i legionella</h1>
+    <p class="meta">15 listopada 2026 · 7 min czytania</p>
+    <p class="lead">Ciepłą wodę użytkową (CWU) z pompy ciepła ustawia się możliwie nisko: poradnik Polskiej Organizacji Rozwoju Technologii Pomp Ciepła (PORT PC) podaje jako przykład 42–44°C, bo im chłodniejsza woda, tym wydajniej pracuje pompa. Ryzyko bakterii Legionella ogranicza się wtedy okresową dezynfekcją termiczną powyżej 60°C, na przykład raz w tygodniu. Zbiornik najlepiej ładować w tańszych godzinach taryfy, na przykład w G12 u TAURON Dystrybucja to 22:00–6:00 i 13:00–15:00.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul>
+      <li>Typowa potrzebna temperatura CWU to 40–46°C (PORT PC). Każdy stopień więcej to niższa efektywność pompy.</li>
+      <li>Legionella rozwija się w wodzie o temperaturze 20–50°C (Światowa Organizacja Zdrowia, WHO). Przy niskiej temperaturze CWU włącz dezynfekcję termiczną.</li>
+      <li>Polskie warunki techniczne wymagały 55–60°C w punktach poboru i możliwości dezynfekcji w 70–80°C.</li>
+      <li>W pompach Midea i Rotenso dezynfekcję ustawiasz w MENU › CIEPŁA WODA UŻYTKOWA › DEZYNFEKCJA. Do jej działania potrzebna jest grzałka w zbiorniku albo dodatkowe źródło ciepła.</li>
+      <li>Godziny tańszej strefy G12 i G12w sprawdź w taryfie swojego operatora sieci.</li>
+    </ul></div>
+
+    <h2>Jaka temperatura ciepłej wody z pompy ciepła</h2>
+    <p>Poradnik PORT PC „Pompuj ciepło z głową” (część II, 2024) przyjmuje, że potrzebna temperatura ciepłej wody to zwykle 40–46°C. Radzi zadać pompie możliwie niską wartość, na przykład 42–44°C.</p>
+    <p>Powód: im mniejsza różnica między wodą zimną a zadaną, tym wyższa efektywność pompy i mniejsze straty ciepła. Ten sam poradnik podaje, że uśredniona sezonowa efektywność (SCOP, czyli COP, współczynnik efektywności, uśredniony za sezon) przy grzaniu CWU wynosi 2,5–3,6 i jest niższa niż przy ogrzewaniu domu.</p>
+    <p>Ustawienie 60 czy 65°C według PORT PC wymusza częste włączanie grzałki elektrycznej. Pompa ma wtedy problem, żeby sama dogrzać wodę do takiej temperatury.</p>
+
+    <h3>Dlaczego pompa grzeje CWU gorzej niż dom</h3>
+    <p>Pompa nie grzeje zbiornika wodą o temperaturze zadanej, tylko cieplejszą. W pompach Midea i Rotenso różnicę między wodą wychodzącą z pompy a zadaną temperaturą w zbiorniku ustawia parametr serwisowy <b>1.7 dT1S5</b>, fabrycznie 10°C. Pompa celuje więc w wodę wyraźnie cieplejszą niż ta w zbiorniku. Dla porównania: przy ogrzewaniu podłogowym gotowe krzywe tego samego sterownika dają wodę 24–38°C.</p>
+    <p>Wysoka temperatura wody to niski COP. Więcej o tej zależności w artykule <a href="/blog/temperatura-zasilania-a-cop/">temperatura zasilania a COP</a>.</p>
+    <p>Instrukcja Rotenso Aquami (Midea M-Thermal) podaje zakres pracy dla CWU od +12 do +60°C. Do dezynfekcji (fabrycznie 65°C) wymaga grzałki zbiornika albo dodatkowego źródła ciepła.</p>
+
+    <h2>Legionella: od jakiej temperatury rośnie ryzyko</h2>
+    <p>Legionella to bakteria, która może wywołać ciężkie zapalenie płuc. Zakażenie następuje przez wdychanie drobnych kropelek wody, na przykład pod prysznicem.</p>
+    <p>Według WHO bakterie żyją i namnażają się w instalacjach wodnych w temperaturze 20–50°C, najlepiej w około 35°C. WHO zaleca utrzymywać ciepłą wodę powyżej 50°C, co wymaga, by woda wychodząca z podgrzewacza miała co najmniej 60°C.</p>
+    <p>Polskie rozporządzenie w sprawie warunków technicznych, jakim powinny odpowiadać budynki (z 2002 r., § 120), wymagało, by instalacja dawała w punktach poboru wodę o temperaturze 55–60°C. Miała też umożliwiać okresową dezynfekcję, a do dezynfekcji termicznej potrzebne było 70–80°C w punktach poboru.</p>
+    <p>To rozporządzenie utraciło moc 20 września 2026 r. Według stanu z początku października 2026 nowe przepisy nie zostały ogłoszone, a przez 18 miesięcy od tej daty projekty mogą być sporządzane według dotychczasowych zasad.</p>
+    <p>Jest więc rozjazd: poradnik dla pomp ciepła mówi o 42–44°C na co dzień, a WHO i dawne przepisy o 55–60°C. Kompromis, który opisuje PORT PC, to niska temperatura na co dzień i regularny przegrzew wody.</p>
+
+    <h2>Dezynfekcja termiczna CWU (funkcja antylegionella)</h2>
+    <p>Funkcja antylegionella raz na jakiś czas podgrzewa cały zbiornik do wysokiej temperatury. PORT PC podaje przykład: raz w tygodniu powyżej 60°C. Poradnik radzi też zrobić taki przegrzew po dłuższej nieobecności, na przykład po powrocie z wakacji.</p>
+    <p>Jeśli masz cyrkulację CWU, pamiętaj, że sam przegrzew zbiornika nie dogrzewa rur. Dlatego niektóre sterowniki włączają podczas dezynfekcji pompę cyrkulacyjną.</p>
+
+    <h3>Dezynfekcja w pompach Midea i Rotenso</h3>
+    <p>W sterowniku przewodowym KJRH-120 wybierz <b>MENU › CIEPŁA WODA UŻYTKOWA › DEZYNFEKCJA</b>. Ustawiasz tam dzień tygodnia (DZIEŃ PRACY) i godzinę startu (URUCHOM). Instrukcja podaje przykład: piątek, 23:00.</p>
+    <p>Parametry dezynfekcji są w menu serwisanta, w sekcji <b>1. KONF. TRYB CWU</b>:</p>
+    <div class="tabwrap"><table>
+      <thead><tr><th>Nr</th><th>Parametr</th><th>Co robi</th><th>Fabrycznie</th><th>Zakres</th></tr></thead>
+      <tbody>
+        <tr><td>1.2</td><td>DEZYNFEKCJA</td><td>włącza funkcję</td><td>1 (tak)</td><td>0–1</td></tr>
+        <tr><td>1.14</td><td>T5S_DI</td><td>temperatura wody w zbiorniku podczas dezynfekcji</td><td>65°C</td><td>60–70°C</td></tr>
+        <tr><td>1.15</td><td>t_DI_HIGHTEMP</td><td>jak długo zbiornik trzyma najwyższą temperaturę</td><td>15 min</td><td>5–60 min</td></tr>
+        <tr><td>1.16</td><td>t_DI_MAX</td><td>najdłuższy czas trwania dezynfekcji</td><td>210 min</td><td>90–300 min</td></tr>
+        <tr><td>1.21</td><td>DEZYNFEKCJA POMPY CWU</td><td>włącza pompę CWU (cyrkulacyjną) podczas dezynfekcji, gdy T5 ≥ T5S_DI−2</td><td>1 (tak)</td><td>0–1</td></tr>
+      </tbody>
+    </table></div>
+    <p>Ważne: w rozwiązywaniu problemów instrukcja montażu wymienia sytuację „funkcja dezynfekcji jest włączona, ale bez TBH”. Zalecenie: wyłączyć dezynfekcję albo dodać grzałkę zbiornika (TBH) lub dodatkowe źródło ciepła (AHS) w trybie CWU. Bez grzałki pompa sama nie osiągnie temperatury dezynfekcji.</p>
+    <p>W trybie URLOP POZA DOMEM dezynfekcja, jeśli jest włączona, odbywa się o 23:00 ostatniego dnia urlopu.</p>
+    <div class="uwaga"><b>Parametry 1.x to nastawy serwisowe.</b> Ich zmiana to zadanie dla instalatora albo działanie na własną odpowiedzialność, z instrukcją w ręku. Według instrukcji sterownika po wyjściu z menu serwisanta jednostka się wyłącza: sprawdź potem, czy CWU i grzanie znów są włączone.</div>
+
+    <h2>Harmonogram CWU w taniej taryfie G12 i G12w</h2>
+    <p>Zbiornik CWU magazynuje ciepło, więc wodę można grzać wtedy, gdy prąd jest tańszy, a zużywać później. PORT PC radzi dopasować harmonogram do taryfy albo do produkcji z fotowoltaiki.</p>
+    <p>Godziny tańszej strefy ustala operator sieci dystrybucyjnej. Przykład z taryfy TAURON Dystrybucja na 2026 rok:</p>
+    <div class="tabwrap"><table>
+      <thead><tr><th>Taryfa</th><th>Tańsze godziny (TAURON Dystrybucja, 2026)</th></tr></thead>
+      <tbody>
+        <tr><td>G12</td><td>22:00–6:00 i 13:00–15:00, cały rok</td></tr>
+        <tr><td>G12w</td><td>od poniedziałku do piątku 22:00–6:00 i 13:00–15:00, a w soboty, niedziele i święta całą dobę</td></tr>
+        <tr><td>G12as</td><td>22:00–6:00</td></tr>
+      </tbody>
+    </table></div>
+    <p>U innych operatorów (PGE, Enea, Energa, Stoen) godziny mogą być inne. Sprawdź wyciąg z taryfy swojego operatora albo rachunek.</p>
+    <p>Jak to wykorzystać:</p>
+    <ul>
+      <li><b>Główne ładowanie w nocy.</b> Okno 22:00–6:00 jest długie, więc pompa zdąży dogrzać nawet duży zbiornik.</li>
+      <li><b>Doładowanie po południu.</b> Okno 13:00–15:00 przydaje się przed wieczornymi kąpielami. To też zwykle najcieplejsza pora dnia, a pompie powietrznej łatwiej grzać, gdy na dworze jest cieplej.</li>
+      <li><b>Dezynfekcja w taniej strefie.</b> W G12w dobrym momentem jest noc albo weekend, gdy cała doba jest tańsza.</li>
+      <li><b>Zapas temperatury.</b> Jeśli między oknami woda ma wystarczyć na kilka godzin, ładuj zbiornik trochę wyżej niż na co dzień i sprawdź, czy wystarcza.</li>
+    </ul>
+
+    <h3>Harmonogram w sterowniku Midea i Rotenso</h3>
+    <p>W menu <b>HARMONOGRAM › MINUTNIK</b> ustawisz do sześciu okresów. Każdy ma godzinę startu, godzinę końca, tryb (CWU, grzanie albo chłodzenie) i temperaturę. Jest też <b>TYGODNIOWY HARMONOGRAM</b>, jeśli dni robocze i weekend mają wyglądać inaczej. Minutnik i harmonogram tygodniowy mają równy priorytet: obowiązuje ten ustawiony później.</p>
+    <p>Na to, kiedy pompa rusza z grzaniem CWU, wpływa też parametr serwisowy <b>1.6 dT5_ON</b>: o ile stopni musi spaść temperatura w zbiorniku, żeby pompa zaczęła grzać (fabrycznie 10°C, zakres 1–30°C). Duża wartość oznacza rzadsze, dłuższe ładowania, mała częstsze i krótsze.</p>
+    <p>Dwa kolejne parametry pilnują, żeby CWU nie zabrała całego czasu na grzanie domu: <b>1.18 t_DHWHP_MAX</b> (najdłuższe ciągłe grzanie CWU przy priorytecie, fabrycznie 90 min) i <b>1.17 t_DHWHP_RESTRICT</b> (czas grzania domu między ładowaniami, fabrycznie 30 min).</p>
+
+    <div class="ramka"><b>Ciepła woda to jedno, a ogrzewanie domu drugie.</b> Temperaturę wody do grzejników i podłogówki wyznaczysz w <a href="/kalkulator-krzywej-grzewczej/">darmowym kalkulatorze krzywej grzewczej</a>: test na stałej wodzie, wykres i nastawy do sterownika.</div>
+
+    <h2>Grzałka w zbiorniku CWU: kiedy się włącza</h2>
+    <p>W pompach Midea i Rotenso grzałka zbiornika (TBH) może się włączyć, gdy temperatura na dworze spadnie poniżej wartości <b>1.12 T4_TBH_ON</b> (fabrycznie 5°C) i sprężarka pracuje już dłużej niż <b>1.13 t_TBH_DELAY</b> (fabrycznie 30 min). Grzałka zamienia 1 kWh prądu na 1 kWh ciepła. Pompa przy grzaniu CWU daje średnio 2,5–3,6 kWh ciepła z 1 kWh prądu (SCOP według PORT PC).</p>
+    <p>Jeśli grzałka pracuje często, PORT PC wskazuje dwie typowe przyczyny: za wysoką zadaną temperaturę CWU (60 czy 65°C) i duże zużycie ciepłej wody. Więcej w artykule <a href="/blog/grzalka-w-pompie-ciepla/">grzałka w pompie ciepła</a>.</p>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Jaką temperaturę ciepłej wody ustawić w pompie ciepła?</h3><p>Możliwie niską, która wystarcza domownikom. Poradnik PORT PC podaje, że potrzebna temperatura to zwykle 40–46°C, i jako przykład nastawy 42–44°C. Przy niskiej temperaturze włącz okresową dezynfekcję termiczną.</p>
+    <h3>Jak często robić dezynfekcję termiczną CWU?</h3><p>PORT PC podaje przykład raz w tygodniu, z podgrzaniem wody powyżej 60°C, oraz dodatkowo po dłuższej nieobecności w domu. W pompach Midea i Rotenso fabryczna temperatura dezynfekcji to 65°C.</p>
+    <h3>W jakiej temperaturze rozwija się Legionella?</h3><p>Według WHO bakterie Legionella żyją i namnażają się w wodzie o temperaturze 20–50°C, najlepiej w około 35°C.</p>
+    <h3>W jakich godzinach grzać CWU w taryfie G12?</h3><p>W tańszej strefie. W TAURON Dystrybucja w 2026 roku to 22:00–6:00 i 13:00–15:00, a w G12w dodatkowo całe weekendy i święta. U innych operatorów godziny mogą być inne.</p>
+    <h3>Dlaczego dezynfekcja w pompie Midea nie działa?</h3><p>Instrukcja wymaga do niej grzałki zbiornika (TBH) albo dodatkowego źródła ciepła (AHS). Bez nich zaleca wyłączyć funkcję dezynfekcji.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla">
+      <li>PORT PC, <a href="https://budujemydom.pl/files/bry/17410-portpc.PDF" rel="noopener">Poradnik „Pompuj ciepło z głową”, część II: Jak optymalnie obsługiwać pompę ciepła?</a>, marzec 2024 (punkty 6–8: ciepła woda, antylegionella, tańsza energia).</li>
+      <li>WHO, <a href="https://www.who.int/news-room/fact-sheets/detail/legionellosis" rel="noopener">Legionellosis, fact sheet</a>.</li>
+      <li>Rozporządzenie Ministra Infrastruktury z 12 kwietnia 2002 r. w sprawie warunków technicznych, jakim powinny odpowiadać budynki i ich usytuowanie, <a href="https://arslege.pl/staly-obieg-wody-przewody/k218/a23267/" rel="noopener">§ 120</a> (akt uchylony z dniem 20.09.2026).</li>
+      <li>money.pl, <a href="https://www.money.pl/gospodarka/miala-byc-rewolucja-w-budowie-domow-termin-minal-przepisow-nie-ma-7336366827530560a.html" rel="noopener">Miała być rewolucja w budowie domów. Termin minął, przepisów nie ma</a>, 4.10.2026.</li>
+      <li>TAURON Dystrybucja, <a href="https://www.tauron-dystrybucja.pl/-/media/offer-documents/dystrybucja/aktualna-taryfa/wyciag-z-taryfy-td-sa-na-rok-2026-dla-odbiorcow-grup-g.ashx" rel="noopener">Wyciąg z taryfy na rok 2026 dla odbiorców grup G</a> (strefy czasowe G12, G12w, G12as).</li>
+      <li>Instrukcja montażu i obsługi Rotenso Aquami AQM120X3 R13 (Midea M-Thermal): zakres pracy, tabela parametrów KONF. TRYB CWU, rozwiązywanie problemów (objaw 8). Instrukcja sterownika przewodowego Rotenso Reni (Midea KJRH-120H): rozdz. 6.3.1 (dezynfekcja), 6.4 (harmonogram), tryb urlopowy.</li>
+    </ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul>
+    <li><a href="/blog/grzalka-w-pompie-ciepla/">Grzałka w pompie ciepła</a></li>
+    <li><a href="/blog/temperatura-zasilania-a-cop/">Temperatura zasilania a COP</a></li>
+    <li><a href="/blog/taktowanie-pompy-ciepla/">Taktowanie pompy ciepła</a></li>
+  </ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>

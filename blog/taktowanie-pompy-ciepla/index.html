@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/taktowanie-pompy-ciepla/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/taktowanie-pompy-ciepla/">
+<meta property="og:title" content="Taktowanie pompy ciepła: skąd się bierze i jak je ograniczyć">
+<meta property="og:description" content="Pompa ciepła często się włącza i wyłącza? Przyczyny taktowania: za duża moc, za wysoka krzywa, mało wody, wąska histereza. Co sprawdzić i co zmienić.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-taktowanie-pompy-ciepla.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-taktowanie-pompy-ciepla.jpg">
+<title>Taktowanie pompy ciepła: przyczyny i jak je ograniczyć – Pompa w HA</title>
+<meta name="description" content="Pompa ciepła często się włącza i wyłącza? Przyczyny taktowania: za duża moc, za wysoka krzywa, mało wody, wąska histereza. Co sprawdzić i co zmienić.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Taktowanie pompy ciepła: przyczyny i jak je ograniczyć","description":"Pompa ciepła często się włącza i wyłącza? Przyczyny taktowania: za duża moc, za wysoka krzywa, mało wody, wąska histereza. Co sprawdzić i co zmienić.","datePublished":"2026-11-15","dateModified":"2026-11-15","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/taktowanie-pompy-ciepla/","image":"https://pompa.woleoze.pl/docs/og/blog-taktowanie-pompy-ciepla.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Co to jest taktowanie pompy ciepła?", "acceptedAnswer": {"@type": "Answer", "text": "To częste włączanie i wyłączanie sprężarki w krótkich cyklach. Pompa szybko nagrzewa wodę do temperatury zadanej, staje, a po chwili znowu rusza, bo woda zdążyła ostygnąć o wartość histerezy."}}, {"@type": "Question", "name": "Ile startów sprężarki na godzinę to za dużo?", "acceptedAnswer": {"@type": "Answer", "text": "Nie ma jednej normy. Sterowniki Midea i Rotenso pilnują odstępu 5 minut między uruchomieniami sprężarki w trybie grzania. Ostrożnie: jeśli przy plusowej temperaturze sprężarka rusza kilka razy w każdej godzinie i pracuje krócej niż kilkanaście minut, warto szukać przyczyny."}}, {"@type": "Question", "name": "Czy bufor likwiduje taktowanie?", "acceptedAnswer": {"@type": "Answer", "text": "Pomaga, gdy problemem jest mała pojemność wodna, bo nadmiar ciepła ma się gdzie zmieścić. Nie usunie przyczyny, jeśli krzywa jest za wysoka albo pompa jest mocno za duża. Sprzęgło lub bufor równoległy mogą też mieszać wodę i zmuszać pompę do grzania cieplejszej wody."}}, {"@type": "Question", "name": "Ile wody musi być w instalacji z pompą Rotenso albo Midea?", "acceptedAnswer": {"@type": "Answer", "text": "Instrukcja montażu pompy Rotenso Aquami Monoblock wymaga co najmniej 40 litrów wody w instalacji, nie licząc wody w samej pompie. Ta ilość powinna zostać nawet wtedy, gdy wszystkie zawory w obiegach są zamknięte."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Taktowanie pompy ciepła: skąd się bierze i jak je ograniczyć</h1>
+    <p class="meta">15 listopada 2026 · 7 min czytania</p>
+    <p class="lead">Taktowanie to częste włączanie i wyłączanie sprężarki w krótkich cyklach. Najczęściej pojawia się przy łagodnej pogodzie, gdy pompa daje więcej ciepła, niż dom w danej chwili odbiera, a w instalacji jest za mało wody, żeby ten nadmiar przyjąć. Ogranicza się je, obniżając krzywą grzewczą, otwierając obiegi, zwiększając pojemność wodną i ustawiając rozsądną histerezę.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>Główna przyczyna: najmniejsza moc, do której pompa potrafi zejść, jest większa niż zapotrzebowanie domu przy plusowej temperaturze.</li><li>Taktowanie nasilają: za wysoka krzywa grzewcza, zamykające się głowice i siłowniki, mało wody w instalacji i wąska histereza.</li><li>W sterownikach Midea i Rotenso: histereza dT1SH (fabrycznie 5°C), stały odstęp 5 minut między startami sprężarki w trybie grzania, a instrukcja wymaga co najmniej 40 l wody poza pompą.</li><li>Bufor pomaga tylko wtedy, gdy dodaje pojemności. Nie naprawi za wysokiej krzywej ani mocno przewymiarowanej pompy.</li></ul></div>
+
+    <h2>Co to jest taktowanie pompy ciepła</h2>
+    <p>Cykl wygląda tak: sprężarka rusza, woda szybko osiąga temperaturę zadaną, sprężarka staje, woda stygnie o wartość histerezy i sprężarka znów rusza. Gdy taki cykl trwa kilkanaście minut i powtarza się przez cały dzień, mówimy o taktowaniu.</p>
+    <p>Dlaczego to źle? Zaraz po starcie sprężarka nie pracuje jeszcze stabilnie, a przy krótkich cyklach taki rozruch zajmuje dużą część czasu pracy. Częste starty obniżają więc średnią sprawność i bardziej obciążają podzespoły.</p>
+    <p>Nie każda przerwa to taktowanie. Pompa zatrzymuje grzanie domu także podczas <a href="/blog/odszranianie-pompy-ciepla/">odszraniania</a> i podczas ładowania zasobnika ciepłej wody użytkowej (CWU). To normalne.</p>
+
+    <h2>Przyczyna 1: moc pompy większa niż zapotrzebowanie przy plusowych temperaturach</h2>
+    <p>Dom potrzebuje najwięcej ciepła w mróz, a najmniej przy kilku stopniach na plusie. Pompę dobiera się jednak do mrozu.</p>
+    <p>Przykład: dom ma 8 kW obciążenia przy −20°C i 20°C w środku. Przy +7°C potrzebuje tylko około 2,6 kW, a przy +12°C około 1,6 kW (uproszczenie bez zysków od słońca i ludzi).</p>
+    <p>Pompa z falownikiem (inwerterem) potrafi obniżyć moc, ale ma dolną granicę. Jeśli ta granica jest wyższa niż potrzeby domu, sterownik nie ma wyjścia: grzeje, wyłącza się, czeka i grzeje znowu.</p>
+    <p>Dlatego mocno przewymiarowana pompa taktuje przez dużą część sezonu. Więcej o doborze mocy przeczytasz w tekście o <a href="/blog/projektowa-temperatura-zewnetrzna/">projektowej temperaturze zewnętrznej</a>.</p>
+
+    <h2>Przyczyna 2: za wysoka krzywa grzewcza</h2>
+    <p>Gdy woda jest cieplejsza, niż dom potrzebuje, pokoje szybko się nagrzewają. Głowice termostatyczne i siłowniki podłogówki zaczynają zamykać obiegi.</p>
+    <p>Przepływ przez instalację spada, woda w pompie nagrzewa się szybciej i sprężarka szybciej osiąga temperaturę zadaną. Cykl się skraca.</p>
+    <p>Obniżenie krzywej działa tu podwójnie: krótsze grzanie zamienia się w dłuższą, spokojniejszą pracę, a niższa temperatura wody poprawia COP (współczynnik efektywności). Jak to zrobić krok po kroku, opisujemy w poradniku o <a href="/blog/korekta-krzywej-grzewczej/">korekcie krzywej grzewczej</a>.</p>
+
+    <h2>Przyczyna 3: za mało wody w instalacji i zamykające się obiegi</h2>
+    <p>Woda w instalacji działa jak akumulator. Im jej więcej, tym dłużej trwa nagrzanie jej o kilka stopni i tym dłuższy jest cykl.</p>
+    <p>Instrukcja montażu pompy Rotenso Aquami Monoblock wymaga co najmniej 40 litrów wody w instalacji, nie licząc wody w samej pompie. Zaznacza też, że tę minimalną ilość trzeba zachować nawet wtedy, gdy wszystkie zawory w obiegach są zamknięte.</p>
+    <p>Sama pompa ma niewiele wody: według karty katalogowej model AQM80X1 ma w środku 3,2 litra, a minimalny przepływ przez wymiennik to 6 l/min.</p>
+    <p>Prosty rachunek pokazuje skalę. Ogrzanie 40 litrów wody o 5°C wymaga około 0,23 kWh (ciepło właściwe wody to około 4,19 kJ na kg i stopień).</p>
+    <div class="tabwrap"><table>
+      <tr><th>Woda w instalacji</th><th>Ciepło na 5°C</th><th>Czas przy nadwyżce 2 kW</th></tr>
+      <tr><td>40 l</td><td>około 0,23 kWh</td><td>około 7 minut</td></tr>
+      <tr><td>200 l</td><td>około 1,16 kWh</td><td>około 35 minut</td></tr>
+    </table></div>
+    <p>Nadwyżka 2 kW to np. pompa dająca 4 kW przy domu, który bierze 2 kW. Przy 40 litrach woda dojdzie do górnej granicy w kilka minut. Gdy głowice zamkną większość obiegów, ciepło przyjmuje tylko woda w tych, które zostały otwarte, a cykl skraca się jeszcze bardziej.</p>
+
+    <h2>Przyczyna 4: zbyt wąska histereza</h2>
+    <p>Histereza to różnica, o jaką woda musi ostygnąć poniżej temperatury zadanej, zanim sprężarka znów ruszy. W sterownikach Midea i Rotenso odpowiada za to parametr dT1SH w menu serwisowym (3. tryb grzania).</p>
+    <div class="tabwrap"><table>
+      <tr><th>Parametr</th><th>Co robi</th><th>Fabrycznie</th><th>Zakres</th></tr>
+      <tr><td>3.5 dT1SH</td><td>o ile woda (T1) musi spaść poniżej zadanej, żeby sprężarka znów ruszyła</td><td>5°C</td><td>2–20°C</td></tr>
+      <tr><td>3.6 dTSH</td><td>to samo przy sterowaniu według temperatury pokoju (Ta)</td><td>2°C</td><td>1–10°C</td></tr>
+      <tr><td>3.7 t_INTERVAL_H</td><td>odstęp między uruchomieniami sprężarki w trybie grzania</td><td>5 min</td><td>stały</td></tr>
+    </table></div>
+    <p>Mniejsza histereza oznacza częstsze starty. Większa wydłuża cykle, ale temperatura wody bardziej się waha. Wartości fabryczne podajemy według instrukcji pompy Rotenso Aquami; w innych modelach mogą się różnić.</p>
+    <p>Podobnie działa termostat pokojowy, który włącza i wyłącza pompę. Jeśli ma bardzo małą histerezę, też potrafi wywołać częste starty.</p>
+
+    <h2>Bufor i sprzęgło hydrauliczne: kiedy pomagają</h2>
+    <p>Bufor to zbiornik z wodą, który zwiększa pojemność instalacji. Pomaga, gdy problemem jest mała ilość wody albo obiegi, które się zamykają.</p>
+    <p>Bufor włączony szeregowo (np. na powrocie) dodaje wody bez mieszania. Sprzęgło hydrauliczne albo bufor równoległy rozdzielają obieg pompy od obiegów domu. Ma to sens, gdy instalacja potrzebuje własnych pomp obiegowych.</p>
+    <p>Rozdzielenie ma jednak wadę. Gdy przez obiegi domu płynie więcej wody niż przez pompę, w sprzęgle zimny powrót miesza się z zasilaniem. Do grzejników trafia wtedy chłodniejsza woda, więc pompa musi grzać cieplej, a to obniża <a href="/blog/temperatura-zasilania-a-cop/">COP</a>.</p>
+    <p>Małe sprzęgło niewiele dodaje pojemności. Bufor zajmuje miejsce i sam traci trochę ciepła. Zanim go dołożysz, sprawdź krzywą i otwórz obiegi, bo to nic nie kosztuje.</p>
+
+    <h2>Ile startów na godzinę to dużo</h2>
+    <p>Nie znaleźliśmy normy ani danych producenta, które podawałyby dopuszczalną liczbę startów na godzinę dla domowych pomp Midea i Rotenso. Sterownik sam pilnuje odstępu 5 minut między uruchomieniami sprężarki w trybie grzania.</p>
+    <p>Ostrożna wskazówka: jeśli przy plusowej temperaturze sprężarka rusza kilka razy w każdej godzinie i za każdym razem pracuje krócej niż kilkanaście minut, warto poszukać przyczyny. Długie postoje przy ciepłej pogodzie są normalne, gdy każde włączenie trwa długo.</p>
+    <p>Najłatwiej to policzyć z historii częstotliwości sprężarki: każdy skok od zera to jeden start.</p>
+
+    <div class="ramka"><b>Policz starty sprężarki w Home Assistant.</b> Moduł Pompa w HA odczytuje z pomp Midea i Rotenso częstotliwość sprężarki, temperatury wody i odszranianie, więc cykle widać na wykresie. <a href="/sprawdz/?src=blog">Sprawdź, czy Twoja pompa pasuje</a>.</div>
+
+    <h2>Jak ograniczyć taktowanie: lista kontrolna</h2>
+    <ol>
+      <li><b>Obniż krzywą grzewczą</b> do najniższej wody, przy której w domu jest ciepło. Pomoże w tym <a href="/kalkulator-krzywej-grzewczej/">kalkulator krzywej</a>.</li>
+      <li><b>Otwórz głowice i siłowniki</b> przynajmniej w części pomieszczeń, tak żeby zawsze był otwarty obieg z dużą ilością wody. Więcej w tekście o <a href="/blog/glowice-termostatyczne-a-pompa-ciepla/">głowicach termostatycznych</a>.</li>
+      <li><b>Sprawdź pojemność wodną.</b> Według instrukcji Rotenso Aquami co najmniej 40 litrów poza pompą, także przy zamkniętych zaworach.</li>
+      <li><b>Rozważ szerszą histerezę dT1SH.</b> To parametr serwisowy, więc zmieniaj go z instalatorem i obserwuj temperatury w domu.</li>
+      <li><b>Dołóż bufor szeregowy,</b> jeśli po poprzednich krokach woda wciąż nagrzewa się w kilka minut.</li>
+    </ol>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Co to jest taktowanie pompy ciepła?</h3><p>To częste włączanie i wyłączanie sprężarki w krótkich cyklach. Pompa szybko nagrzewa wodę do temperatury zadanej, staje, a po chwili znowu rusza, bo woda zdążyła ostygnąć o wartość histerezy.</p>
+    <h3>Ile startów sprężarki na godzinę to za dużo?</h3><p>Nie ma jednej normy. Sterowniki Midea i Rotenso pilnują odstępu 5 minut między uruchomieniami sprężarki w trybie grzania. Ostrożnie: jeśli przy plusowej temperaturze sprężarka rusza kilka razy w każdej godzinie i pracuje krócej niż kilkanaście minut, warto szukać przyczyny.</p>
+    <h3>Czy bufor likwiduje taktowanie?</h3><p>Pomaga, gdy problemem jest mała pojemność wodna, bo nadmiar ciepła ma się gdzie zmieścić. Nie usunie przyczyny, jeśli krzywa jest za wysoka albo pompa jest mocno za duża. Sprzęgło lub bufor równoległy mogą też mieszać wodę i zmuszać pompę do grzania cieplejszej wody.</p>
+    <h3>Ile wody musi być w instalacji z pompą Rotenso albo Midea?</h3><p>Instrukcja montażu pompy Rotenso Aquami Monoblock wymaga co najmniej 40 litrów wody w instalacji, nie licząc wody w samej pompie. Ta ilość powinna zostać nawet wtedy, gdy wszystkie zawory w obiegach są zamknięte.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla">
+      <li>Instrukcja montażu i obsługi pompy Rotenso Aquami Monoblock: rozdz. 9.4.2 (minimalna objętość wody 40 l) i rozdz. 10.5 (menu DLA SERWISANTA, parametry dT1SH, dTSH, t_INTERVAL_H).</li>
+      <li><a href="https://static.aero7.pl/public/cms/files/1466/Rotenso-Aquami-Monoblock-1-faz-8-kW-karta.pdf" rel="nofollow noopener" target="_blank">Karta katalogowa Rotenso Aquami Monoblock AQM80X1 [R14] (PDF)</a>: objętość wody w pompie, minimalny przepływ.</li>
+      <li><a href="https://pl.wikipedia.org/wiki/Ciep%C5%82o_w%C5%82a%C5%9Bciwe" rel="noopener" target="_blank">Ciepło właściwe, Wikipedia</a>: woda około 4190 J/(kg·K).</li>
+      <li>Wyliczenia zapotrzebowania przy +7 i +12°C oraz czasu nagrzewania 40 i 200 litrów: własne, uproszczone.</li>
+    </ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/korekta-krzywej-grzewczej/">Za zimno czy za ciepło? Jak poprawić krzywą grzewczą</a></li><li><a href="/blog/glowice-termostatyczne-a-pompa-ciepla/">Głowice termostatyczne a pompa ciepła: odkręcać czy nie</a></li><li><a href="/blog/odszranianie-pompy-ciepla/">Odszranianie pompy ciepła: co jest normalne, a co nie</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>

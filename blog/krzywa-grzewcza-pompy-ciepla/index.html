@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/krzywa-grzewcza-pompy-ciepla/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/krzywa-grzewcza-pompy-ciepla/">
+<meta property="og:title" content="Krzywa grzewcza pompy ciepła: co to jest i jak ją ustawić">
+<meta property="og:description" content="Krzywa grzewcza mówi pompie ciepła, jak ciepłej wody użyć przy danej pogodzie. Co oznacza nachylenie i przesunięcie i jak ustawić krzywą z testu.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-krzywa-grzewcza-pompy-ciepla.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-krzywa-grzewcza-pompy-ciepla.jpg">
+<title>Krzywa grzewcza pompy ciepła: co to jest i jak ją ustawić – Pompa w HA</title>
+<meta name="description" content="Krzywa grzewcza mówi pompie ciepła, jak ciepłej wody użyć przy danej pogodzie. Co oznacza nachylenie i przesunięcie i jak ustawić krzywą z testu.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Krzywa grzewcza pompy ciepła: co to jest i jak ją ustawić","description":"Krzywa grzewcza mówi pompie ciepła, jak ciepłej wody użyć przy danej pogodzie. Co oznacza nachylenie i przesunięcie i jak ustawić krzywą z testu.","datePublished":"2026-11-15","dateModified":"2026-11-15","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/krzywa-grzewcza-pompy-ciepla/","image":"https://pompa.woleoze.pl/docs/og/blog-krzywa-grzewcza-pompy-ciepla.jpg"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Czym się różni krzywa grzewcza od krzywej pogodowej?","acceptedAnswer":{"@type":"Answer","text":"Niczym. To dwie nazwy tego samego: zależności temperatury wody w instalacji od temperatury na dworze. W instrukcjach pomp Midea i Rotenso ta sama funkcja nazywa się krzywą klimatyczną."}},{"@type":"Question","name":"Jakie nachylenie krzywej grzewczej ustawić na start?","acceptedAnswer":{"@type":"Answer","text":"Najlepiej takie, które wynika z testu na stałej temperaturze wody, a nie wartość z głowy. W przykładzie z kalkulatora wyszło ok. 0,7°C wody na 1°C na dworze dla grzejników i ok. 0,4°C dla podłogówki, ale każdy dom ma swoje liczby."}},{"@type":"Question","name":"Co ile można zmieniać krzywą grzewczą?","acceptedAnswer":{"@type":"Answer","text":"Po każdej zmianie o 1°C odczekaj co najmniej dobę, a przy podłogówce w wylewce dłużej. Wcześniej dom nie dojdzie do nowej temperatury i łatwo przesadzić z poprawką."}},{"@type":"Question","name":"Czy krzywa grzewcza działa z termostatem pokojowym?","acceptedAnswer":{"@type":"Answer","text":"Tak. Krzywa ustala temperaturę wody, a termostat może wyłączać grzanie, gdy w pokoju jest za ciepło. Przy dobrze ustawionej krzywej termostat rzadko ma coś do roboty, a pompa pracuje dłużej i równiej."}}]}
+</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Krzywa grzewcza pompy ciepła: co to jest i jak ją ustawić</h1>
+    <p class="meta">15 listopada 2026 · 8 min czytania</p>
+    <p class="lead">Krzywa grzewcza to zasada, według której pompa ciepła dobiera temperaturę wody w grzejnikach albo podłogówce do temperatury na dworze: im zimniej, tym cieplejsza woda. Najpewniej ustawisz ją na podstawie testu na stałej temperaturze wody, a potem poprawisz o 1°C, aż w domu będzie równo ciepło przy każdej pogodzie.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>Krzywa grzewcza (inaczej pogodowa) łączy temperaturę na dworze z temperaturą wody, którą pompa wysyła do CO – centralnego ogrzewania.</li><li>Im niżej leży krzywa, tym chłodniejsza woda i tym wyższy COP – współczynnik efektywności pompy. Zbyt nisko – w domu jest zimno.</li><li>Krzywą zmienia się na dwa sposoby: nachyleniem (jak mocno woda rośnie z mrozem) i przesunięciem (cała krzywa wyżej albo niżej).</li><li>Dobry punkt startowy daje test na stałej wodzie przez 2–4 dni. Darmowy kalkulator zamienia jego wynik na nastawy.</li><li>Poprawki rób po 1°C, jedną naraz, i oceniaj po dobie.</li></ul></div>
+
+    <h2>Co to jest krzywa grzewcza</h2>
+    <p>Krzywa grzewcza (nazywana też krzywą pogodową, a w instrukcjach Midea i Rotenso krzywą klimatyczną) to wykres. Na osi poziomej jest temperatura na dworze, na pionowej temperatura wody, którą pompa ciepła wysyła do instalacji, czyli temperatura zasilania.</p>
+    <p>Sterownik co jakiś czas odczytuje czujnik zewnętrzny i ustawia zadaną temperaturę wody z tego wykresu. Nie musisz niczego przestawiać, gdy przychodzi mróz albo odwilż.</p>
+    <p>Skąd ta zależność? Dom traci tym więcej ciepła, im większa różnica temperatur między wnętrzem a dworem. Żeby grzejniki oddały więcej ciepła, potrzebują cieplejszej wody. Krzywa grzewcza zapisuje tę zależność dla jednego, konkretnego domu.</p>
+    <p>Przykład z kalkulatora (dom z grzejnikami płytowymi, 21°C w środku): przy +10°C na dworze wystarcza woda ok. 32°C, przy 0°C ok. 39°C, a przy −20°C ok. 52°C.</p>
+
+    <h2>Po co pompie ciepła krzywa zamiast stałej temperatury</h2>
+    <p>Pompa ciepła pracuje tym sprawniej, im chłodniejszą wodę grzeje. Każdy stopień zasilania mniej to wyższy COP, a więc mniej prądu na tę samą ilość ciepła. Szczegóły opisujemy w artykule <a href="/blog/temperatura-zasilania-a-cop/">o temperaturze zasilania i COP</a>.</p>
+    <p>Stała temperatura ustawiona „na mrozy” przez większość sezonu jest za wysoka. Przez większą część zimy na dworze jest kilka stopni powyżej albo poniżej zera, a nie −20°C. Za ciepła woda to niższa sprawność, a do tego głowice i termostat przymykają grzanie i pompa częściej się wyłącza i włącza. To zjawisko nazywa się <a href="/blog/taktowanie-pompy-ciepla/">taktowaniem</a>.</p>
+    <p>Krzywa daje wodę tylko tak ciepłą, jak trzeba w danej chwili. Dom dostaje tyle ciepła, ile traci, a pompa pracuje długo i równo.</p>
+
+    <h2>Nachylenie i przesunięcie krzywej grzewczej</h2>
+    <p>Każdą krzywą da się opisać dwiema liczbami. Producenci nazywają je różnie, ale sens jest ten sam.</p>
+    <ul>
+      <li><b>Nachylenie</b> mówi, o ile stopni rośnie woda, gdy na dworze robi się o 1°C zimniej. W przykładzie z grzejnikami wychodzi ok. 0,7°C wody na każdy stopień mrozu, a dla podłogówki w podobnym domu ok. 0,4°C.</li>
+      <li><b>Przesunięcie</b> (równoległe) podnosi albo obniża całą krzywą o tyle samo stopni przy każdej pogodzie. W części sterowników to „korekta krzywej” albo zadana temperatura pokoju.</li>
+    </ul>
+    <p>Do tego dochodzą dwa ograniczenia: najwyższa temperatura wody (ważna przy podłogówce i przy pompie, która więcej nie da) oraz temperatura na dworze, powyżej której grzanie się wyłącza.</p>
+    <p>Wiele pomp nie pyta o nachylenie, tylko o dwa punkty: ile wody przy mrozie i ile przy cieple. Pompy Midea i Rotenso mają tak zbudowaną krzywą nr 9. Prosta przez dwa punkty ma swoje nachylenie i przesunięcie, więc to tylko inny zapis tej samej rzeczy.</p>
+    <div class="tabwrap"><table>
+      <tr><th>Rodzaj sterownika</th><th>Co wpisujesz</th><th>Przykład (grzejniki, strefa III)</th></tr>
+      <tr><td>Dwa punkty</td><td>woda przy mrozie i przy cieple</td><td>−20°C → 52°C, +15°C → 28°C</td></tr>
+      <tr><td>Trzy punkty</td><td>dodatkowy punkt w środku</td><td>−20°C → 52°C, −2°C → 40°C, +15°C → 28°C</td></tr>
+      <tr><td>Nachylenie i przesunięcie</td><td>stopnie wody na 1°C na dworze</td><td>ok. 0,7°C na 1°C (porównaj z wykresem w instrukcji)</td></tr>
+    </table></div>
+    <p>Liczby w tabeli to przykład z kalkulatora, nie nastawy dla Twojego domu.</p>
+
+    <h2>Dlaczego krzywa grzewcza jest łukiem, a sterownik rysuje prostą</h2>
+    <p>Grzejnik oddaje ciepło nieproporcjonalnie do różnicy między wodą a pokojem. Gdy ta różnica rośnie dwukrotnie, grzejnik daje więcej niż dwa razy tyle ciepła. Opisuje to wykładnik n z normy PN-EN 442: dla grzejników płytowych producenci podają wartości bliskie 1,3.</p>
+    <p>Dlatego prawdziwa krzywa grzewcza to łagodny łuk: w łagodne dni bardziej stroma, przy mrozie bardziej płaska. W przykładzie z kalkulatora prosta z dwóch punktów różni się od łuku najwyżej o 0,8°C, a przy podłogówce o 0,2°C. To mniej niż typowa poprawka po pierwszej dobie, więc dwa punkty w zupełności wystarczają.</p>
+    <p>Więcej o tym, jak ten łuk wpływa na poprawki, piszemy w artykule <a href="/blog/korekta-krzywej-grzewczej/">o korekcie krzywej grzewczej</a>.</p>
+
+    <h2>Jak ustawić krzywą grzewczą: trzy sposoby</h2>
+    <h3>1. Z projektu instalacji</h3>
+    <p>Projektant liczy straty ciepła domu dla projektowej temperatury zewnętrznej z normy PN-EN 12831. W Polsce to od −16°C do −24°C, zależnie od strefy klimatycznej (więcej w artykule <a href="/blog/projektowa-temperatura-zewnetrzna/">o projektowej temperaturze zewnętrznej</a>). Z projektu masz punkt „mróz”: temperaturę wody, przy której grzejniki pokrywają straty.</p>
+    <p>Słaba strona tej drogi: projekty liczy się z zapasem, a dom po dociepleniu albo wymianie okien potrzebuje mniej ciepła niż na papierze. Krzywa z projektu bywa więc za wysoka.</p>
+    <h3>2. Z testu na stałej temperaturze wody</h3>
+    <p>Ustawiasz na pompie stałą wodę (na przykład 36°C dla grzejników, 28°C dla podłogówki), otwierasz głowice i czekasz 2–4 dni. Potem zapisujesz średnią temperaturę w domu i na dworze. Z tych liczb wynika, ile wody dom potrzebuje przy każdej pogodzie.</p>
+    <p>To najpewniejsza droga, bo mierzy Twój dom, a nie założenia. Całą procedurę z przykładem liczbowym opisujemy w artykule <a href="/blog/jak-wyznaczyc-krzywa-grzewcza/">jak wyznaczyć krzywą grzewczą</a>.</p>
+    <h3>3. Metodą prób</h3>
+    <p>Ustawiasz krzywą „na oko” i poprawiasz, gdy jest za zimno albo za ciepło. Ta droga też prowadzi do celu, ale trwa: mrozy zdarzają się kilka razy w sezonie, więc punkt „mróz” sprawdzisz dopiero po kilku tygodniach albo w następnej zimie.</p>
+
+    <div class="ramka"><b>Masz wynik testu?</b> <a href="/kalkulator-krzywej-grzewczej/">Darmowy kalkulator krzywej grzewczej</a> zamieni go na wykres, tabelę i nastawy do sterownika z dwoma albo trzema punktami.</div>
+
+    <h2>Krzywa grzewcza dla podłogówki i grzejników</h2>
+    <p>Podłogówka grzeje dużą powierzchnią, więc wystarcza jej dużo chłodniejsza woda. Jej krzywa jest niższa, bardziej płaska i prawie prosta. Ogranicza ją też temperatura samej podłogi: w miejscach, gdzie się chodzi, przyjmuje się najwyżej 29°C.</p>
+    <p>Podłoga w wylewce reaguje na zmianę wody po wielu godzinach, grzejniki szybciej. Dlatego test przy podłogówce trwa dłużej, a każdą poprawkę ocenia się później. Porównanie obu instalacji i układy mieszane opisujemy w artykule <a href="/blog/krzywa-grzewcza-podlogowka-grzejniki/">krzywa grzewcza dla podłogówki i grzejników</a>.</p>
+
+    <h2>Jak poprawić krzywą, gdy w domu jest za zimno albo za ciepło</h2>
+    <ul>
+      <li>Za zimno (albo za ciepło) przy każdej pogodzie: przesuń całą krzywą o 1°C w górę (albo w dół).</li>
+      <li>Za zimno tylko w mrozy: zwiększ nachylenie, czyli podnieś wodę w punkcie „mróz”.</li>
+      <li>Za zimno tylko w łagodne dni: podnieś wodę w punkcie „ciepło”.</li>
+    </ul>
+    <p>Jedna zmiana naraz, o 1°C, i co najmniej doba czekania. Przy podłogówce dłużej. Pełną diagnozę objawów znajdziesz w artykule <a href="/blog/korekta-krzywej-grzewczej/">jak poprawić krzywą grzewczą</a>.</p>
+
+    <h2>Najczęstsze błędy przy ustawianiu krzywej</h2>
+    <ul>
+      <li><b>Przymknięte głowice albo termostat w czasie testu.</b> Wtedy dom wygląda na trudniejszy do ogrzania, niż jest. Więcej w artykule <a href="/blog/glowice-termostatyczne-a-pompa-ciepla/">o głowicach termostatycznych</a>.</li>
+      <li><b>Ocena po kilku godzinach.</b> Dom i instalacja mają bezwładność. Po zmianie krzywej temperatura w pokojach dochodzi do nowego poziomu przez dobę, przy podłogówce dłużej.</li>
+      <li><b>Kilka zmian naraz.</b> Gdy zmienisz krzywą, termostat i godziny CWU – ciepłej wody użytkowej – nie wiesz, co pomogło.</li>
+      <li><b>Za niski limit wody.</b> Jeśli pompa nie może dać tyle, ile wynika z krzywej przy mrozie, brakuje ciepła i dorabia <a href="/blog/grzalka-w-pompie-ciepla/">grzałka</a>.</li>
+      <li><b>Mylenie krzywej z CWU.</b> Krzywa dotyczy ogrzewania domu. Ciepła woda w zasobniku ma osobne nastawy, opisane w artykule <a href="/blog/cwu-pompa-ciepla-nastawy/">o nastawach CWU</a>.</li>
+    </ul>
+
+    <h2>Krzywa grzewcza w pompach Midea i Rotenso</h2>
+    <p>Sterowniki tych pomp mają osiem gotowych krzywych w tabelach i krzywą nr 9, którą ustawia się dwoma punktami w menu serwisanta: T4H1 i T1SetH1 (temperatura na dworze i woda przy mrozie) oraz T4H2 i T1SetH2 (to samo przy cieple).</p>
+    <p>Gotowe krzywe są bardzo płaskie. W tabeli krzywej nr 1 dla niskiej temperatury woda zmienia się z 38°C przy −20°C tylko do 35°C przy 0°C. Typowy dom potrzebuje większej różnicy, dlatego zwykle lepiej wpisać dwa punkty z testu w krzywą nr 9. Krok po kroku pokazujemy to w artykule <a href="/blog/krzywa-grzewcza-midea-rotenso/">o krzywej grzewczej w pompach Midea i Rotenso</a>.</p>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Czym się różni krzywa grzewcza od krzywej pogodowej?</h3><p>Niczym. To dwie nazwy tego samego: zależności temperatury wody w instalacji od temperatury na dworze. W instrukcjach pomp Midea i Rotenso ta sama funkcja nazywa się krzywą klimatyczną.</p>
+    <h3>Jakie nachylenie krzywej grzewczej ustawić na start?</h3><p>Najlepiej takie, które wynika z testu na stałej temperaturze wody, a nie wartość z głowy. W przykładzie z kalkulatora wyszło ok. 0,7°C wody na 1°C na dworze dla grzejników i ok. 0,4°C dla podłogówki, ale każdy dom ma swoje liczby.</p>
+    <h3>Co ile można zmieniać krzywą grzewczą?</h3><p>Po każdej zmianie o 1°C odczekaj co najmniej dobę, a przy podłogówce w wylewce dłużej. Wcześniej dom nie dojdzie do nowej temperatury i łatwo przesadzić z poprawką.</p>
+    <h3>Czy krzywa grzewcza działa z termostatem pokojowym?</h3><p>Tak. Krzywa ustala temperaturę wody, a termostat może wyłączać grzanie, gdy w pokoju jest za ciepło. Przy dobrze ustawionej krzywej termostat rzadko ma coś do roboty, a pompa pracuje dłużej i równiej.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla"><li>Vogel&amp;Noot, <a href="https://www.vogelundnoot.com/static_files/pl/media/downloads/grzejniki_plytowe_dane_techniczne.pdf" rel="noopener">Grzejniki płytowe – katalog techniczny</a> (PDF): moc cieplna badana według EN 442-2 i wykładnik n podany dla każdego typu grzejnika, w granicach ok. 1,29–1,38.</li><li><a href="https://globenergia.pl/nowe-temperatury-obliczeniowe-dla-ogrzewnictwa-klimatyzacji-i-wentylacji/" rel="noopener">Nowe temperatury obliczeniowe dla ogrzewnictwa, klimatyzacji i wentylacji</a>, GLOBEnergia, 2023: pięć stref klimatycznych Polski, projektowe temperatury od −16°C do −24°C co 2°C (PN-EN 12831).</li><li><a href="https://inzynierbudownictwa.pl/wodne-ogrzewanie-podlogowe-charakterystyka-systemu/" rel="noopener">Wodne ogrzewanie podłogowe. Charakterystyka systemu</a>, Inżynier Budownictwa: zalecana średnia temperatura powierzchni podłogi 26°C, najwyżej 29°C, w łazienkach 33°C, w strefach brzegowych 35°C.</li><li>Instrukcja montażu i obsługi pompy ciepła Rotenso Aquami AQM120X3 (rozdz. 10.5, menu serwisanta) oraz instrukcja jej sterownika przewodowego: krzywe 1–8 jako gotowe tabele, krzywa nr 9 jako prosta przez dwa punkty (T4H1 i T1SetH1, T4H2 i T1SetH2), druga strefa z własną temperaturą T1S2.</li></ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/jak-wyznaczyc-krzywa-grzewcza/">Jak wyznaczyć krzywą grzewczą: test na stałej temperaturze wody krok po kroku</a></li><li><a href="/blog/korekta-krzywej-grzewczej/">Za zimno czy za ciepło? Jak poprawić krzywą grzewczą (przesunięcie i nachylenie)</a></li><li><a href="/blog/krzywa-grzewcza-podlogowka-grzejniki/">Krzywa grzewcza dla podłogówki i grzejników: czym się różnią</a></li><li><a href="/blog/krzywa-grzewcza-midea-rotenso/">Krzywa grzewcza w pompie Midea i Rotenso: krzywe 1–8, krzywa 9 i tryb EKO</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/grzalka-w-pompie-ciepla/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/grzalka-w-pompie-ciepla/">
+<meta property="og:title" content="Grzałka w pompie ciepła: kiedy się włącza i jak nie przepłacać">
+<meta property="og:description" content="Kiedy w pompie ciepła włącza się grzałka CO i grzałka CWU? Parametry T4_IBH_ON i T4_TBH_ON w Midea i Rotenso, dezynfekcja, odszranianie i COP równy 1.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-grzalka-w-pompie-ciepla.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-grzalka-w-pompie-ciepla.jpg">
+<title>Grzałka w pompie ciepła: kiedy się włącza i jak ją ustawić – Pompa w HA</title>
+<meta name="description" content="Kiedy w pompie ciepła włącza się grzałka CO i grzałka CWU? Parametry T4_IBH_ON i T4_TBH_ON w Midea i Rotenso, dezynfekcja, odszranianie i COP równy 1.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Grzałka w pompie ciepła: kiedy się włącza i jak ją ustawić","description":"Kiedy w pompie ciepła włącza się grzałka CO i grzałka CWU? Parametry T4_IBH_ON i T4_TBH_ON w Midea i Rotenso, dezynfekcja, odszranianie i COP równy 1.","datePublished":"2026-11-15","dateModified":"2026-11-15","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/grzalka-w-pompie-ciepla/","image":"https://pompa.woleoze.pl/docs/og/blog-grzalka-w-pompie-ciepla.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Kiedy włącza się grzałka w pompie ciepła Midea albo Rotenso?", "acceptedAnswer": {"@type": "Answer", "text": "W trybie grzania grzałka CO (IBH) może ruszyć, gdy temperatura na dworze spadnie poniżej T4_IBH_ON (fabrycznie −5°C), woda jest chłodniejsza od zadanej o dT1_IBH_ON (fabrycznie 5°C), a sprężarka pracuje już t_IBH_DELAY (fabrycznie 30 minut). Wartości fabryczne pochodzą z instrukcji pompy Rotenso Aquami i mogą się różnić między modelami."}}, {"@type": "Question", "name": "Ile prądu zużywa grzałka w pompie ciepła?", "acceptedAnswer": {"@type": "Answer", "text": "Tyle, ile wynosi jej moc, przez cały czas pracy: grzałka 3 kW w ciągu godziny zużyje 3 kWh prądu i da 3 kWh ciepła. Ma COP równy 1. Sprężarka pompy AQM80X1 przy +7°C na dworze daje według karty od 3,18 do 5,15 kWh ciepła z 1 kWh prądu."}}, {"@type": "Question", "name": "Czy można wyłączyć grzałkę w pompie ciepła?", "acceptedAnswer": {"@type": "Answer", "text": "Można, ale wtedy przy dużym mrozie pompa może nie nadążyć z ogrzewaniem, a zasobnik nie dojdzie do temperatury dezynfekcji. Lepiej ustawić progi T4_IBH_ON i t_IBH_DELAY tak, żeby grzałka pracowała tylko wtedy, gdy jest naprawdę potrzebna."}}, {"@type": "Question", "name": "Po co pompa grzeje wodę do 65°C raz w tygodniu?", "acceptedAnswer": {"@type": "Answer", "text": "To dezynfekcja termiczna zasobnika przeciw bakteriom Legionella, które według WHO żyją i namnażają się w wodzie o temperaturze 20–50°C. W pompach Rotenso fabryczna temperatura dezynfekcji (T5S_DI) to 65°C, a sprężarka grzeje CWU do 60°C, więc resztę dogrzewa grzałka."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Grzałka w pompie ciepła: kiedy się włącza i jak nie przepłacać</h1>
+    <p class="meta">15 listopada 2026 · 7 min czytania</p>
+    <p class="lead">Grzałka w pompie ciepła włącza się, gdy sama sprężarka nie nadąża albo nie może pracować: przy dużym mrozie, przy dogrzewaniu ciepłej wody do dezynfekcji, a czasem przy odszranianiu. Grzeje prądem bezpośrednio, więc z 1 kWh prądu daje 1 kWh ciepła (COP równy 1). W pompach Midea i Rotenso o tym, kiedy wolno jej ruszyć, decydują głównie parametry z menu 7, przede wszystkim T4_IBH_ON.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>Są dwie grzałki: zapasowa w obiegu CO (centralnego ogrzewania), w Midea i Rotenso oznaczona IBH, oraz grzałka w zasobniku CWU (ciepłej wody użytkowej), oznaczona TBH.</li><li>Grzałka CO rusza, gdy na dworze jest zimniej niż T4_IBH_ON (fabrycznie −5°C), woda jest za chłodna o dT1_IBH_ON (5°C), a sprężarka pracuje już t_IBH_DELAY (30 minut).</li><li>Dezynfekcja zasobnika celuje fabrycznie w 65°C, a według karty pompa grzeje ciepłą wodę do 60°C. Ostatnie stopnie dogrzewa grzałka.</li><li>Najtańsza grzałka to ta, która nie musi się włączać: niższa krzywa, rozsądne progi i podgląd, kiedy naprawdę pracuje.</li></ul></div>
+
+    <h2>Dwie grzałki: zapasowa CO i grzałka zasobnika CWU</h2>
+    <p>W instrukcjach pomp Midea i Rotenso spotkasz trzy skróty:</p>
+    <ul>
+      <li><b>IBH</b> (wewnętrzna grzałka dodatkowa) siedzi w module hydraulicznym, w rurze obiegu grzewczego, i dogrzewa wodę do grzejników albo podłogówki. W pompie Rotenso Aquami AQM80X1 to według karty jeden stopień o mocy 3 kW. W modelach trójfazowych instalator wybiera 3, 6 albo 9 kW przełącznikami DIP.</li>
+      <li><b>TBH</b> (grzałka wspomagająca zbiornika) jest w zasobniku CWU i grzeje tylko ciepłą wodę.</li>
+      <li><b>AHS</b> (dodatkowe źródło ciepła) to np. kocioł gazowy sterowany przez pompę. Ma osobne parametry, ustawiane podobnie jak IBH.</li>
+    </ul>
+
+    <h2>COP grzałki to 1: dlaczego to drogie ciepło</h2>
+    <p>Grzałka oporowa zamienia prąd w ciepło jeden do jednego. Grzałka 3 kW pracująca godzinę zużyje 3 kWh prądu i da 3 kWh ciepła.</p>
+    <p>Sprężarka przenosi ciepło z powietrza, więc z tej samej kWh prądu daje go więcej. Porównanie dla 10 kWh ciepła, według karty katalogowej pompy AQM80X1 (na dworze +7°C):</p>
+    <div class="tabwrap"><table>
+      <tr><th>Źródło ciepła</th><th>COP</th><th>Prąd na 10 kWh ciepła</th></tr>
+      <tr><td>Grzałka</td><td>1</td><td>10 kWh</td></tr>
+      <tr><td>Sprężarka, woda 55°C</td><td>3,18</td><td>3,1 kWh</td></tr>
+      <tr><td>Sprężarka, woda 35°C</td><td>5,15</td><td>1,9 kWh</td></tr>
+    </table></div>
+    <p>W mróz COP sprężarki spada, bo rośnie różnica temperatur między powietrzem a wodą. Przewaga nad grzałką maleje, ale dopóki sprężarka może pracować, zwykle grzeje taniej.</p>
+
+    <h2>Kiedy włącza się grzałka CO w Midea i Rotenso: menu 7</h2>
+    <p>Progi grzałki IBH ustawia się w menu serwisowym, w grupie 7 (inne źródło ciepła). Wartości fabryczne i zakresy według instrukcji pompy Rotenso Aquami:</p>
+    <div class="tabwrap"><table>
+      <tr><th>Parametr</th><th>Co robi</th><th>Fabrycznie</th><th>Zakres</th></tr>
+      <tr><td>7.1 dT1_IBH_ON</td><td>o ile woda musi być chłodniejsza od zadanej, żeby ruszyła grzałka</td><td>5°C</td><td>2–10°C</td></tr>
+      <tr><td>7.2 t_IBH_DELAY</td><td>ile minut sprężarka musi pracować, zanim dołączy grzałka</td><td>30 min</td><td>15–120 min</td></tr>
+      <tr><td>7.3 T4_IBH_ON</td><td>temperatura na dworze, poniżej której grzałka może się włączyć</td><td>−5°C</td><td>−15–30°C</td></tr>
+      <tr><td>7.7 LOK. IBH</td><td>grzałka w rurze (0) albo w buforze (1)</td><td>0</td><td>0–1</td></tr>
+    </table></div>
+    <p>W zwykłej pracy grzałka CO dołącza więc wtedy, gdy jest zimno, sprężarka od dłuższego czasu nie nadąża i woda zostaje wyraźnie poniżej zadanej. Przy −3°C na dworze i fabrycznych nastawach grzałka w trybie grzania nie powinna ruszyć.</p>
+    <p>Są wyjątki, np. awaria jednostki zewnętrznej albo praca poza zakresem sprężarki. Warto też zajrzeć do parametru 3.4 T4HMIN: instrukcja opisuje go jako minimalną temperaturę zewnętrzną dla trybu grzania (fabrycznie −15°C). Według karty AQM80X1 pompa grzeje do −25°C, więc próg ustawiony wyżej może oddawać grzałce pracę, którą mogłaby wykonać sprężarka.</p>
+    <p>Wartości fabryczne pochodzą z instrukcji pompy Rotenso Aquami. W innych modelach i wersjach oprogramowania mogą się różnić, więc sprawdź je w swoim sterowniku.</p>
+
+    <h2>Grzałka zasobnika CWU (TBH): kiedy rusza</h2>
+    <p>Dla ciepłej wody są osobne progi, w grupie 1 menu serwisowego (tryb CWU):</p>
+    <div class="tabwrap"><table>
+      <tr><th>Parametr</th><th>Co robi</th><th>Fabrycznie</th><th>Zakres</th></tr>
+      <tr><td>1.12 T4_TBH_ON</td><td>najwyższa temperatura na dworze, przy której działa grzałka zasobnika</td><td>5°C</td><td>−5–50°C</td></tr>
+      <tr><td>1.13 t_TBH_DELAY</td><td>ile minut sprężarka grzeje CWU, zanim dołączy grzałka</td><td>30 min</td><td>0–240 min</td></tr>
+      <tr><td>1.11 dT5_TBH_OFF</td><td>różnica między temperaturą w zasobniku a zadaną, przy której grzałka się wyłącza</td><td>5°C</td><td>0–10°C</td></tr>
+      <tr><td>1.9 T4DHWMIN</td><td>najniższa temperatura na dworze, przy której CWU grzeje sprężarka</td><td>−10°C</td><td>−25–30°C</td></tr>
+    </table></div>
+    <p>Przy wyjątkowo niskiej temperaturze na dworze instrukcja przewiduje, że ciepłą wodę grzeje już tylko grzałka zasobnika. Karta AQM80X1 podaje dla CWU zakres pracy sprężarki do −25°C, więc fabryczne −10°C zostawia sprężarce mniej pracy, niż mogłaby wykonać. Zmianę omów z instalatorem.</p>
+    <p>Więcej o temperaturach i harmonogramie ciepłej wody piszemy w poradniku o <a href="/blog/cwu-pompa-ciepla-nastawy/">nastawach CWU</a>.</p>
+
+    <h2>Dezynfekcja termiczna CWU: tu grzałka i tak się włączy</h2>
+    <p>Bakterie Legionella według WHO żyją i namnażają się w wodzie o temperaturze 20–50°C. Dlatego sterownik ma funkcję DEZYNFEKCJA, która co jakiś czas wymusza mocne podgrzanie zasobnika.</p>
+    <ul>
+      <li><b>T5S_DI</b>: temperatura dezynfekcji, fabrycznie 65°C, zakres 60–70°C.</li>
+      <li><b>t_DI_HIGHTEMP</b>: jak długo trzymać tę temperaturę, fabrycznie 15 minut.</li>
+      <li><b>t_DI_MAX</b>: najdłuższy czas całej dezynfekcji, fabrycznie 210 minut.</li>
+      <li>Dzień tygodnia i godzinę startu wybiera się w menu CWU. Instrukcja sterownika podaje przykład: piątek, 23:00.</li>
+    </ul>
+    <p>Karta AQM80X1 podaje dla zasobnika CWU zakres 30–60°C. Do 65°C sprężarka nie dojdzie, więc ostatnie stopnie dogrzewa grzałka.</p>
+    <p>Dezynfekcji nie wyłączaj bez zastanowienia: to zabezpieczenie zdrowotne. Jeśli masz taryfę dwustrefową, ustaw jej start na godziny tańszego prądu.</p>
+
+    <h2>Grzałka a odszranianie</h2>
+    <p>Podczas odszraniania pompa zwykle odwraca obieg i ogrzewa wymiennik na zewnątrz ciepłem pobranym z wody w instalacji, więc woda na chwilę się wychładza. Szczegóły opisujemy w tekście o <a href="/blog/odszranianie-pompy-ciepla/">odszranianiu pompy ciepła</a>.</p>
+    <p>Instrukcja pompy Rotenso przy błędach podczas odszraniania każe sprawdzić zasilanie i bezpieczniki grzałki dodatkowej. Wynika z tego, że w tych pompach grzałka może brać udział w ochronie wody w czasie odszraniania.</p>
+
+    <h2>Jak nie przepłacać za pracę grzałki</h2>
+    <ol>
+      <li><b>Sprawdź, kiedy grzałka naprawdę pracuje.</b> Pojedyncze godziny w największe mrozy i cotygodniowa dezynfekcja to norma. Codzienna praca przy plusowej temperaturze to sygnał, że coś jest źle ustawione.</li>
+      <li><b>Nie podnoś krzywej bez potrzeby.</b> Za wysoka temperatura zadana wody, której sprężarka nie dogania, spełnia warunek dT1_IBH_ON i zaprasza grzałkę do pracy.</li>
+      <li><b>Dopasuj T4_IBH_ON do swojego domu.</b> Jeśli pompa sama utrzymuje ciepło przy −5°C, można rozważyć niższy próg. Zbyt niski grozi chłodem w domu w największe mrozy, więc zmieniaj go z instalatorem i obserwuj temperatury.</li>
+      <li><b>Daj sprężarce czas.</b> Dłuższe t_IBH_DELAY sprawia, że grzałka nie wskakuje po każdym chwilowym spadku temperatury wody, np. po ładowaniu CWU.</li>
+      <li><b>Pilnuj progów CWU.</b> T4_TBH_ON, t_TBH_DELAY i zadana temperatura wody w zasobniku decydują, jak często grzałka zasobnika pomaga sprężarce.</li>
+    </ol>
+    <p>Gdzie leży rozsądny próg, zależy od mocy pompy i od tego, jak zimno bywa w Twojej okolicy. Pomoże w tym tekst o <a href="/blog/projektowa-temperatura-zewnetrzna/">projektowej temperaturze zewnętrznej i punkcie biwalentnym</a>.</p>
+
+    <div class="ramka"><b>Zobacz, kiedy pracuje Twoja grzałka.</b> Moduł Pompa w HA pokazuje w Home Assistant pracę grzałki CO i grzałki zasobnika, odszranianie, częstotliwość sprężarki oraz nastawy T4_IBH_ON i T4_TBH_ON z pomp Midea i Rotenso. <a href="/sprawdz/?src=blog">Sprawdź, czy Twoja pompa pasuje</a>.</div>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Kiedy włącza się grzałka w pompie ciepła Midea albo Rotenso?</h3><p>W trybie grzania grzałka CO (IBH) może ruszyć, gdy temperatura na dworze spadnie poniżej T4_IBH_ON (fabrycznie −5°C), woda jest chłodniejsza od zadanej o dT1_IBH_ON (fabrycznie 5°C), a sprężarka pracuje już t_IBH_DELAY (fabrycznie 30 minut). Wartości fabryczne pochodzą z instrukcji pompy Rotenso Aquami i mogą się różnić między modelami.</p>
+    <h3>Ile prądu zużywa grzałka w pompie ciepła?</h3><p>Tyle, ile wynosi jej moc, przez cały czas pracy: grzałka 3 kW w ciągu godziny zużyje 3 kWh prądu i da 3 kWh ciepła. Ma COP równy 1. Sprężarka pompy AQM80X1 przy +7°C na dworze daje według karty od 3,18 do 5,15 kWh ciepła z 1 kWh prądu.</p>
+    <h3>Czy można wyłączyć grzałkę w pompie ciepła?</h3><p>Można, ale wtedy przy dużym mrozie pompa może nie nadążyć z ogrzewaniem, a zasobnik nie dojdzie do temperatury dezynfekcji. Lepiej ustawić progi T4_IBH_ON i t_IBH_DELAY tak, żeby grzałka pracowała tylko wtedy, gdy jest naprawdę potrzebna.</p>
+    <h3>Po co pompa grzeje wodę do 65°C raz w tygodniu?</h3><p>To dezynfekcja termiczna zasobnika przeciw bakteriom Legionella, które według WHO żyją i namnażają się w wodzie o temperaturze 20–50°C. W pompach Rotenso fabryczna temperatura dezynfekcji (T5S_DI) to 65°C, a sprężarka grzeje CWU do 60°C, więc resztę dogrzewa grzałka.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla">
+      <li>Instrukcja montażu i obsługi pompy Rotenso Aquami Monoblock, rozdz. 10.5 (menu DLA SERWISANTA: grupa 1 tryb CWU, grupa 3 tryb grzania, grupa 7 inne źródło ciepła), ustawienia przełączników DIP grzałki i rozwiązywanie problemów z odszranianiem.</li>
+      <li>Instrukcja sterownika przewodowego pomp Rotenso Aquami, rozdz. 6.3.1 (funkcja DEZYNFEKCJA, dzień i godzina startu).</li>
+      <li><a href="https://static.aero7.pl/public/cms/files/1466/Rotenso-Aquami-Monoblock-1-faz-8-kW-karta.pdf" rel="nofollow noopener" target="_blank">Karta katalogowa Rotenso Aquami Monoblock AQM80X1 [R14] (PDF)</a>: grzałka 1 × 3 kW, COP przy A7/W35 i A7/W55, zakresy pracy (grzanie i CWU do −25°C, CWU 30–60°C).</li>
+      <li><a href="https://www.who.int/news-room/fact-sheets/detail/legionellosis" rel="noopener" target="_blank">Legionellosis, WHO (ang.)</a>: zakres temperatur, w których rozwija się Legionella.</li>
+      <li><a href="https://en.wikipedia.org/wiki/Coefficient_of_performance" rel="noopener" target="_blank">Coefficient of performance, Wikipedia (ang.)</a>: zamiana pracy na ciepło ma COP najwyżej 1; COP pompy rośnie, gdy maleje różnica temperatur.</li>
+    </ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/cwu-pompa-ciepla-nastawy/">Ciepła woda z pompy ciepła: jaka temperatura, harmonogram i legionella</a></li><li><a href="/blog/odszranianie-pompy-ciepla/">Odszranianie pompy ciepła: co jest normalne, a co nie</a></li><li><a href="/blog/projektowa-temperatura-zewnetrzna/">Projektowa temperatura zewnętrzna w Polsce: strefy klimatyczne</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>

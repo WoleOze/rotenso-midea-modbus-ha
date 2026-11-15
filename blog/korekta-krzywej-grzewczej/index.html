@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/korekta-krzywej-grzewczej/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/korekta-krzywej-grzewczej/">
+<meta property="og:title" content="Za zimno czy za ciepło? Jak poprawić krzywą grzewczą (przesunięcie i nachylenie)">
+<meta property="og:description" content="Za zimno przy każdej pogodzie? Przesuń krzywą. Tylko w mrozy? Zmień nachylenie. Jak poprawiać krzywą grzewczą po 1°C i dlaczego oceniać ją po dobie.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-korekta-krzywej-grzewczej.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-korekta-krzywej-grzewczej.jpg">
+<title>Jak poprawić krzywą grzewczą: przesunięcie i nachylenie – Pompa w HA</title>
+<meta name="description" content="Za zimno przy każdej pogodzie? Przesuń krzywą. Tylko w mrozy? Zmień nachylenie. Jak poprawiać krzywą grzewczą po 1°C i dlaczego oceniać ją po dobie.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Jak poprawić krzywą grzewczą: przesunięcie i nachylenie","description":"Za zimno przy każdej pogodzie? Przesuń krzywą. Tylko w mrozy? Zmień nachylenie. Jak poprawiać krzywą grzewczą po 1°C i dlaczego oceniać ją po dobie.","datePublished":"2026-11-15","dateModified":"2026-11-15","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/korekta-krzywej-grzewczej/","image":"https://pompa.woleoze.pl/docs/og/blog-korekta-krzywej-grzewczej.jpg"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"O ile zmieniać krzywą grzewczą za jednym razem?","acceptedAnswer":{"@type":"Answer","text":"O 1°C wody. W przykładzie z kalkulatora 1°C wody to ok. 0,6°C w pokoju, więc taki krok wystarcza, żeby zauważyć różnicę, a trudno nim przestrzelić."}},{"@type":"Question","name":"Po jakim czasie ocenić zmianę krzywej?","acceptedAnswer":{"@type":"Answer","text":"Przy grzejnikach po dobie, przy podłogówce w wylewce po dłuższym czasie. Porównuj dni o podobnej pogodzie, bo słońce albo wiatr zmieniają temperaturę w domu bez żadnej zmiany nastaw."}},{"@type":"Question","name":"W domu jest za zimno tylko rano. Co zmienić?","acceptedAnswer":{"@type":"Answer","text":"Najpierw sprawdź, czy nie działa obniżenie nocne albo ładowanie CWU nad ranem. Rano na dworze jest też najzimniej, a dom reaguje z opóźnieniem. Jeśli to się powtarza tylko w mroźne noce, podnieś punkt „mróz” o 1°C."}},{"@type":"Question","name":"Lepsza krzywa z dwóch czy z trzech punktów?","acceptedAnswer":{"@type":"Answer","text":"Trzy punkty lepiej odwzorowują łuk, ale różnica jest niewielka. W przykładzie z kalkulatora prosta przez dwa punkty odbiega od łuku najwyżej o 0,8°C przy grzejnikach i o 0,2°C przy podłogówce."}}]}
+</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Za zimno czy za ciepło? Jak poprawić krzywą grzewczą (przesunięcie i nachylenie)</h1>
+    <p class="meta">15 listopada 2026 · 6 min czytania</p>
+    <p class="lead">Jeśli w domu jest za zimno albo za ciepło przy każdej pogodzie, przesuń całą krzywą grzewczą o 1°C. Jeśli problem pojawia się tylko w mrozy albo tylko w łagodne dni, zmień nachylenie. Zawsze jedna zmiana naraz, o 1°C, i ocena po dobie.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>Za zimno lub za ciepło zawsze: przesunięcie. Problem zależny od pogody: nachylenie.</li><li>W sterowniku z dwoma punktami: przesunięcie to oba punkty o 1°C, nachylenie to jeden z nich.</li><li>1°C wody to mniej niż 1°C w pokoju. W przykładzie z kalkulatora +1°C w domu wymaga ok. 1,7°C cieplejszej wody.</li><li>Prawdziwa krzywa grzejników to łagodny łuk, ale prosta przez dwa punkty różni się od niego zwykle o niecały stopień.</li></ul></div>
+
+    <h2>Diagnoza: przesunięcie czy nachylenie krzywej grzewczej</h2>
+    <p>Zanim cokolwiek zmienisz, odpowiedz na jedno pytanie: czy problem zależy od pogody? Przez kilka dni zapisuj średnią temperaturę w domu i na dworze. Wystarczą dwie liczby dziennie.</p>
+    <div class="tabwrap"><table>
+      <tr><th>Objaw</th><th>Co zmienić</th><th>Sterownik z dwoma punktami</th></tr>
+      <tr><td>Za zimno przy każdej pogodzie</td><td>przesunięcie +1°C</td><td>oba punkty +1°C</td></tr>
+      <tr><td>Za ciepło przy każdej pogodzie</td><td>przesunięcie −1°C</td><td>oba punkty −1°C</td></tr>
+      <tr><td>Za zimno tylko w mrozy</td><td>nachylenie większe</td><td>punkt „mróz” +1°C</td></tr>
+      <tr><td>Za ciepło tylko w mrozy</td><td>nachylenie mniejsze</td><td>punkt „mróz” −1°C</td></tr>
+      <tr><td>Za zimno tylko w łagodne dni</td><td>nachylenie mniejsze i przesunięcie w górę</td><td>punkt „ciepło” +1°C</td></tr>
+      <tr><td>Za ciepło tylko w łagodne dni</td><td>nachylenie większe i przesunięcie w dół</td><td>punkt „ciepło” −1°C</td></tr>
+    </table></div>
+    <p>W pompach Midea i Rotenso punkt „mróz” to para T4H1 i T1SetH1, a punkt „ciepło” to T4H2 i T1SetH2 w krzywej nr 9. Gdzie je znaleźć, opisujemy w artykule <a href="/blog/krzywa-grzewcza-midea-rotenso/">o krzywej grzewczej w pompach Midea i Rotenso</a>.</p>
+
+    <h2>Przesunięcie krzywej: za zimno albo za ciepło zawsze</h2>
+    <p>Przesunięcie podnosi albo obniża całą krzywą o tyle samo stopni. Kąt nachylenia się nie zmienia. To właściwa poprawka, gdy dom jest za chłodny albo za ciepły tak samo w odwilż, jak w mróz.</p>
+    <p>Najczęściej przesunięcie jest potrzebne zaraz po wpisaniu krzywej z testu albo z projektu. Test nie jest idealny, a projekt liczy się z zapasem. Jedna albo dwie poprawki o 1°C zwykle wystarczą.</p>
+    <p>W sterownikach, które pytają o zadaną temperaturę pokoju zamiast o przesunięcie, zmiana tej temperatury robi podobną rzecz: przesuwa krzywą w górę albo w dół.</p>
+
+    <h2>Nachylenie krzywej: problem zależy od pogody</h2>
+    <p>Nachylenie decyduje, o ile cieplejsza staje się woda, gdy na dworze robi się zimniej. Za małe nachylenie daje dom w sam raz przy +5°C, ale chłodny przy −10°C. Za duże odwrotnie: w mróz jest dobrze, a w łagodne dni za ciepło.</p>
+    <p>Przy dwóch punktach nie zmieniasz nachylenia wprost. Podnosisz albo obniżasz jeden koniec prostej. Podniesienie punktu „mróz” najmocniej działa przy mrozie, a przy cieple prawie wcale. Z punktem „ciepło” jest odwrotnie.</p>
+    <p>Zmiany nachylenia nie da się ocenić w jeden dzień. Musisz trafić na pogodę, której dotyczy poprawka. Dlatego poprawki w punkcie „mróz” rozkładają się często na cały sezon.</p>
+
+    <h2>Jak korygować krzywą: po 1°C, ocena po dobie</h2>
+    <ul>
+      <li><b>Jedna zmiana naraz.</b> Jeśli zmienisz krzywą, termostat i harmonogram CWU – ciepłej wody użytkowej – jednego dnia, nie wiesz, co zadziałało.</li>
+      <li><b>Po 1°C wody.</b> W przykładzie z kalkulatora (grzejniki, 21°C w domu) podniesienie temperatury w domu do 22°C wymaga przy 0°C na dworze wody 40,6°C zamiast 38,9°C, czyli o 1,7°C więcej. Zmiana o 1°C wody daje więc ok. 0,6°C w pokoju. Większe skoki łatwo przestrzelić.</li>
+      <li><b>Ocena po dobie.</b> Dom i instalacja mają bezwładność. Przy grzejnikach oceniaj po dobie, przy podłogówce w wylewce po dłuższym czasie. Więcej w artykule <a href="/blog/krzywa-grzewcza-podlogowka-grzejniki/">o krzywej dla podłogówki i grzejników</a>.</li>
+      <li><b>Porównuj podobne dni.</b> Dzień słoneczny po pochmurnym da cieplej w domu bez żadnej zmiany krzywej.</li>
+      <li><b>Zapisuj.</b> Data, średnia na dworze, średnia w domu i wprowadzona zmiana. Po kilku tygodniach widać, przy jakiej pogodzie krzywa jeszcze nie pasuje.</li>
+    </ul>
+    <p>Pamiętaj, że każdy stopień wody mniej poprawia COP – współczynnik efektywności pompy. Jeśli w domu jest za ciepło, obniżenie krzywej daje komfort i mniejszy rachunek za prąd. Więcej w artykule <a href="/blog/temperatura-zasilania-a-cop/">o temperaturze zasilania i COP</a>.</p>
+
+    <div class="ramka"><b>Zacznij od dobrej krzywej, a poprawek będzie mniej.</b> <a href="/kalkulator-krzywej-grzewczej/">Darmowy kalkulator krzywej grzewczej</a> wyliczy punkt startowy z testu na stałej wodzie.</div>
+
+    <h2>Dlaczego prawdziwa krzywa to łagodny łuk, a w praktyce prawie prosta</h2>
+    <p>Dom traci ciepło proporcjonalnie do różnicy temperatur dom–dwór. Grzejnik oddaje je inaczej: proporcjonalnie do różnicy „woda minus pokój” podniesionej do potęgi n, dla grzejników płytowych bliskiej 1,3 (norma PN-EN 442). Gdy mróz rośnie, grzejnik daje coraz więcej ciepła z każdego dodatkowego stopnia wody.</p>
+    <p>Dlatego krzywa z testu jest łukiem: w łagodne dni bardziej stroma, przy mrozie bardziej płaska. W przykładzie z kalkulatora między +10 a +15°C woda zmienia się o ok. 0,82°C na każdy stopień na dworze, a między −20 a −15°C już tylko o ok. 0,62°C.</p>
+    <p>Do tego dochodzi drugi efekt. Pompa obiegowa tłoczy mniej więcej stały przepływ, więc przy mrozie rośnie różnica zasilanie–powrót. To podnosi zasilanie trochę bardziej, niż wynikałoby z samego grzejnika, i część łuku się prostuje.</p>
+    <div class="tabwrap"><table>
+      <tr><th>Na dworze</th><th>Łuk z testu</th><th>Prosta przez 2 punkty</th><th>Różnica</th></tr>
+      <tr><td>−20°C</td><td>51,7°C</td><td>52,2°C</td><td>+0,5°C</td></tr>
+      <tr><td>−10°C</td><td>45,5°C</td><td>45,4°C</td><td>−0,1°C</td></tr>
+      <tr><td>0°C</td><td>38,9°C</td><td>38,6°C</td><td>−0,3°C</td></tr>
+      <tr><td>+10°C</td><td>31,7°C</td><td>31,8°C</td><td>+0,1°C</td></tr>
+      <tr><td>+15°C</td><td>27,6°C</td><td>28,4°C</td><td>+0,8°C</td></tr>
+    </table></div>
+    <p>W efekcie prosta przez dwa punkty różni się od łuku w tym przykładzie najwyżej o 0,8°C. To mniej niż typowa poprawka po pierwszej dobie. Przy podłogówce, gdzie wykładnik jest bliski 1,1, różnica spada do ok. 0,2°C.</p>
+    <p>Wniosek praktyczny: jeśli z prostą w domu jest odrobinę chłodniej w okolicach zera, a odrobinę cieplej przy +15°C, to normalne. Gdy sterownik ma trzeci punkt, wpisz go z kalkulatora, a różnica zniknie.</p>
+
+    <h2>Kiedy korekta krzywej nie pomoże</h2>
+    <ul>
+      <li><b>Zimno tylko w jednym pokoju.</b> To zwykle sprawa grzejnika, głowicy albo przepływu w tym pomieszczeniu, a nie krzywej. Podniesienie krzywej dla całego domu przegrzeje resztę. Zacznij od artykułu <a href="/blog/glowice-termostatyczne-a-pompa-ciepla/">o głowicach termostatycznych</a>.</li>
+      <li><b>Pompa nie nadąża w mrozy.</b> Jeśli woda nie osiąga temperatury z krzywej, korekta nic nie zmieni. Sprawdź, czy nie pracuje już <a href="/blog/grzalka-w-pompie-ciepla/">grzałka</a>.</li>
+      <li><b>Pompa ciągle się włącza i wyłącza.</b> Krótkie cykle zaniżają średnią temperaturę wody. Przyczyny opisujemy w artykule <a href="/blog/taktowanie-pompy-ciepla/">o taktowaniu pompy ciepła</a>.</li>
+      <li><b>Przerwy na odszranianie i CWU.</b> W wilgotne dni w pobliżu zera pompa częściej odszrania parownik, a ładowanie zasobnika CWU przerywa grzanie domu. Zobacz artykuły <a href="/blog/odszranianie-pompy-ciepla/">o odszranianiu</a> i <a href="/blog/cwu-pompa-ciepla-nastawy/">o nastawach CWU</a>.</li>
+    </ul>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>O ile zmieniać krzywą grzewczą za jednym razem?</h3><p>O 1°C wody. W przykładzie z kalkulatora 1°C wody to ok. 0,6°C w pokoju, więc taki krok wystarcza, żeby zauważyć różnicę, a trudno nim przestrzelić.</p>
+    <h3>Po jakim czasie ocenić zmianę krzywej?</h3><p>Przy grzejnikach po dobie, przy podłogówce w wylewce po dłuższym czasie. Porównuj dni o podobnej pogodzie, bo słońce albo wiatr zmieniają temperaturę w domu bez żadnej zmiany nastaw.</p>
+    <h3>W domu jest za zimno tylko rano. Co zmienić?</h3><p>Najpierw sprawdź, czy nie działa obniżenie nocne albo ładowanie CWU nad ranem. Rano na dworze jest też najzimniej, a dom reaguje z opóźnieniem. Jeśli to się powtarza tylko w mroźne noce, podnieś punkt „mróz” o 1°C.</p>
+    <h3>Lepsza krzywa z dwóch czy z trzech punktów?</h3><p>Trzy punkty lepiej odwzorowują łuk, ale różnica jest niewielka. W przykładzie z kalkulatora prosta przez dwa punkty odbiega od łuku najwyżej o 0,8°C przy grzejnikach i o 0,2°C przy podłogówce.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla"><li>Vogel&amp;Noot, <a href="https://www.vogelundnoot.com/static_files/pl/media/downloads/grzejniki_plytowe_dane_techniczne.pdf" rel="noopener">Grzejniki płytowe – katalog techniczny</a> (PDF): moc cieplna badana według EN 442-2 i wykładnik n podany dla każdego typu grzejnika, w granicach ok. 1,29–1,38.</li><li><a href="https://rehva.eu/rehva-journal/chapter/can-we-still-trust-in-en-442-new-operating-definitions-for-radiators-part-2-model-based-analysis-and-results" rel="noopener">Can we still trust in EN 442? New Operating Definitions for Radiators – Part 2</a>, REHVA Journal 04/2021 (po angielsku): punkt odniesienia normy 75/65/20°C, czyli 50 K nadwyżki, i wykładniczy model mocy grzejnika.</li><li>Instrukcja montażu i obsługi pompy ciepła Rotenso Aquami AQM120X3 (rozdz. 10.5, menu serwisanta) oraz instrukcja jej sterownika przewodowego: krzywe 1–8 jako gotowe tabele, krzywa nr 9 jako prosta przez dwa punkty (T4H1 i T1SetH1, T4H2 i T1SetH2), druga strefa z własną temperaturą T1S2.</li></ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/krzywa-grzewcza-pompy-ciepla/">Krzywa grzewcza pompy ciepła: co to jest i jak ją ustawić</a></li><li><a href="/blog/jak-wyznaczyc-krzywa-grzewcza/">Jak wyznaczyć krzywą grzewczą: test na stałej temperaturze wody krok po kroku</a></li><li><a href="/blog/krzywa-grzewcza-midea-rotenso/">Krzywa grzewcza w pompie Midea i Rotenso: krzywe 1–8, krzywa 9 i tryb EKO</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>

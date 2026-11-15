@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/">
+<meta property="og:title" content="Poradnik: pompa ciepła, krzywa grzewcza i nastawy">
+<meta property="og:description" content="Krzywa grzewcza, grzałka, CWU, taktowanie i COP po polsku, bez lania wody. Z przykładami na pompach Midea i Rotenso.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog.jpg">
+<title>Poradnik o pompach ciepła: krzywa grzewcza i nastawy – Pompa w HA</title>
+<meta name="description" content="Poradnik o pompach ciepła: jak ustawić krzywą grzewczą, kiedy włącza się grzałka, jaka temperatura CWU, skąd taktowanie i ile kosztuje każdy stopień wody.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Poradnik: pompa ciepła, krzywa grzewcza i nastawy", "url": "https://pompa.woleoze.pl/blog/", "inLanguage": "pl", "hasPart": [{"@type": "Article", "headline": "Krzywa grzewcza pompy ciepła: co to jest i jak ją ustawić", "url": "https://pompa.woleoze.pl/blog/krzywa-grzewcza-pompy-ciepla/"}, {"@type": "Article", "headline": "Jak wyznaczyć krzywą grzewczą: test na stałej temperaturze wody krok po kroku", "url": "https://pompa.woleoze.pl/blog/jak-wyznaczyc-krzywa-grzewcza/"}, {"@type": "Article", "headline": "Za zimno czy za ciepło? Jak poprawić krzywą grzewczą (przesunięcie i nachylenie)", "url": "https://pompa.woleoze.pl/blog/korekta-krzywej-grzewczej/"}, {"@type": "Article", "headline": "Krzywa grzewcza dla podłogówki i grzejników: czym się różnią", "url": "https://pompa.woleoze.pl/blog/krzywa-grzewcza-podlogowka-grzejniki/"}, {"@type": "Article", "headline": "Krzywa grzewcza w pompie Midea i Rotenso: krzywe 1–8, krzywa 9 i tryb EKO", "url": "https://pompa.woleoze.pl/blog/krzywa-grzewcza-midea-rotenso/"}, {"@type": "Article", "headline": "Temperatura zasilania a COP: ile kosztuje każdy stopień wody", "url": "https://pompa.woleoze.pl/blog/temperatura-zasilania-a-cop/"}, {"@type": "Article", "headline": "Grzałka w pompie ciepła: kiedy się włącza i jak nie przepłacać", "url": "https://pompa.woleoze.pl/blog/grzalka-w-pompie-ciepla/"}, {"@type": "Article", "headline": "Taktowanie pompy ciepła: skąd się bierze i jak je ograniczyć", "url": "https://pompa.woleoze.pl/blog/taktowanie-pompy-ciepla/"}, {"@type": "Article", "headline": "Projektowa temperatura zewnętrzna w Polsce: strefy klimatyczne i co z nich wynika dla pompy ciepła", "url": "https://pompa.woleoze.pl/blog/projektowa-temperatura-zewnetrzna/"}, {"@type": "Article", "headline": "Ciepła woda z pompy ciepła: jaka temperatura, harmonogram i legionella", "url": "https://pompa.woleoze.pl/blog/cwu-pompa-ciepla-nastawy/"}, {"@type": "Article", "headline": "Głowice termostatyczne a pompa ciepła: odkręcać czy nie", "url": "https://pompa.woleoze.pl/blog/glowice-termostatyczne-a-pompa-ciepla/"}, {"@type": "Article", "headline": "Odszranianie pompy ciepła: co jest normalne, a co nie", "url": "https://pompa.woleoze.pl/blog/odszranianie-pompy-ciepla/"}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › Poradnik</nav>
+  <h1>Poradnik o pompach ciepła</h1>
+  <p class="lead">Krzywa grzewcza, grzałka, ciepła woda, taktowanie i koszty, po polsku i na konkretnych liczbach. Przykłady na pompach Midea i Rotenso, a większość zasad działa w każdej pompie.</p>
+  <div class="ramka"><b>Najpierw policz swoją krzywą.</b> <a href="/kalkulator-krzywej-grzewczej/">Darmowy kalkulator krzywej grzewczej</a>: test na stałej wodzie, wykres i nastawy do sterownika.</div>
+  <h2>Krzywa grzewcza</h2>
+  <ul class="lista">
+    <li><a href="/blog/krzywa-grzewcza-pompy-ciepla/">Krzywa grzewcza pompy ciepła: co to jest i jak ją ustawić</a><p>Krzywa grzewcza mówi pompie ciepła, jak ciepłej wody użyć przy danej pogodzie. Co oznacza nachylenie i przesunięcie i jak ustawić krzywą z testu.</p></li>
+    <li><a href="/blog/jak-wyznaczyc-krzywa-grzewcza/">Jak wyznaczyć krzywą grzewczą: test na stałej temperaturze wody krok po kroku</a><p>Krzywą grzewczą wyznaczysz sam: 2–4 dni na stałej temperaturze wody, średnia w domu i na dworze, prosty rachunek. Instrukcja z przykładem liczbowym.</p></li>
+    <li><a href="/blog/korekta-krzywej-grzewczej/">Za zimno czy za ciepło? Jak poprawić krzywą grzewczą (przesunięcie i nachylenie)</a><p>Za zimno przy każdej pogodzie? Przesuń krzywą. Tylko w mrozy? Zmień nachylenie. Jak poprawiać krzywą grzewczą po 1°C i dlaczego oceniać ją po dobie.</p></li>
+    <li><a href="/blog/krzywa-grzewcza-podlogowka-grzejniki/">Krzywa grzewcza dla podłogówki i grzejników: czym się różnią</a><p>Podłogówka potrzebuje chłodniejszej wody i łagodniejszej krzywej niż grzejniki. Wykładnik, bezwładność i układy mieszane z buforem lub zaworem.</p></li>
+    <li><a href="/blog/krzywa-grzewcza-midea-rotenso/">Krzywa grzewcza w pompie Midea i Rotenso: krzywe 1–8, krzywa 9 i tryb EKO</a><p>Gdzie w sterowniku Midea i Rotenso włączyć krzywą grzewczą, czym różnią się krzywe 1–8 od krzywej 9 (T1SetH1, T4H1…) i jak działa tryb EKO.</p></li>
+  </ul>
+  <h2>Koszty i sprawność</h2>
+  <ul class="lista">
+    <li><a href="/blog/temperatura-zasilania-a-cop/">Temperatura zasilania a COP: ile kosztuje każdy stopień wody</a><p>Ile prądu kosztuje każdy stopień wody w pompie ciepła? Liczby z karty katalogowej (A7/W35 i A7/W55), granica Carnota i jak obniżyć temperaturę zasilania.</p></li>
+    <li><a href="/blog/grzalka-w-pompie-ciepla/">Grzałka w pompie ciepła: kiedy się włącza i jak nie przepłacać</a><p>Kiedy w pompie ciepła włącza się grzałka CO i grzałka CWU? Parametry T4_IBH_ON i T4_TBH_ON w Midea i Rotenso, dezynfekcja, odszranianie i COP równy 1.</p></li>
+    <li><a href="/blog/taktowanie-pompy-ciepla/">Taktowanie pompy ciepła: skąd się bierze i jak je ograniczyć</a><p>Pompa ciepła często się włącza i wyłącza? Przyczyny taktowania: za duża moc, za wysoka krzywa, mało wody, wąska histereza. Co sprawdzić i co zmienić.</p></li>
+    <li><a href="/blog/projektowa-temperatura-zewnetrzna/">Projektowa temperatura zewnętrzna w Polsce: strefy klimatyczne i co z nich wynika dla pompy ciepła</a><p>Strefy klimatyczne w Polsce: −16, −18, −20, −22 i −24°C. Ile godzin w roku jest tak zimno, co to punkt biwalentny i jak dobrać moc pompy ciepła.</p></li>
+  </ul>
+  <h2>Na co dzień</h2>
+  <ul class="lista">
+    <li><a href="/blog/cwu-pompa-ciepla-nastawy/">Ciepła woda z pompy ciepła: jaka temperatura, harmonogram i legionella</a><p>Jaką temperaturę ciepłej wody ustawić w pompie ciepła, jak często robić dezynfekcję przeciw legionelli i jak grzać CWU w tańszych godzinach G12.</p></li>
+    <li><a href="/blog/glowice-termostatyczne-a-pompa-ciepla/">Głowice termostatyczne a pompa ciepła: odkręcać czy nie</a><p>Odkręcać głowice przy pompie ciepła czy nie? Regulacja pogodowa a głowice, pomieszczenie referencyjne, równoważenie i wpływ na przepływ oraz taktowanie.</p></li>
+    <li><a href="/blog/odszranianie-pompy-ciepla/">Odszranianie pompy ciepła: co jest normalne, a co nie</a><p>Szron, para i woda pod jednostką zewnętrzną: kiedy odszranianie pompy ciepła jest normalne, jak często i jak długo trwa i kiedy wezwać serwis.</p></li>
+  </ul>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>

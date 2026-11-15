@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/temperatura-zasilania-a-cop/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/temperatura-zasilania-a-cop/">
+<meta property="og:title" content="Temperatura zasilania a COP pompy ciepła: ile kosztuje każdy stopień">
+<meta property="og:description" content="Ile prądu kosztuje każdy stopień wody w pompie ciepła? Liczby z karty katalogowej (A7/W35 i A7/W55), granica Carnota i jak obniżyć temperaturę zasilania.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-temperatura-zasilania-a-cop.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-temperatura-zasilania-a-cop.jpg">
+<title>Temperatura zasilania a COP: ile kosztuje 1°C wody – Pompa w HA</title>
+<meta name="description" content="Ile prądu kosztuje każdy stopień wody w pompie ciepła? Liczby z karty katalogowej (A7/W35 i A7/W55), granica Carnota i jak obniżyć temperaturę zasilania.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Temperatura zasilania a COP: ile kosztuje 1°C wody","description":"Ile prądu kosztuje każdy stopień wody w pompie ciepła? Liczby z karty katalogowej (A7/W35 i A7/W55), granica Carnota i jak obniżyć temperaturę zasilania.","datePublished":"2026-11-15","dateModified":"2026-11-15","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/temperatura-zasilania-a-cop/","image":"https://pompa.woleoze.pl/docs/og/blog-temperatura-zasilania-a-cop.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Ile procent COP traci pompa ciepła na każdy stopień wody?", "acceptedAnswer": {"@type": "Answer", "text": "Nie ma jednej stałej. Z karty pompy Rotenso Aquami 8 kW (AQM80X1) przy +7°C na dworze wychodzi średnio około 2,4% więcej prądu na każdy 1°C między 35 a 55°C. Jako przybliżenie przyjmuje się 2–3% na stopień."}}, {"@type": "Question", "name": "Jakie COP ma pompa ciepła przy A7/W35 i A7/W55?", "acceptedAnswer": {"@type": "Answer", "text": "To zależy od modelu. Rotenso Aquami AQM80X1 według karty katalogowej ma COP 5,15 przy A7/W35 i 3,18 przy A7/W55. A7/W35 oznacza powietrze +7°C i wodę 35°C na wyjściu z pompy."}}, {"@type": "Question", "name": "Czy niższa temperatura zasilania zawsze się opłaca?", "acceptedAnswer": {"@type": "Answer", "text": "Tylko do granicy komfortu. Gdy woda jest za chłodna, w domu robi się zimno i ktoś podnosi nastawy albo dogrzewa grzałką, co kosztuje więcej. Celem jest najniższa woda, przy której wszystkie pokoje trzymają zadaną temperaturę."}}, {"@type": "Question", "name": "Co to jest COP Carnota?", "acceptedAnswer": {"@type": "Answer", "text": "To teoretyczny górny limit COP: temperatura wody podzielona przez różnicę temperatur wody i powietrza, liczona w kelwinach. Dla +7°C na dworze i wody 35°C wynosi około 11, a dla wody 55°C około 6,8. Prawdziwa pompa osiąga mniej więcej połowę tej wartości."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Temperatura zasilania a COP: ile kosztuje każdy stopień wody</h1>
+    <p class="meta">15 listopada 2026 · 6 min czytania</p>
+    <p class="lead">Każdy stopień cieplejszej wody w instalacji podnosi rachunek za prąd. Z karty katalogowej pompy Rotenso Aquami 8 kW wychodzi średnio około 2,4% więcej prądu na każdy 1°C temperatury zasilania. Przy +7°C na dworze ta sama pompa ma COP 5,15, gdy grzeje wodę do 35°C, i tylko 3,18, gdy grzeje do 55°C.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>COP (współczynnik efektywności) mówi, ile kWh ciepła pompa daje z 1 kWh prądu. Im mniejsza różnica między temperaturą powietrza a wody, tym jest wyższy.</li><li>Według karty pompy AQM80X1 ta sama ilość ciepła przy wodzie 55°C kosztuje około 62% więcej prądu niż przy wodzie 35°C (na dworze +7°C).</li><li>Jako przybliżenie: 2–3% prądu na każdy stopień wody. Dokładna wartość zależy od modelu, pogody i zakresu temperatur.</li><li>Najtańszy stopień to ten, którego nie trzeba dawać. Najniższą wodę, przy której w domu jest ciepło, wyznacza krzywa grzewcza.</li></ul></div>
+
+    <h2>Co to jest COP i dlaczego zależy od temperatury wody</h2>
+    <p>COP (współczynnik efektywności) to stosunek ciepła oddanego przez pompę do prądu, który w tym czasie pobrała. COP 4 oznacza, że z 1 kWh prądu dostajesz 4 kWh ciepła.</p>
+    <p>Pompa ciepła nie wytwarza ciepła z prądu, tylko je przenosi: z powietrza na zewnątrz do wody w instalacji. Prąd zasila głównie sprężarkę, która to ciepło „podnosi” na wyższy poziom temperatury.</p>
+    <p>Im wyżej trzeba podnieść ciepło, tym więcej pracy ma sprężarka. Dlatego COP spada, gdy na dworze robi się zimniej, i spada, gdy zażądasz cieplejszej wody.</p>
+    <p>Temperatura zasilania to temperatura wody, która wypływa z pompy do grzejników albo podłogówki. W sterownikach Midea i Rotenso to czujnik T1, a zadaną wartość (T1S) liczy krzywa grzewcza.</p>
+
+    <h2>Granica fizyki: COP Carnota</h2>
+    <p>Fizyka wyznacza sufit, którego żadna pompa nie przebije. To COP Carnota: temperatura wody podzielona przez różnicę temperatur wody i powietrza. Obie temperatury podaje się w kelwinach, czyli °C + 273,15.</p>
+    <div class="tabwrap"><table>
+      <tr><th>Warunki</th><th>Wyliczenie</th><th>COP Carnota</th></tr>
+      <tr><td>Powietrze +7°C, woda 35°C</td><td>308,15 / 28</td><td>11,0</td></tr>
+      <tr><td>Powietrze +7°C, woda 55°C</td><td>328,15 / 48</td><td>6,8</td></tr>
+    </table></div>
+    <p>Sufit spada o około 38%, choć woda jest cieplejsza tylko o 20 stopni. Różnica temperatur rośnie bowiem z 28 do 48 stopni.</p>
+    <p>Prawdziwa pompa osiąga mniej więcej połowę tej granicy. Model z przykładu poniżej ma 5,15 przy 35°C (47% sufitu) i 3,18 przy 55°C (46% sufitu). Ułamek prawie się nie zmienia, więc o stracie decyduje głównie różnica temperatur.</p>
+
+    <h2>Prawdziwe liczby: A7/W35, A7/W45 i A7/W55 z karty katalogowej</h2>
+    <p>Producenci podają COP w punktach pomiarowych. Zapis A7/W35 oznacza powietrze +7°C (A, od ang. air) i wodę 35°C na wyjściu z pompy (W, od ang. water).</p>
+    <p>Poniżej dane z karty katalogowej pompy Rotenso Aquami Monoblock AQM80X1 (8 kW, jedna faza). Ostatnia kolumna to nasze wyliczenie: ile prądu potrzeba na 1000 kWh ciepła.</p>
+    <div class="tabwrap"><table>
+      <tr><th>Punkt pracy</th><th>Moc grzewcza</th><th>Pobór prądu</th><th>COP</th><th>Prąd na 1000 kWh ciepła</th></tr>
+      <tr><td>A7/W35</td><td>8,40 kW</td><td>1,63 kW</td><td>5,15</td><td>194 kWh</td></tr>
+      <tr><td>A7/W45</td><td>8,10 kW</td><td>2,10 kW</td><td>3,85</td><td>260 kWh</td></tr>
+      <tr><td>A7/W55</td><td>7,50 kW</td><td>2,36 kW</td><td>3,18</td><td>314 kWh</td></tr>
+    </table></div>
+    <p>Karta podaje też SCOP (sezonowy współczynnik efektywności, czyli średnią z całego sezonu w przeciętnym klimacie): 5,21 przy wodzie 35°C i 3,36 przy wodzie 55°C.</p>
+    <p>Jedno zastrzeżenie: według karty punkty W35 i W45 mierzono przy różnicy 5 K między zasilaniem a powrotem, a W55 przy 8 K. To standardowe warunki pomiaru, ale warto o nich pamiętać przy porównaniach.</p>
+
+    <h2>Ile kosztuje 1°C wody: 2–3% to przybliżenie</h2>
+    <p>Przejście z wody 35°C na 55°C podnosi zużycie prądu na tę samą ilość ciepła ze 194 do 314 kWh, czyli o około 62%. Rozłożone na 20 stopni daje to średnio około 2,4% na każdy stopień (procent składany).</p>
+    <p>Ten koszt nie jest równy w całym zakresie. Według tej samej karty:</p>
+    <ul>
+      <li>między 35 a 45°C każdy stopień to około 2,9% więcej prądu,</li>
+      <li>między 45 a 55°C około 1,9%,</li>
+      <li>porównanie SCOP przy 35 i 55°C daje około 2,2% na stopień.</li>
+    </ul>
+    <p>Stąd popularna reguła „2–3% na stopień”. Traktuj ją jako przybliżenie, nie stałą. Inna pompa, inna pogoda i inny zakres temperatur dadzą trochę inne liczby.</p>
+    <p>Przykład: jeśli przez większą część sezonu woda jest o 5 stopni cieplejsza, niż dom potrzebuje, to przy 2,4% na stopień ogrzewanie zużywa około 13% prądu więcej. Tyle zwykle kosztuje krzywa ustawiona „na zapas”.</p>
+
+    <div class="ramka"><b>Policz to dla swojego domu.</b> <a href="/kalkulator-krzywej-grzewczej/">Darmowy kalkulator krzywej grzewczej</a>: test na stałej wodzie, wykres i nastawy do sterownika.</div>
+
+    <h2>Skąd się bierze za wysoka temperatura zasilania</h2>
+    <p>Najczęściej z ustawień, których nikt nie sprawdził po pierwszej zimie:</p>
+    <ul>
+      <li><b>Krzywa „na zapas”.</b> Instalator ustawia ją wyżej, żeby nikt nie zmarzł, i tak zostaje. W sterownikach Midea i Rotenso fabryczna krzywa nr 9 to 35°C przy −5°C na dworze i 28°C przy +7°C (według instrukcji pompy Rotenso Aquami). Twój dom może potrzebować mniej albo więcej. Jak ją zmienić, opisujemy w poradniku o <a href="/blog/krzywa-grzewcza-midea-rotenso/">krzywej grzewczej w Midea i Rotenso</a>.</li>
+      <li><b>Zamykające się głowice termostatyczne.</b> Pokoje się przegrzewają, głowice dławią przepływ, a ktoś podnosi temperaturę wody, bo „grzejniki są letnie”.</li>
+      <li><b>Jeden zimny pokój.</b> Za mały grzejnik w jednym pomieszczeniu potrafi dyktować temperaturę wody całemu domowi.</li>
+      <li><b>Ciepła woda użytkowa.</b> Ładowanie zasobnika CWU wymaga wyższej temperatury, ale to osobny cykl i <a href="/blog/cwu-pompa-ciepla-nastawy/">osobne nastawy</a>.</li>
+    </ul>
+
+    <h2>Jak obniżyć temperaturę zasilania i nie marznąć</h2>
+    <ol>
+      <li><b>Wyznacz krzywą z pomiaru.</b> Przez 2–4 dni grzej na stałej temperaturze wody i notuj temperatury w domu i na dworze. Z tego wynika, ile stopni wody potrzebujesz przy każdej pogodzie.</li>
+      <li><b>Obniżaj powoli.</b> Po 1–2 stopnie i czekaj: grzejniki reagują w kilka godzin, podłogówka nawet w dobę lub dłużej.</li>
+      <li><b>Otwórz głowice.</b> Ustaw je trochę wyżej niż temperatura, którą chcesz mieć w pokoju. Wtedy temperaturą w domu steruje krzywa, a głowice tylko pilnują przegrzania.</li>
+      <li><b>Znajdź najsłabszy pokój.</b> Jeśli tylko jedno pomieszczenie jest za zimne, czasem taniej jest zmienić grzejnik niż grzać cieplejszą wodą cały dom.</li>
+    </ol>
+    <p>Cel nie brzmi „jak najniższa woda za wszelką cenę”. Celem jest najniższa woda, przy której wszystkie pokoje trzymają zadaną temperaturę.</p>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Ile procent COP traci pompa ciepła na każdy stopień wody?</h3><p>Nie ma jednej stałej. Z karty pompy Rotenso Aquami 8 kW (AQM80X1) przy +7°C na dworze wychodzi średnio około 2,4% więcej prądu na każdy 1°C między 35 a 55°C. Jako przybliżenie przyjmuje się 2–3% na stopień.</p>
+    <h3>Jakie COP ma pompa ciepła przy A7/W35 i A7/W55?</h3><p>To zależy od modelu. Rotenso Aquami AQM80X1 według karty katalogowej ma COP 5,15 przy A7/W35 i 3,18 przy A7/W55. A7/W35 oznacza powietrze +7°C i wodę 35°C na wyjściu z pompy.</p>
+    <h3>Czy niższa temperatura zasilania zawsze się opłaca?</h3><p>Tylko do granicy komfortu. Gdy woda jest za chłodna, w domu robi się zimno i ktoś podnosi nastawy albo dogrzewa grzałką, co kosztuje więcej. Celem jest najniższa woda, przy której wszystkie pokoje trzymają zadaną temperaturę.</p>
+    <h3>Co to jest COP Carnota?</h3><p>To teoretyczny górny limit COP: temperatura wody podzielona przez różnicę temperatur wody i powietrza, liczona w kelwinach. Dla +7°C na dworze i wody 35°C wynosi około 11, a dla wody 55°C około 6,8. Prawdziwa pompa osiąga mniej więcej połowę tej wartości.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla">
+      <li><a href="https://static.aero7.pl/public/cms/files/1466/Rotenso-Aquami-Monoblock-1-faz-8-kW-karta.pdf" rel="nofollow noopener" target="_blank">Karta katalogowa Rotenso Aquami Monoblock AQM80X1 [R14] (PDF)</a>: moc, pobór i COP przy A7/W35, A7/W45 i A7/W55, SCOP przy 35 i 55°C, warunki pomiaru.</li>
+      <li><a href="https://en.wikipedia.org/wiki/Coefficient_of_performance" rel="noopener" target="_blank">Coefficient of performance, Wikipedia (ang.)</a>: wzór na teoretyczny COP Carnota.</li>
+      <li>Instrukcja montażu i obsługi pompy Rotenso Aquami Monoblock, rozdz. 10.5 (menu DLA SERWISANTA, parametry krzywej nr 9: T1SetH1, T1SetH2, T4H1, T4H2).</li>
+      <li>Wyliczenia procentowe (2,9%, 1,9%, 2,4% i 2,2% na stopień, prąd na 1000 kWh ciepła, 47% i 46% granicy Carnota): własne, z danych karty katalogowej.</li>
+    </ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/krzywa-grzewcza-pompy-ciepla/">Krzywa grzewcza pompy ciepła: co to jest i jak ją ustawić</a></li><li><a href="/blog/jak-wyznaczyc-krzywa-grzewcza/">Jak wyznaczyć krzywą grzewczą: test na stałej temperaturze wody</a></li><li><a href="/blog/glowice-termostatyczne-a-pompa-ciepla/">Głowice termostatyczne a pompa ciepła: odkręcać czy nie</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>

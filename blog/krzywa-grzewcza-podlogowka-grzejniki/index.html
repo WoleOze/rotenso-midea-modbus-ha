@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/krzywa-grzewcza-podlogowka-grzejniki/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/krzywa-grzewcza-podlogowka-grzejniki/">
+<meta property="og:title" content="Krzywa grzewcza dla podłogówki i grzejników: czym się różnią">
+<meta property="og:description" content="Podłogówka potrzebuje chłodniejszej wody i łagodniejszej krzywej niż grzejniki. Wykładnik, bezwładność i układy mieszane z buforem lub zaworem.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-krzywa-grzewcza-podlogowka-grzejniki.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-krzywa-grzewcza-podlogowka-grzejniki.jpg">
+<title>Krzywa grzewcza dla podłogówki i grzejników: różnice – Pompa w HA</title>
+<meta name="description" content="Podłogówka potrzebuje chłodniejszej wody i łagodniejszej krzywej niż grzejniki. Wykładnik, bezwładność i układy mieszane z buforem lub zaworem.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Krzywa grzewcza dla podłogówki i grzejników: różnice","description":"Podłogówka potrzebuje chłodniejszej wody i łagodniejszej krzywej niż grzejniki. Wykładnik, bezwładność i układy mieszane z buforem lub zaworem.","datePublished":"2026-11-15","dateModified":"2026-11-15","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/krzywa-grzewcza-podlogowka-grzejniki/","image":"https://pompa.woleoze.pl/docs/og/blog-krzywa-grzewcza-podlogowka-grzejniki.jpg"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jaka temperatura zasilania jest dobra dla podłogówki?","acceptedAnswer":{"@type":"Answer","text":"Taka, jaka wynika z testu na stałej wodzie dla Twojego domu. W przykładzie z kalkulatora podłogówka potrzebowała ok. 30°C przy 0°C na dworze i ok. 38°C przy −20°C. Ponad 40°C przy mrozie to sygnał, żeby sprawdzić instalację."}},{"@type":"Question","name":"Czy podłogówka może pracować na krzywej od grzejników?","acceptedAnswer":{"@type":"Answer","text":"Nie bezpośrednio. Woda dobrana do grzejników jest dla podłogi za ciepła, więc przed podłogówką potrzebny jest zawór mieszający albo osobna strefa z własną krzywą."}},{"@type":"Question","name":"Dlaczego krzywa podłogówki jest prawie prosta?","acceptedAnswer":{"@type":"Answer","text":"Bo oddawanie ciepła przez podłogę rośnie z różnicą temperatur prawie liniowo, z wykładnikiem ok. 1,1. Grzejnik ma wykładnik ok. 1,3, dlatego jego krzywa jest wyraźniej wygięta."}},{"@type":"Question","name":"Ile czekać po zmianie krzywej przy podłogówce?","acceptedAnswer":{"@type":"Answer","text":"Dłużej niż przy grzejnikach: co najmniej dobę, a często półtorej do dwóch. Wylewka nagrzewa się i stygnie powoli, więc wcześniejsza ocena bywa myląca."}}]}
+</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Krzywa grzewcza dla podłogówki i grzejników: czym się różnią</h1>
+    <p class="meta">15 listopada 2026 · 7 min czytania</p>
+    <p class="lead">Podłogówka potrzebuje dużo chłodniejszej wody i łagodniejszej krzywej grzewczej niż grzejniki, bo oddaje ciepło całą powierzchnią podłogi. Jej krzywa jest prawie prostą, krzywa grzejników wyraźniej wygiętym łukiem, a podłoga w wylewce reaguje na zmiany z opóźnieniem wielu godzin.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>W przykładzie z kalkulatora podłogówka przy −20°C potrzebuje ok. 38°C wody, grzejniki ok. 52°C.</li><li>Nachylenie krzywej podłogówki jest mniej więcej o połowę mniejsze: ok. 0,4°C zamiast 0,7°C wody na 1°C na dworze.</li><li>Grzejnik ma wykładnik ok. 1,3 (norma PN-EN 442), podłoga ok. 1,1, dlatego jej krzywa jest prawie prosta.</li><li>W instalacji mieszanej pompa pracuje na krzywej grzejników, a podłogówka dostaje chłodniejszą wodę przez zawór mieszający albo drugą strefę.</li></ul></div>
+
+    <h2>Dlaczego podłogówka potrzebuje chłodniejszej wody</h2>
+    <p>Grzejnik ma kilka metrów kwadratowych blachy, podłoga w pokoju kilkanaście albo kilkadziesiąt. Żeby oddać tyle samo ciepła, duża powierzchnia może być dużo chłodniejsza. Dlatego podłogówka grzeje wodą, która w grzejniku dałaby niewiele.</p>
+    <p>Podłogę ogranicza też komfort. Jako zalecaną średnią temperaturę powierzchni podłogi podaje się 26°C, a jako najwyższą 29°C w miejscach, po których się chodzi. W łazienkach dopuszcza się 33°C, w pasach przy oknach i ścianach zewnętrznych 35°C.</p>
+    <p>Dla pompy ciepła to dobra wiadomość: chłodniejsza woda oznacza wyższy COP – współczynnik efektywności. Więcej w artykule <a href="/blog/temperatura-zasilania-a-cop/">o temperaturze zasilania i COP</a>.</p>
+
+    <h2>Krzywa podłogówki i grzejników: przykład liczbowy</h2>
+    <p>Dwa przykładowe domy dały w teście ten sam wynik: 20,5°C w środku przy +3°C na dworze i różnicy zasilanie–powrót 4°C. Pierwszy ma podłogówkę i robił test na wodzie 28°C, drugi ma grzejniki płytowe i robił test na 36°C. Oba chcą 21°C w domu, oba leżą w III strefie (−20°C).</p>
+    <div class="tabwrap"><table>
+      <tr><th>Na dworze</th><th>Podłogówka</th><th>Grzejniki płytowe</th></tr>
+      <tr><td>−20°C</td><td>37,6°C</td><td>51,7°C</td></tr>
+      <tr><td>−10°C</td><td>33,8°C</td><td>45,5°C</td></tr>
+      <tr><td>0°C</td><td>29,9°C</td><td>38,9°C</td></tr>
+      <tr><td>+10°C</td><td>25,9°C</td><td>31,7°C</td></tr>
+      <tr><td>+15°C</td><td>23,8°C</td><td>27,6°C</td></tr>
+      <tr><td>Nachylenie</td><td>ok. 0,39°C na 1°C</td><td>ok. 0,68°C na 1°C</td></tr>
+      <tr><td>Prosta 2 pkt różni się od łuku</td><td>najwyżej o 0,2°C</td><td>najwyżej o 0,8°C</td></tr>
+    </table></div>
+    <p>To przykład z modelu, którego używa kalkulator, a nie typowe wartości dla każdego domu. Pokazuje jednak dwie rzeczy, które powtarzają się prawie zawsze: krzywa podłogówki leży niżej i rośnie wolniej.</p>
+    <p>Kalkulator ostrzega, gdy podłogówka przy projektowym mrozie potrzebuje ponad 40°C. Przy takim wyniku warto sprawdzić, czy w czasie testu wszystkie pętle były otwarte.</p>
+
+    <h2>Wykładnik grzejnika: 1,3 kontra 1,1</h2>
+    <p>Każdy odbiornik ciepła oddaje moc proporcjonalnie do różnicy „średnia woda minus pokój” podniesionej do potęgi n. Wykładnik n mówi, jak bardzo moc rośnie szybciej niż sama różnica temperatur.</p>
+    <ul>
+      <li><b>Grzejniki płytowe:</b> producenci podają n w granicach ok. 1,29–1,38, badane według normy PN-EN 442. W obliczeniach przyjmuje się zwykle 1,3.</li>
+      <li><b>Podłoga:</b> dla oddawania ciepła z powierzchni podłogi literatura podaje zależność z wykładnikiem 1,1.</li>
+    </ul>
+    <p>Im bliżej jedynki, tym bliżej prostej. Grzejnik przy mrozie „rozkręca się” bardziej, więc jego krzywa wygina się w łuk: w łagodne dni stroma, przy mrozie płaska. Podłoga zachowuje się prawie liniowo i jej krzywą da się bez straty dokładności opisać dwoma punktami.</p>
+    <div class="tabwrap"><table>
+      <tr><th>Rodzaj ogrzewania</th><th>Wykładnik n w kalkulatorze</th><th>Czas testu</th></tr>
+      <tr><td>Grzejniki płytowe, żeliwne, członowe</td><td>1,3</td><td>ok. 2 dni</td></tr>
+      <tr><td>Konwektory (grzejniki kanałowe)</td><td>1,4</td><td>ok. 2 dni</td></tr>
+      <tr><td>Ogrzewanie podłogowe, ścienne, sufitowe</td><td>1,1</td><td>ok. 4 dni</td></tr>
+      <tr><td>Klimakonwektory (fancoile)</td><td>1,0</td><td>ok. 2 dni</td></tr>
+    </table></div>
+    <p>Wartości dla konwektorów i klimakonwektorów to założenia kalkulatora. Jeśli producent Twojego grzejnika podaje w katalogu inny wykładnik, ufaj katalogowi.</p>
+
+    <h2>Bezwładność: podłoga reaguje godzinami</h2>
+    <p>Rury podłogówki leżą w kilku centymetrach wylewki, a nad nią jest jeszcze płytka albo panel. Zanim zmiana temperatury wody dotrze do pokoju, ta masa musi się nagrzać albo ostygnąć. Trwa to wiele godzin.</p>
+    <p>Stąd trzy praktyczne zasady:</p>
+    <ul>
+      <li>Test na stałej wodzie przy podłogówce trwa dłużej, ok. 4 dni zamiast 2.</li>
+      <li>Po każdej korekcie krzywej czekaj dłużej niż przy grzejnikach, zanim ocenisz efekt. Szczegóły w artykule <a href="/blog/korekta-krzywej-grzewczej/">o korekcie krzywej</a>.</li>
+      <li>Obniżenia nocne przy podłogówce zwykle dają niewiele: podłoga nie zdąży ostygnąć w nocy i trzeba ją potem dłużej dogrzewać.</li>
+    </ul>
+    <p>Grzejniki stalowe mają mało wody i mało masy, więc reagują w kilkadziesiąt minut. Ich krzywą można poprawiać szybciej, ale doba na ocenę i tak się przydaje, bo dom ma własną bezwładność.</p>
+
+    <div class="ramka"><b>Podłogówka czy grzejniki, policz swoją krzywą.</b> <a href="/kalkulator-krzywej-grzewczej/">Darmowy kalkulator krzywej grzewczej</a> ma osobne ustawienia dla podłogi, grzejników, konwektorów i klimakonwektorów.</div>
+
+    <h2>Instalacja mieszana: grzejniki i podłogówka razem</h2>
+    <p>W wielu domach na dole jest podłogówka, a na piętrze grzejniki. Pompa ciepła wysyła jedną temperaturę wody, więc trzeba zdecydować, kto dostaje jaką.</p>
+    <h3>Zawór mieszający przed podłogówką</h3>
+    <p>Pompa pracuje na krzywej grzejników, bo to one potrzebują cieplejszej wody. Przed podłogówką zawór mieszający dolewa do zasilania chłodną wodę z powrotu i obniża temperaturę do tej, której potrzebuje podłoga.</p>
+    <p>Zawór termostatyczny trzyma jedną stałą temperaturę. Zawór z siłownikiem i własnym sterownikiem pogodowym może prowadzić podłogówkę po jej własnej krzywej. Ta druga wersja jest wygodniejsza, bo podłoga nie dostaje zimą i jesienią tej samej wody.</p>
+    <h3>Druga strefa w sterowniku pompy</h3>
+    <p>Część pomp ma obsługę dwóch stref z osobnymi temperaturami. W pompach Midea i Rotenso po włączeniu podwójnej strefy sterownik liczy osobną zadaną temperaturę T1S2 dla strefy 2, a w ustawieniach wybiera się rodzaj odbiornika w każdej strefie. Według instrukcji druga strefa potrzebuje zaworu mieszającego, własnej pompy obiegowej i czujnika temperatury wody tej strefy, kupowanych osobno. Więcej w artykule <a href="/blog/krzywa-grzewcza-midea-rotenso/">o krzywej grzewczej w pompach Midea i Rotenso</a>.</p>
+    <h3>Bufor albo sprzęgło hydrauliczne</h3>
+    <p>Gdy za pompą jest bufor, pompa grzeje bufor, a obiegi biorą wodę z niego, każdy przez własną pompę i, w razie potrzeby, zawór. W buforze woda się miesza, więc do obiegów dochodzi zwykle trochę chłodniejsza, niż wyszła z pompy. Krzywą pompy ustawia się wtedy według najcieplejszego obiegu z małym zapasem i poprawia po pierwszej dobie.</p>
+    <div class="uwaga">Podłogówka nie powinna dostawać wody prosto z krzywej grzejników, bez zaworu mieszającego. Przy mrozie podłoga może się wtedy nagrzać ponad podane wyżej granice.</div>
+    <h3>Jak zrobić test w instalacji mieszanej</h3>
+    <p>Test na stałej wodzie rób dla obiegu, który wyznacza krzywą pompy, zwykle grzejnikowego. Podłogówka za zaworem mieszającym ma własne nastawy i własny test: przez kilka dni trzymasz na zaworze stałą temperaturę i notujesz temperaturę w pomieszczeniach z podłogówką. Opis testu krok po kroku znajdziesz w artykule <a href="/blog/jak-wyznaczyc-krzywa-grzewcza/">jak wyznaczyć krzywą grzewczą</a>.</p>
+
+    <h2>Podłogówka i grzejniki: podsumowanie różnic</h2>
+    <div class="tabwrap"><table>
+      <tr><th></th><th>Podłogówka</th><th>Grzejniki</th></tr>
+      <tr><td>Temperatura wody</td><td>niska</td><td>wyższa</td></tr>
+      <tr><td>Nachylenie krzywej</td><td>małe</td><td>większe</td></tr>
+      <tr><td>Kształt krzywej</td><td>prawie prosta</td><td>łagodny łuk</td></tr>
+      <tr><td>Reakcja na zmianę</td><td>wiele godzin</td><td>kilkadziesiąt minut</td></tr>
+      <tr><td>Test na stałej wodzie</td><td>ok. 4 dni, start 28°C</td><td>ok. 2 dni, start 36°C</td></tr>
+    </table></div>
+    <p>Wspólne jest jedno: krzywą wyznaczasz z pomiaru, a nie z tabelki. Ogólny opis krzywej grzewczej jest w artykule <a href="/blog/krzywa-grzewcza-pompy-ciepla/">krzywa grzewcza pompy ciepła</a>.</p>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Jaka temperatura zasilania jest dobra dla podłogówki?</h3><p>Taka, jaka wynika z testu na stałej wodzie dla Twojego domu. W przykładzie z kalkulatora podłogówka potrzebowała ok. 30°C przy 0°C na dworze i ok. 38°C przy −20°C. Ponad 40°C przy mrozie to sygnał, żeby sprawdzić instalację.</p>
+    <h3>Czy podłogówka może pracować na krzywej od grzejników?</h3><p>Nie bezpośrednio. Woda dobrana do grzejników jest dla podłogi za ciepła, więc przed podłogówką potrzebny jest zawór mieszający albo osobna strefa z własną krzywą.</p>
+    <h3>Dlaczego krzywa podłogówki jest prawie prosta?</h3><p>Bo oddawanie ciepła przez podłogę rośnie z różnicą temperatur prawie liniowo, z wykładnikiem ok. 1,1. Grzejnik ma wykładnik ok. 1,3, dlatego jego krzywa jest wyraźniej wygięta.</p>
+    <h3>Ile czekać po zmianie krzywej przy podłogówce?</h3><p>Dłużej niż przy grzejnikach: co najmniej dobę, a często półtorej do dwóch. Wylewka nagrzewa się i stygnie powoli, więc wcześniejsza ocena bywa myląca.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla"><li><a href="https://inzynierbudownictwa.pl/wodne-ogrzewanie-podlogowe-charakterystyka-systemu/" rel="noopener">Wodne ogrzewanie podłogowe. Charakterystyka systemu</a>, Inżynier Budownictwa: zalecana średnia temperatura powierzchni podłogi 26°C, najwyżej 29°C, w łazienkach 33°C, w strefach brzegowych 35°C.</li><li>Vogel&amp;Noot, <a href="https://www.vogelundnoot.com/static_files/pl/media/downloads/grzejniki_plytowe_dane_techniczne.pdf" rel="noopener">Grzejniki płytowe – katalog techniczny</a> (PDF): moc cieplna badana według EN 442-2 i wykładnik n podany dla każdego typu grzejnika, w granicach ok. 1,29–1,38.</li><li><a href="https://bcpw.bg.pw.edu.pl/Content/2621/download" rel="noopener">Cieplne właściwości dynamiczne grzejnika podłogowego</a>, rozprawa doktorska, Politechnika Warszawska, 2009 (PDF): współczynnik przejmowania ciepła podłogi h = 8,92·Δt<sup>0,1</sup> W/(m²·K) według DIN 4725, czyli oddawane ciepło rośnie jak Δt<sup>1,1</sup>.</li><li>Instrukcja montażu i obsługi pompy ciepła Rotenso Aquami AQM120X3 (rozdz. 10.5, menu serwisanta) oraz instrukcja jej sterownika przewodowego: krzywe 1–8 jako gotowe tabele, krzywa nr 9 jako prosta przez dwa punkty (T4H1 i T1SetH1, T4H2 i T1SetH2), druga strefa z własną temperaturą T1S2.</li></ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/krzywa-grzewcza-pompy-ciepla/">Krzywa grzewcza pompy ciepła: co to jest i jak ją ustawić</a></li><li><a href="/blog/jak-wyznaczyc-krzywa-grzewcza/">Jak wyznaczyć krzywą grzewczą: test na stałej temperaturze wody krok po kroku</a></li><li><a href="/blog/temperatura-zasilania-a-cop/">Temperatura zasilania a COP: ile kosztuje każdy stopień wody</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>

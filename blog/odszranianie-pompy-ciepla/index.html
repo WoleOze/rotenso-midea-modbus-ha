@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/odszranianie-pompy-ciepla/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/odszranianie-pompy-ciepla/">
+<meta property="og:title" content="Odszranianie pompy ciepła: co jest normalne, a co nie">
+<meta property="og:description" content="Szron, para i woda pod jednostką zewnętrzną: kiedy odszranianie pompy ciepła jest normalne, jak często i jak długo trwa i kiedy wezwać serwis.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-odszranianie-pompy-ciepla.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-odszranianie-pompy-ciepla.jpg">
+<title>Odszranianie pompy ciepła: co jest normalne, a co nie – Pompa w HA</title>
+<meta name="description" content="Szron, para i woda pod jednostką zewnętrzną: kiedy odszranianie pompy ciepła jest normalne, jak często i jak długo trwa i kiedy wezwać serwis.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Odszranianie pompy ciepła: co jest normalne, a co nie","description":"Szron, para i woda pod jednostką zewnętrzną: kiedy odszranianie pompy ciepła jest normalne, jak często i jak długo trwa i kiedy wezwać serwis.","datePublished":"2026-11-15","dateModified":"2026-11-15","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/odszranianie-pompy-ciepla/","image":"https://pompa.woleoze.pl/docs/og/blog-odszranianie-pompy-ciepla.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Czy szron na pompie ciepła jest normalny?", "acceptedAnswer": {"@type": "Answer", "text": "Tak. Przy temperaturze w okolicach zera i dużej wilgotności każda powietrzna pompa ciepła się szroni. Szron przy +2, +3, a nawet +5°C też jest normalny. Pompa usuwa go sama, odszraniając wymiennik."}}, {"@type": "Question", "name": "Ile trwa odszranianie pompy ciepła?", "acceptedAnswer": {"@type": "Answer", "text": "Zwykle kilka minut. W dokumentacji niektórych modeli najdłuższy czas odszraniania to 8 lub 10 minut."}}, {"@type": "Question", "name": "Jak często pompa ciepła może się odszraniać?", "acceptedAnswer": {"@type": "Answer", "text": "Przy chłodnej i wilgotnej pogodzie nawet kilka razy na godzinę, w suchy mróz dużo rzadziej. Lepiej porównywać dni o podobnej pogodzie niż szukać jednej normy."}}, {"@type": "Question", "name": "Dlaczego z pompy ciepła leci para?", "acceptedAnswer": {"@type": "Answer", "text": "To para wodna z topniejącego szronu, która skrapla się w zimnym powietrzu. Pojawia się podczas odszraniania i nie oznacza awarii."}}, {"@type": "Question", "name": "Kiedy odszranianie oznacza awarię?", "acceptedAnswer": {"@type": "Answer", "text": "Gdy lód zostaje po odszranianiu i narasta, gdy zamarza woda w podstawie jednostki, gdy dom przestaje być ciepły albo gdy sterownik pokazuje kod błędu. Wtedy sprawdź odpływ i wezwij serwis."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Odszranianie pompy ciepła: co jest normalne, a co nie</h1>
+    <p class="meta">15 listopada 2026 · 7 min czytania</p>
+    <p class="lead">Szron na jednostce zewnętrznej i regularne odszranianie są normalne: przy temperaturze w okolicach zera i dużej wilgotności każda powietrzna pompa ciepła się szroni i co jakiś czas sama ten szron topi. Trwa to zwykle kilka minut, z jednostki kapie woda i bucha biała para. Problem zaczyna się wtedy, gdy lód zostaje po odszranianiu i narasta, gdy woda zamarza w podstawie jednostki albo gdy dom przestaje być ciepły.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul>
+      <li>Najwięcej szronu narasta przy temperaturze około 0°C i dużej wilgotności. Szron przy +2…+5°C też jest normalny.</li>
+      <li>Podczas odszraniania pompa odwraca obieg i grzeje wymiennik na zewnątrz. Wentylator na chwilę staje.</li>
+      <li>Biała chmura z jednostki to para wodna z topniejącego szronu, a nie dym.</li>
+      <li>Normalne odszranianie trwa kilka minut. W wilgotne, chłodne dni może się powtarzać nawet kilka razy na godzinę.</li>
+      <li>Niepokojące: lód po zakończeniu odszraniania, lód w podstawie, niedogrzany dom, kody błędów na sterowniku.</li>
+    </ul></div>
+
+    <h2>Dlaczego pompa ciepła się szroni</h2>
+    <p>Jednostka zewnętrzna odbiera ciepło z powietrza. Jej wymiennik (lamele z tyłu jednostki) jest przy tym zimniejszy niż powietrze wokół.</p>
+    <p>Kanadyjski poradnik rządowy (Natural Resources Canada) opisuje to tak: gdy temperatura na dworze spada w okolice zera albo niżej, wilgoć z powietrza skrapla się na wymienniku i zamarza. Ilość szronu zależy od temperatury i wilgotności powietrza. Szron utrudnia oddawanie ciepła do czynnika chłodniczego, więc w pewnym momencie trzeba go usunąć.</p>
+    <p>Badanie Tao, Guo i Chen (Międzynarodowy Kongres Chłodnictwa IIR, 2007) w zakresie od −15 do +5°C i wilgotności 55–90% pokazało, że najwięcej szronu narasta, gdy na dworze jest około 0°C. Przy tej samej temperaturze szronu przybywa tym więcej, im wyższa wilgotność.</p>
+    <p>Stąd częste zdziwienie: przy −15°C pompa szroni się wolniej niż przy +2°C. W mroźnym powietrzu jest po prostu mniej pary wodnej. Portal GLOBEnergia pisze wprost, że oszronienie przy +2, +3 czy nawet +5°C to zjawisko naturalne.</p>
+    <p>Najgorsze warunki to więc polska zima w wersji „szaro i mokro”: około zera, mgła, duża wilgotność.</p>
+
+    <h2>Jak działa odszranianie</h2>
+    <p>Według poradnika Natural Resources Canada odszranianie przebiega tak:</p>
+    <ol>
+      <li>Zawór czterodrogowy przełącza pompę w tryb chłodzenia. Gorący czynnik chłodniczy płynie do wymiennika na zewnątrz i topi szron.</li>
+      <li>Wentylator jednostki zewnętrznej staje, żeby nie wydmuchiwać ciepła potrzebnego do stopienia szronu.</li>
+      <li>Po stopieniu szronu pompa wraca do grzania.</li>
+    </ol>
+    <p>W trybie chłodzenia wymiennik wodny odbiera ciepło z wody, więc pompa powietrze-woda topi szron ciepłem z wody w instalacji. Instrukcja pomp Midea i Rotenso Aquami wymaga co najmniej 40 litrów wody w obiegu poza samą jednostką.</p>
+    <p>Poradnik PORT PC (Polska Organizacja Rozwoju Technologii Pomp Ciepła) ostrzega też przed uruchamianiem pompy w niewykończonym, nieocieplonym domu. W skrajnym przypadku pompa może się wtedy wyłączyć awaryjnie, bo nie będzie w stanie przeprowadzić odszraniania.</p>
+    <p>Pompa sama decyduje, kiedy odszraniać. Starsze rozwiązania robią to co stały czas (Natural Resources Canada podaje 30, 60 albo 90 minut), nowsze na podstawie pomiarów, gdy szron rzeczywiście się pojawi. Według tego samego poradnika drugi sposób jest zwykle oszczędniejszy, bo unika niepotrzebnych cykli.</p>
+    <p>W pompach Midea i Rotenso sterownik przewodowy pokazuje podczas odszraniania osobną ikonę (w instrukcji: „Aktywowano tryb odszraniania”).</p>
+
+    <h2>Jak często i jak długo trwa odszranianie</h2>
+    <p>Nie ma jednej normy, bo wszystko zależy od pogody i od konkretnej pompy. Punkty odniesienia:</p>
+    <ul>
+      <li><b>Czas:</b> prawidłowe odszranianie trwa zwykle kilka minut. W dokumentacji niektórych modeli najdłuższy czas to 8 lub 10 minut (GLOBEnergia).</li>
+      <li><b>Częstość:</b> przy chłodnej i wilgotnej pogodzie odszranianie może się powtarzać nawet kilka razy na godzinę (GLOBEnergia). W suchy mróz zdarza się rzadziej.</li>
+    </ul>
+    <p>Lepszym testem niż sztywna liczba jest porównanie z podobną pogodą. Jeśli przy tej samej temperaturze i wilgotności pompa odszrania się wyraźnie częściej niż tydzień temu, coś się zmieniło. Może to być śnieg, lód albo liście blokujące przepływ powietrza przez wymiennik, albo wiatr wiejący w wylot jednostki.</p>
+
+    <div class="ramka"><b>Na pogodę nie masz wpływu, na temperaturę wody tak.</b> Sprawdź, czy Twoja krzywa grzewcza nie jest za wysoka: <a href="/kalkulator-krzywej-grzewczej/">darmowy kalkulator krzywej grzewczej</a> wyliczy ją z kilku dni testu na stałej wodzie.</div>
+
+    <h2>Para z jednostki zewnętrznej i woda pod pompą</h2>
+    <p>Podczas odszraniania z jednostki potrafi wydobywać się duża biała chmura. To para z topniejącego szronu, która skrapla się w zimnym powietrzu. Wygląda groźnie, ale jest normalna. Normalne jest też to, że wentylator na chwilę staje.</p>
+    <p>Stopiony szron to woda, która musi gdzieś spłynąć. Instrukcja montażu Rotenso Aquami (Midea M-Thermal) zaleca:</p>
+    <ul>
+      <li>kanał odpływowy wokół fundamentu,</li>
+      <li>postawienie jednostki na betonowych blokach (około 100 mm), jeśli woda nie odpływa swobodnie,</li>
+      <li>tam, gdzie pada dużo śniegu, możliwie wysoki fundament,</li>
+      <li>kabel grzejny w rurce odpływu skroplin, jeśli odpływ z tacy ociekowej sprawia problemy (moc do 40 W).</li>
+    </ul>
+    <p>Poradnik Natural Resources Canada radzi podnieść jednostkę na podstawie 30–60 cm nad gruntem, żeby nie zasypywał jej śnieg i żeby woda z odszraniania miała gdzie odpłynąć. Odradza też miejsce pod okapem dachu, skąd kapie woda i spada lód.</p>
+
+    <h2>Kiedy odszranianie to problem</h2>
+    <p>Samo częste odszranianie nie jest jeszcze awarią. Sygnały, że trzeba szukać przyczyny:</p>
+    <ul>
+      <li><b>Lód zostaje po odszranianiu</b> i z każdym cyklem go przybywa. Pompa nie nadąża albo odszranianie nie działa jak trzeba.</li>
+      <li><b>Lód w podstawie i na tacy ociekowej.</b> Woda z odszraniania nie odpływa i zamarza pod wymiennikiem. Sprawdź odpływ, a gdy to nie pomaga, wezwij serwis.</li>
+      <li><b>Dom przestaje być ciepły</b> w pogodę, w której wcześniej pompa dawała radę.</li>
+      <li><b>Wentylator nie rusza,</b> choć sprężarka pracuje, albo pompa w ogóle przestaje grzać. Wtedy postępuj według instrukcji i wezwij serwis.</li>
+      <li><b>Kod błędu na sterowniku.</b> Lista kodów i działań naprawczych jest w instrukcji montażu (dla Midea i Rotenso rozdz. 13.4 „Kody błędów”).</li>
+    </ul>
+    <p>Instrukcja Midea i Rotenso zwraca uwagę na dwa błędy: E0 i Hb. Jeśli wystąpią zimą i nie zostaną szybko usunięte, pompa wodna i orurowanie mogą ulec uszkodzeniu przez zamarznięcie. Przy błędzie przepływu podczas odszraniania instrukcja każe też sprawdzić zasilanie i bezpieczniki grzałki dodatkowej.</p>
+
+    <h3>Wiatr i śnieg</h3>
+    <p>Instrukcja montażu Midea ostrzega, że wiatr o prędkości od 5 m/s albo wiejący prosto w wylot powietrza ogranicza przepływ przez jednostkę. Skutki to między innymi spadek mocy i częstsze zamarzanie podczas grzania. Jeśli jednostka stoi w takim miejscu, porozmawiaj z instalatorem o osłonie albo innym ustawieniu.</p>
+    <p>PORT PC przypomina, żeby po zawiei sprawdzić, czy śnieg i lód nie blokują przepływu powietrza. Jednostkę czyść ostrożnie, bez ostrych narzędzi, żeby nie uszkodzić lamel wymiennika ani wentylatora.</p>
+
+    <h2>Odszranianie a zużycie prądu</h2>
+    <p>Odszranianie kosztuje energię: przez kilka minut pompa nie grzeje domu, tylko oddaje ciepło na zewnątrz. Szron sam w sobie też obniża wydajność, bo utrudnia wymianę ciepła. Dlatego niepotrzebne cykle obniżają sezonową efektywność pompy (Natural Resources Canada).</p>
+    <p>W praktyce niewiele na to poradzisz poza dobrym ustawieniem jednostki: wolna przestrzeń wokół, sprawny odpływ, brak wiatru w wylot. Ręcznego wyłączania pompy na noc PORT PC odradza: pompa ciepła lubi stabilną pracę przez całą dobę.</p>
+    <p>Jeśli chcesz wiedzieć, ile razy na dobę pompa się odszrania i jak długo, potrzebujesz zapisu jej pracy. Sterownik pokazuje tylko to, co dzieje się teraz. Przy pompach Midea i Rotenso podgląd odszraniania na żywo daje moduł Pompa w HA, a w wersji Pro także raport dzień po dniu, w którym widać też odszraniania.</p>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Czy szron na pompie ciepła jest normalny?</h3><p>Tak. Przy temperaturze w okolicach zera i dużej wilgotności każda powietrzna pompa ciepła się szroni. Szron przy +2, +3, a nawet +5°C też jest normalny. Pompa usuwa go sama, odszraniając wymiennik.</p>
+    <h3>Ile trwa odszranianie pompy ciepła?</h3><p>Zwykle kilka minut. W dokumentacji niektórych modeli najdłuższy czas odszraniania to 8 lub 10 minut.</p>
+    <h3>Jak często pompa ciepła może się odszraniać?</h3><p>Przy chłodnej i wilgotnej pogodzie nawet kilka razy na godzinę, w suchy mróz dużo rzadziej. Lepiej porównywać dni o podobnej pogodzie niż szukać jednej normy.</p>
+    <h3>Dlaczego z pompy ciepła leci para?</h3><p>To para wodna z topniejącego szronu, która skrapla się w zimnym powietrzu. Pojawia się podczas odszraniania i nie oznacza awarii.</p>
+    <h3>Kiedy odszranianie oznacza awarię?</h3><p>Gdy lód zostaje po odszranianiu i narasta, gdy zamarza woda w podstawie jednostki, gdy dom przestaje być ciepły albo gdy sterownik pokazuje kod błędu. Wtedy sprawdź odpływ i wezwij serwis.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla">
+      <li>Natural Resources Canada, <a href="https://static.hydroottawa.com/documents/publications/heating-cooling/heat-pump.pdf" rel="noopener">Heating and Cooling With a Heat Pump</a>, wydanie poprawione, grudzień 2004 (rozdział o cyklu odszraniania i montażu jednostki zewnętrznej).</li>
+      <li>X. Tao, X. Guo, Y. Chen, <a href="https://iifiir.org/en/fridoc/experimental-investigation-on-dynamic-defrosting-characteristics-of-an-24605" rel="noopener">Experimental investigation on dynamic defrosting characteristics of an air source heat pump</a>, 22. Międzynarodowy Kongres Chłodnictwa IIR (ICR 2007).</li>
+      <li>GLOBEnergia, <a href="https://globenergia.pl/defrost-pompy-ciepla-kiedy-oszronienie-jest-normalne-a-kiedy-oznacza-problem/" rel="noopener">Defrost pompy ciepła. Kiedy oszronienie jest normalne, a kiedy oznacza problem?</a>, 10.11.2026.</li>
+      <li>PORT PC, <a href="https://budujemydom.pl/files/bry/17410-portpc.PDF" rel="noopener">Poradnik „Pompuj ciepło z głową”, część II: Jak optymalnie obsługiwać pompę ciepła?</a>, marzec 2024 (punkty 4 i 9 oraz ramka o nowych domach).</li>
+      <li>Instrukcja montażu i obsługi Rotenso Aquami AQM120X3 R13 (Midea M-Thermal): rozdz. 7 (miejsce montażu, wiatr, odpływ skroplin), 9.4.2 (objętość wody), 13.4 (kody błędów), aneks K (taśma grzewcza odpływu). Instrukcja sterownika przewodowego Rotenso Reni (Midea KJRH-120H): ikony stanu.</li>
+    </ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul>
+    <li><a href="/blog/taktowanie-pompy-ciepla/">Taktowanie pompy ciepła</a></li>
+    <li><a href="/blog/grzalka-w-pompie-ciepla/">Grzałka w pompie ciepła</a></li>
+    <li><a href="/blog/projektowa-temperatura-zewnetrzna/">Projektowa temperatura zewnętrzna</a></li>
+  </ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>

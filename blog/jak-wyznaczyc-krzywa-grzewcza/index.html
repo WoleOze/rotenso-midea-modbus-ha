@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/jak-wyznaczyc-krzywa-grzewcza/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/jak-wyznaczyc-krzywa-grzewcza/">
+<meta property="og:title" content="Jak wyznaczyć krzywą grzewczą: test na stałej temperaturze wody krok po kroku">
+<meta property="og:description" content="Krzywą grzewczą wyznaczysz sam: 2–4 dni na stałej temperaturze wody, średnia w domu i na dworze, prosty rachunek. Instrukcja z przykładem liczbowym.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-jak-wyznaczyc-krzywa-grzewcza.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-jak-wyznaczyc-krzywa-grzewcza.jpg">
+<title>Jak wyznaczyć krzywą grzewczą: test na stałej wodzie – Pompa w HA</title>
+<meta name="description" content="Krzywą grzewczą wyznaczysz sam: 2–4 dni na stałej temperaturze wody, średnia w domu i na dworze, prosty rachunek. Instrukcja z przykładem liczbowym.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Jak wyznaczyć krzywą grzewczą: test na stałej wodzie","description":"Krzywą grzewczą wyznaczysz sam: 2–4 dni na stałej temperaturze wody, średnia w domu i na dworze, prosty rachunek. Instrukcja z przykładem liczbowym.","datePublished":"2026-11-15","dateModified":"2026-11-15","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/jak-wyznaczyc-krzywa-grzewcza/","image":"https://pompa.woleoze.pl/docs/og/blog-jak-wyznaczyc-krzywa-grzewcza.jpg"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Ile trwa test krzywej grzewczej?","acceptedAnswer":{"@type":"Answer","text":"Przy grzejnikach ok. 2 dni, przy podłogówce ok. 4 dni. Pierwsze godziny po zmianie nastaw pomijasz, bo dom dopiero dochodzi do nowej temperatury."}},{"@type":"Question","name":"Czy test można zrobić jesienią przy +10°C na dworze?","acceptedAnswer":{"@type":"Answer","text":"Można, ale wynik dla mrozów będzie mniej pewny, bo różnica dom–dwór jest mała. Lepiej wybrać dni z różnicą co najmniej 10°C, a jeśli się nie da, powtórzyć test, gdy przyjdą chłodniejsze dni."}},{"@type":"Question","name":"Skąd wziąć różnicę zasilanie–powrót?","acceptedAnswer":{"@type":"Answer","text":"Większość pomp ciepła pokazuje temperaturę zasilania i powrotu w menu parametrów pracy. Jeśli nie masz odczytu, przyjmij ok. 5°C dla grzejników i 4°C dla podłogówki, tak jak podpowiada kalkulator."}},{"@type":"Question","name":"Kiedy trzeba powtórzyć test?","acceptedAnswer":{"@type":"Answer","text":"Po zmianach, które zmieniają straty ciepła albo moc grzejników: dociepleniu, wymianie okien, dołożeniu albo wymianie grzejników. Test warto też powtórzyć, jeśli pierwszy był zrobiony w ciepłe dni."}}]}
+</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Jak wyznaczyć krzywą grzewczą: test na stałej temperaturze wody krok po kroku</h1>
+    <p class="meta">15 listopada 2026 · 7 min czytania</p>
+    <p class="lead">Krzywą grzewczą wyznaczysz bez projektu: ustaw na pompie stałą temperaturę wody na 2–4 dni, zmierz średnią temperaturę w domu i na dworze, a z tych liczb policz wodę potrzebną przy każdej pogodzie. Poniżej cała procedura i przykład, który sprawdzisz w kalkulatorze.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>Test trwa 2 dni przy grzejnikach i 4 dni przy podłogówce. Woda na stałe: na start 36°C dla grzejników, 28°C dla podłogówki.</li><li>Głowice odkręcone na maksimum, siłowniki podłogówki otwarte, termostat ustawiony tak wysoko, żeby nie wyłączał grzania.</li><li>Zapisujesz średnią temperaturę w domu i na dworze oraz różnicę zasilanie–powrót. Im większa różnica dom–dwór, tym pewniejszy wynik.</li><li>Z testu wynika krzywa w kształcie łagodnego łuku. Do sterownika wpisujesz prostą przez dwa albo trzy punkty.</li></ul></div>
+
+    <h2>Na czym polega test na stałej temperaturze wody</h2>
+    <p>Przy stałej temperaturze wody dom sam znajduje równowagę. Temperatura w pokojach rośnie albo spada tak długo, aż grzejniki oddają dokładnie tyle ciepła, ile dom traci przez ściany, okna i wentylację.</p>
+    <p>Ta równowaga mówi o domu dwie rzeczy naraz: jak szybko traci ciepło i ile ciepła dają jego grzejniki przy danej wodzie. Nie musisz znać ani strat ciepła w watach, ani mocy grzejników. Wystarczą trzy temperatury: wody, w domu i na dworze.</p>
+    <p>Z tych trzech liczb da się przeliczyć, jakiej wody dom potrzebuje przy mrozie, przy zerze i w łagodny dzień. Tak liczy darmowy kalkulator na tej stronie i tak liczymy w przykładzie poniżej.</p>
+
+    <h2>Przygotowanie do testu krzywej grzewczej</h2>
+    <ol>
+      <li><b>Wyłącz krzywą i ustaw stałą temperaturę wody.</b> Dobry start to 36°C dla grzejników i 28°C dla podłogówki. Wynik nie musi dać komfortu, ważne, żeby temperatura w domu się ustabilizowała.</li>
+      <li><b>Otwórz wszystko, co dławi grzanie.</b> Głowice termostatyczne na maksimum, siłowniki podłogówki zdjęte albo otwarte. Termostat pokojowy ustaw tak wysoko, żeby nie wyłączał pompy.</li>
+      <li><b>Wyłącz obniżenia nocne i harmonogramy.</b> Woda ma być naprawdę stała przez cały test.</li>
+      <li><b>Wybierz chłodne dni.</b> Najlepiej z różnicą dom–dwór co najmniej 10°C. Pochmurne dni są lepsze od słonecznych, bo słońce przez okna dogrzewa dom.</li>
+      <li><b>Nie dogrzewaj domu inaczej.</b> Kominek, piekarnik na pełnych obrotach albo okno otwarte na całą noc zafałszują wynik.</li>
+    </ol>
+    <div class="uwaga">Jeśli przy 36°C w domu robi się chłodniej niż ok. 18°C, podnieś wodę o kilka stopni i zacznij liczyć od nowa. Test nadal będzie poprawny, a domownicy nie zmarzną.</div>
+
+    <h2>Pomiar: co zapisywać i jak liczyć średnie</h2>
+    <p>Pierwsze godziny po zmianie nastaw pomiń. Dom potrzebuje czasu, żeby dojść do nowej temperatury: przy grzejnikach zwykle wystarcza doba, przy podłogówce w wylewce trzeba poczekać dłużej. Zapisuj dopiero wtedy, gdy temperatura w domu przestaje wyraźnie się zmieniać.</p>
+    <ul>
+      <li><b>Temperatura wody (zasilanie):</b> ta stała, którą ustawiasz na czas testu.</li>
+      <li><b>Różnica zasilanie–powrót:</b> większość pomp pokazuje obie temperatury w menu parametrów pracy. Jeśli nie masz odczytu, przyjmij ok. 5°C dla grzejników i 4°C dla podłogówki.</li>
+      <li><b>Średnia w domu:</b> zwykły termometr z dala od grzejnika i okna, w pokoju, w którym spędzasz najwięcej czasu.</li>
+      <li><b>Średnia na dworze:</b> czujnik pompy albo stacja pogodowa. Zapisuj co kilka godzin, także wieczorem i rano.</li>
+    </ul>
+    <p>Jeśli masz Home Assistant, nie musisz notować na kartce: średnie z dowolnego okresu odczytasz z historii czujników.</p>
+
+    <h2>Przykład: krzywa grzewcza z testu krok po kroku</h2>
+    <p>Poniższe liczby to przykład. Ten sam zestaw danych wczyta kalkulator po kliknięciu „Pokaż przykład”, więc możesz sprawdzić każdy krok.</p>
+    <div class="tabwrap"><table>
+      <tr><th>Dane z testu</th><th>Wartość</th></tr>
+      <tr><td>Rodzaj ogrzewania</td><td>grzejniki płytowe (wykładnik n = 1,3)</td></tr>
+      <tr><td>Stała temperatura wody</td><td>36°C</td></tr>
+      <tr><td>Zasilanie minus powrót</td><td>4°C</td></tr>
+      <tr><td>Średnia w domu</td><td>20,5°C</td></tr>
+      <tr><td>Średnia na dworze</td><td>+3°C</td></tr>
+      <tr><td>Chcemy mieć w domu</td><td>21°C</td></tr>
+      <tr><td>Najzimniejszy dzień (strefa III)</td><td>−20°C</td></tr>
+    </table></div>
+    <h3>Krok 1. Ile cieplejsza od pokoju była woda w grzejnikach</h3>
+    <p>Średnia temperatura wody w grzejniku to zasilanie minus połowa różnicy: 36 − 4 / 2 = 34°C. Woda była więc cieplejsza od pokoju o 34 − 20,5 = 13,5°C.</p>
+    <h3>Krok 2. Ile razy więcej ciepła dom potrzebuje przy mrozie</h3>
+    <p>Dom traci ciepło proporcjonalnie do różnicy temperatur między wnętrzem a dworem. W teście ta różnica wynosiła 20,5 − 3 = 17,5°C. Przy −20°C na dworze i 21°C w środku wyniesie 41°C, czyli 41 / 17,5 ≈ 2,34 raza więcej.</p>
+    <h3>Krok 3. O ile cieplejsza musi być woda</h3>
+    <p>Moc grzejnika rośnie z różnicą „woda minus pokój” podniesioną do potęgi n. Dla grzejników płytowych producenci podają n bliskie 1,3 (norma PN-EN 442). Żeby grzejnik dał 2,34 raza więcej ciepła, ta różnica musi wzrosnąć 2,34<sup>1/1,3</sup> ≈ 1,93 raza: 13,5 × 1,93 ≈ 26,0°C. Przy podłogówce wykładnik jest bliższy 1,1, więc woda rośnie z mrozem wolniej.</p>
+    <h3>Krok 4. Różnica zasilanie–powrót przy mrozie</h3>
+    <p>Pompa obiegowa tłoczy mniej więcej tyle samo wody przez cały czas. Gdy grzejniki oddają 2,34 raza więcej ciepła, różnica zasilanie–powrót też rośnie 2,34 raza: z 4°C do ok. 9,4°C. Połowa tej różnicy, ok. 4,7°C, dochodzi do zasilania.</p>
+    <h3>Krok 5. Zasilanie przy −20°C</h3>
+    <p>21 + 26,0 + 4,7 ≈ 51,7°C. Przy projektowym mrozie ten dom potrzebuje ok. 52°C na zasilaniu. Tak samo liczy się każdy inny punkt krzywej:</p>
+    <div class="tabwrap"><table>
+      <tr><th>Na dworze</th><th>Woda (łuk z testu)</th><th>Prosta przez 2 punkty</th><th>Zasilanie–powrót</th></tr>
+      <tr><td>−20°C</td><td>51,7°C</td><td>52,2°C</td><td>9,4°C</td></tr>
+      <tr><td>−10°C</td><td>45,5°C</td><td>45,4°C</td><td>7,1°C</td></tr>
+      <tr><td>0°C</td><td>38,9°C</td><td>38,6°C</td><td>4,8°C</td></tr>
+      <tr><td>+10°C</td><td>31,7°C</td><td>31,8°C</td><td>2,5°C</td></tr>
+      <tr><td>+15°C</td><td>27,6°C</td><td>28,4°C</td><td>1,4°C</td></tr>
+    </table></div>
+    <p>Do sterownika z dwoma punktami wpisujesz: −20°C → 52°C i +15°C → 28°C. Sterownik z trzema punktami: −20°C → 52°C, −2°C → 40°C, +15°C → 28°C. Prosta różni się od łuku najwyżej o 0,8°C. Nachylenie wynosi ok. 0,68°C wody na 1°C na dworze.</p>
+
+    <div class="ramka"><b>Nie licz na kalkulatorze w telefonie.</b> <a href="/kalkulator-krzywej-grzewczej/">Darmowy kalkulator krzywej grzewczej</a> zrobi te kroki za Ciebie: wpisz wyniki testu, a dostaniesz wykres, tabelę i nastawy do sterownika.</div>
+
+    <h2>Kiedy wynik testu jest mało pewny</h2>
+    <ul>
+      <li><b>Mała różnica dom–dwór.</b> Przy teście w temperaturze +12°C na dworze krzywa przy mrozie to daleka ekstrapolacja. Kalkulator ostrzega, gdy różnica jest mniejsza niż 10°C. Powtórz test w chłodniejsze dni.</li>
+      <li><b>Słońce i wiatr.</b> Słoneczne dni zaniżają potrzebną wodę, silny wiatr ją zawyża. Dłuższy test uśrednia oba efekty.</li>
+      <li><b>Przymknięte głowice.</b> Jeśli część grzejników była przymknięta, dom wygląda na trudniejszy do ogrzania, niż jest. Więcej w artykule <a href="/blog/glowice-termostatyczne-a-pompa-ciepla/">o głowicach termostatycznych</a>.</li>
+      <li><b>Pompa nie da tyle wody.</b> Jeśli z wyniku wychodzi przy mrozie więcej, niż pompa potrafi (zwykle 55–60°C), w największe mrozy zabraknie ciepła. Wtedy pomaga <a href="/blog/grzalka-w-pompie-ciepla/">grzałka</a>, większe grzejniki albo docieplenie.</li>
+      <li><b>Podłogówka powyżej 40°C przy mrozie.</b> To dużo jak na podłogę. Sprawdź, czy wszystkie pętle były otwarte, a termostat nie wyłączał grzania.</li>
+    </ul>
+
+    <h2>Co zrobić z wynikiem testu</h2>
+    <p>Wpisz punkty do sterownika i wróć do zwykłych ustawień: załóż głowice i ustaw je trochę wyżej niż temperatura, którą chcesz mieć w domu. Głowice mają pilnować pojedynczych pokoi, a nie zastępować krzywej.</p>
+    <p>Krzywa z testu to punkt startowy. Po dobie oceń efekt i, jeśli trzeba, popraw ją o 1°C. Jak rozpoznać, czy zmienić przesunięcie czy nachylenie, opisujemy w artykule <a href="/blog/korekta-krzywej-grzewczej/">jak poprawić krzywą grzewczą</a>. Jeśli masz pompę Midea albo Rotenso, zajrzyj do artykułu <a href="/blog/krzywa-grzewcza-midea-rotenso/">o krzywej nr 9 w tych pompach</a>.</p>
+    <p>Projektową temperaturę dla swojej okolicy znajdziesz w artykule <a href="/blog/projektowa-temperatura-zewnetrzna/">o strefach klimatycznych</a>. Ogólne wprowadzenie do tematu jest w artykule <a href="/blog/krzywa-grzewcza-pompy-ciepla/">krzywa grzewcza pompy ciepła</a>.</p>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Ile trwa test krzywej grzewczej?</h3><p>Przy grzejnikach ok. 2 dni, przy podłogówce ok. 4 dni. Pierwsze godziny po zmianie nastaw pomijasz, bo dom dopiero dochodzi do nowej temperatury.</p>
+    <h3>Czy test można zrobić jesienią przy +10°C na dworze?</h3><p>Można, ale wynik dla mrozów będzie mniej pewny, bo różnica dom–dwór jest mała. Lepiej wybrać dni z różnicą co najmniej 10°C, a jeśli się nie da, powtórzyć test, gdy przyjdą chłodniejsze dni.</p>
+    <h3>Skąd wziąć różnicę zasilanie–powrót?</h3><p>Większość pomp ciepła pokazuje temperaturę zasilania i powrotu w menu parametrów pracy. Jeśli nie masz odczytu, przyjmij ok. 5°C dla grzejników i 4°C dla podłogówki, tak jak podpowiada kalkulator.</p>
+    <h3>Kiedy trzeba powtórzyć test?</h3><p>Po zmianach, które zmieniają straty ciepła albo moc grzejników: dociepleniu, wymianie okien, dołożeniu albo wymianie grzejników. Test warto też powtórzyć, jeśli pierwszy był zrobiony w ciepłe dni.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla"><li>Vogel&amp;Noot, <a href="https://www.vogelundnoot.com/static_files/pl/media/downloads/grzejniki_plytowe_dane_techniczne.pdf" rel="noopener">Grzejniki płytowe – katalog techniczny</a> (PDF): moc cieplna badana według EN 442-2 i wykładnik n podany dla każdego typu grzejnika, w granicach ok. 1,29–1,38.</li><li><a href="https://rehva.eu/rehva-journal/chapter/can-we-still-trust-in-en-442-new-operating-definitions-for-radiators-part-2-model-based-analysis-and-results" rel="noopener">Can we still trust in EN 442? New Operating Definitions for Radiators – Part 2</a>, REHVA Journal 04/2021 (po angielsku): punkt odniesienia normy 75/65/20°C, czyli 50 K nadwyżki, i wykładniczy model mocy grzejnika.</li><li><a href="https://bcpw.bg.pw.edu.pl/Content/2621/download" rel="noopener">Cieplne właściwości dynamiczne grzejnika podłogowego</a>, rozprawa doktorska, Politechnika Warszawska, 2009 (PDF): współczynnik przejmowania ciepła podłogi h = 8,92·Δt<sup>0,1</sup> W/(m²·K) według DIN 4725, czyli oddawane ciepło rośnie jak Δt<sup>1,1</sup>.</li><li><a href="https://globenergia.pl/nowe-temperatury-obliczeniowe-dla-ogrzewnictwa-klimatyzacji-i-wentylacji/" rel="noopener">Nowe temperatury obliczeniowe dla ogrzewnictwa, klimatyzacji i wentylacji</a>, GLOBEnergia, 2023: pięć stref klimatycznych Polski, projektowe temperatury od −16°C do −24°C co 2°C (PN-EN 12831).</li></ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/krzywa-grzewcza-pompy-ciepla/">Krzywa grzewcza pompy ciepła: co to jest i jak ją ustawić</a></li><li><a href="/blog/korekta-krzywej-grzewczej/">Za zimno czy za ciepło? Jak poprawić krzywą grzewczą (przesunięcie i nachylenie)</a></li><li><a href="/blog/krzywa-grzewcza-podlogowka-grzejniki/">Krzywa grzewcza dla podłogówki i grzejników: czym się różnią</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>
