@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pro na własnym module: instrukcja – Pompa w HA</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="canonical" href="https://pompa.woleoze.pl/wlasny-modul/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/wlasny-modul/">
+<meta property="og:title" content="Pro na własnym module ESP32: instrukcja krok po kroku">
+<meta property="og:description" content="Masz własny moduł ESP32 z RS-485? Co kupić, jak wgrać program przez ESPHome, jak podłączyć H1/H2 i gdzie wkleić klucz Pro.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/wlasny-modul.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Pro na własnym module ESP32">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/wlasny-modul.jpg">
+<meta name="description" content="Licencja Pro na własnym module ESP32 z RS-485: lista sprzętu, wgranie programu przez ESPHome, podłączenie do sterownika H1/H2, klucz Pro w dodatku Home Assistant. Krok po kroku.">
+<style>
+:root{--bg:#f5f7fb;--karta:#fff;--txt:#17203a;--mut:#56627e;--lin:#dbe2ef;--ak:#1677d2;--ok:#138a5e;--kod:#eef2f9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1524;--karta:#16203a;--txt:#e7edfb;--mut:#9fb0d0;--lin:#28365a;--ak:#5cb3ff;--ok:#3fd09c;--kod:#0f1830}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.w{max-width:820px;margin:0 auto;padding:20px 16px 60px}
+a{color:var(--ak)}
+h1{font-size:clamp(26px,5vw,34px);line-height:1.15;margin:8px 0 6px}
+h2{font-size:20px;margin:0 0 10px}
+.pod{color:var(--mut);margin:0 0 16px}
+.k{background:var(--karta);border:1px solid var(--lin);border-radius:14px;padding:18px;margin:0 0 16px}
+.k ol,.k ul{margin:0;padding-left:22px}.k li{margin:0 0 8px}
+.k p{margin:0 0 10px}.k p:last-child{margin-bottom:0}
+code{background:var(--kod);border-radius:6px;padding:1px 6px;font-size:.92em;word-break:break-word}
+.tab{overflow-x:auto;margin:6px 0 4px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{border-bottom:1px solid var(--lin);padding:8px 6px;text-align:left;vertical-align:top}
+th{font-size:13.5px;color:var(--mut);font-weight:700}
+td.w0{white-space:nowrap}
+.mut{color:var(--mut);font-size:14px}
+.ok{color:var(--ok);font-weight:700}
+.stopka{color:var(--mut);font-size:14px;margin-top:24px}
+@media (max-width:560px){table{font-size:13.5px}th,td{padding:6px 4px}.k{padding:14px}td.w0{white-space:normal}}
+@media print{body{background:#fff;color:#000;font-size:11.5pt}.nodruk{display:none}.k{border:1px solid #bbb}a{color:#000}}
+</style>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<div class="w">
+  <p class="nodruk"><a href="/">← pompa.woleoze.pl</a></p>
+  <h1>Pro na własnym module: krok po kroku</h1>
+  <p class="pod">Dla tych, którzy chcą złożyć moduł sami i kupić tylko licencję Pro (149 zł). Około godziny pracy.</p>
+
+  <section class="k"><h2>Zanim kupisz</h2>
+    <ul>
+      <li><b>Pompa</b>: Midea M-Thermal z czarno-białym sterownikiem z zaciskami H1/H2 (Rotenso Aquami, Kaisai Arctic, Galmet Prima, Netsu i inne z <a href="/#zgodnosc">listy zgodności</a>). Nie wiesz? <a href="/sprawdz/?src=wlasny-modul">Sprawdź za darmo ze zdjęcia</a>.</li>
+      <li><b>Home Assistant OS</b> (Raspberry Pi, Home Assistant Green, mini PC). HA w Dockerze też da się, ale pliki wgrywasz ręcznie z paczki ZIP.</li>
+      <li><b>Najpierw Start, potem Pro.</b> Wgraj darmowy program, sprawdź, czy moduł czyta pompę, i dopiero wtedy kup klucz.</li>
+    </ul>
+  </section>
+
+  <section class="k"><h2>1. Sprzęt</h2>
+    <ul>
+      <li><b>Waveshare ESP32-S3-Relay-1CH</b> (albo wersja <code>-U</code> z gniazdem anteny): ESP32-S3 z izolowanym RS-485 na płytce, ok. 95 zł. Na tę płytkę jest gotowy program bez zmian.</li>
+      <li>Zasilacz 5 V z kablem USB-C (np. ładowarka od telefonu, min. 1 A).</li>
+      <li>Skrętka, dwie żyły, do sterownika ściennego.</li>
+      <li>Kabel USB-C do komputera na pierwsze wgranie.</li>
+    </ul>
+    <p class="mut">Inny ESP32 z konwerterem RS-485 też zadziała, ale musisz sam zmienić piny w pliku YAML. Wtedy pomocy udzielamy tylko w ramach rozsądku.</p>
+  </section>
+
+  <section class="k"><h2>2. Program modułu (Start, za darmo)</h2>
+    <ol>
+      <li>W Home Assistant zainstaluj dodatek <b>ESPHome</b> (Ustawienia → Dodatki → Sklep).</li>
+      <li>Pobierz z <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha">GitHuba</a> pliki <code>esphome/pompa-modbus.yaml</code> i <code>esphome/secrets.yaml.example</code>. Ten drugi zapisz jako <code>secrets.yaml</code> i wpisz w nim swoje Wi-Fi.</li>
+      <li>Podłącz moduł kablem USB-C do komputera. W ESPHome przy pliku kliknij <b>Install → Plug into this computer</b> (Chrome lub Edge). Możesz też zbudować plik i wgrać go przez <a href="https://web.esphome.io" target="_blank" rel="noopener">web.esphome.io</a>.</li>
+      <li>Kolejne wersje wgrasz już przez Wi-Fi.</li>
+    </ol>
+    <p class="mut">Szczegóły budowy i źródło każdej wersji: <a href="/program-modulu/">Program modułu (GPL v3)</a>.</p>
+  </section>
+
+  <section class="k"><h2>3. Podłączenie do sterownika</h2>
+    <ol>
+      <li>Menu serwisanta sterownika: <code>17.2 ADRES HMI DLA BMS</code> = 1, <code>17.1 HMI SET</code> = GŁÓWNA (w niektórych wersjach MASTER albo 0). Po wyjściu z menu pompa się wyłącza, włącz ją z powrotem.</li>
+      <li>Dwie żyły z tyłu sterownika: <b>H2 → A+</b>, <b>H1 → B−</b>.</li>
+      <li>Zasil moduł z 5 V przez USB-C. <b>Nigdy nie podawaj zasilania na H1/H2.</b></li>
+      <li>Home Assistant sam wykryje moduł (Ustawienia → Urządzenia). Gdy widzisz temperatury pompy, Start działa.</li>
+    </ol>
+    <p class="mut">Modbus obsługuje sterownik ścienny, nie płyta w jednostce. Zdjęcia i pułapki: <a href="/instrukcja/">instrukcja montażu</a>.</p>
+  </section>
+
+  <section class="k"><h2>4. Licencja Pro</h2>
+    <ol>
+      <li><a href="https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03"><b>Kup Pro · 149 zł</b></a>. Klucz <code>RPRO-…</code> przychodzi od razu na e-mail.</li>
+      <li>Dodaj repozytorium dodatku: <a href="https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FWoleOze%2Frotenso-midea-modbus-ha" target="_blank" rel="noopener">jedno kliknięcie</a>, i zainstaluj dodatek <b>Pompa w HA</b>.</li>
+      <li>Otwórz panel <b>Pompa – instalator</b>, wklej klucz i kliknij <b>Zainstaluj</b>. Dodatek sam doda pakiety, pulpit „Pompa” i zrestartuje HA.</li>
+      <li><b>Program z zapisem nastaw:</b> dodatek zapisze go jako <code>esphome/pompa-modbus-pro.yaml</code>. W ESPHome kliknij przy nim <b>Install</b> (przez Wi-Fi). Od tej chwili zmienisz krzywą, CWU i histerezę z telefonu.</li>
+      <li>W panelu <b>Diagnostyka</b> sprawdź, czy wszystko jest na zielono.</li>
+    </ol>
+    <p class="mut">HA w Dockerze: ZIP z plikami jest w linku z maila, kroki ręczne opisuje <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha#instalacja-pro-klucz">README</a>.</p>
+  </section>
+
+  <section class="k"><h2>Nie chcesz tego robić sam?</h2>
+    <p><b>Zestaw Wi-Fi (499 zł)</b> albo <b>Wi-Fi + LAN (549 zł)</b> przyjeżdża wgrany, sprawdzony i z licencją Pro. Zostaje tylko podłączyć dwie żyły. <a href="/#ceny">Zobacz zestawy →</a></p>
+    <p>Utknąłeś? Napisz na <a href="mailto:pompa@woleoze.pl?subject=Pro%20na%20w%C5%82asnym%20module">pompa@woleoze.pl</a> i dołącz zrzut z panelu Diagnostyka.</p>
+  </section>
+
+  <p class="stopka">Pytania: <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/">pompa.woleoze.pl</a> · <a href="/regulamin/">Regulamin</a> · <a href="/prywatnosc/">Polityka prywatności</a><br>WOLEOZE.PL Sp. z o.o., ul. Biasowicka 8E, 44-264 Jankowice, KRS 0001048206, NIP 6423246378.</p>
+</div>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>
