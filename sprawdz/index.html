@@ -143,19 +143,29 @@
     wifi: ['https://buy.stripe.com/cNieVd2qg9sI7jK6aL3Je05', 'Zamawiam zestaw Wi-Fi · 499 zł', 'btn'],
     lan: ['https://buy.stripe.com/28E00j4yofR633u7eP3Je06', 'Zestaw Wi-Fi + LAN · 549 zł', 'btn drugi'],
     pro: ['https://buy.stripe.com/3cIeVd9SIgVa9rS6aL3Je03', 'Kupuję Pro · 149 zł', 'btn'],
-    tester: ['/#testy', 'Zgłaszam się na testera', 'btn'],
+    tester: ['/#testy', 'Zgłaszam się na testera', 'btn drugi'],
     inne: ['/#inne-marki', 'Jak działa Pro na mojej integracji', 'btn drugi'],
     grupa: ['https://www.facebook.com/groups/pompacieplahomeassistant', '👥 Zapytaj w grupie', 'btn drugi'],
     lista: ['/#zgodnosc', 'Lista pomp, z którymi działa', 'btn drugi'],
     znowu: ['#', '📷 Dodaj inne zdjęcie', 'btn drugi'],
+    oferta: ['', '✉️ Wyślij do nas: sprawdzimy i przygotujemy ofertę', 'btn'],
+    oferta2: ['', '✉️ Wolisz wycenę? Napisz do nas', 'btn drugi'],
   };
+  // 15.11: zapytanie o ofertę mailem – gotowy temat i treść z odczytu (zdjęcia klient dołącza sam, nic nie zapisujemy)
+  function mailOferta(r) {
+    const nazwa = [r.marka, r.model_jednostki].filter(Boolean).join(' ') || 'moja pompa';
+    const dane = [['Marka', r.marka], ['Model', r.model_jednostki], ['Jednostka wewn.', r.model_wewnetrzny], ['Sterownik', r.sterownik], ['Wynik sprawdzenia', (WERDYKT[r.werdykt] || [])[1]]]
+      .filter(([, v]) => v && String(v).trim()).map(([k, v]) => `${k}: ${v}`).join('\n');
+    const tresc = `Dzień dobry,\nproszę o sprawdzenie mojej pompy i ofertę podłączenia do Home Assistant.\n\n${dane}\n\nMam Home Assistant (tak/nie, na czym):\nCo chcę widzieć lub sterować w HA:\nMiejscowość:\nTelefon (nieobowiązkowo):\n\nW załączniku zdjęcia tabliczki i sterownika (przód i tył).`;
+    return `mailto:pompa@woleoze.pl?subject=${encodeURIComponent('Oferta: ' + nazwa)}&body=${encodeURIComponent(tresc)}`;
+  }
   const WERDYKT = {
     pasuje: ['✅', 'Pasuje', ['wifi', 'lan']],
     powinno: ['🟢', 'Powinno pasować', ['wifi', 'lan', 'grupa']],
-    testy: ['🧪', 'W testach: szukamy pierwszego testera', ['tester', 'grupa']],
-    integracja: ['🔌', 'Działa z Licencją Pro', ['pro', 'inne']],
-    nie: ['❌', 'Tej pompy na dziś nie obsługujemy', ['grupa', 'lista']],
-    nie_wiem: ['📷', 'Potrzebuję wyraźniejszego zdjęcia', ['znowu', 'lista']],
+    testy: ['🧪', 'W testach: szukamy pierwszego testera', ['oferta', 'tester', 'grupa']],
+    integracja: ['🔌', 'Działa z Licencją Pro', ['pro', 'oferta2', 'inne']],
+    nie: ['❌', 'Tej pompy na dziś nie obsługujemy', ['oferta', 'grupa']],
+    nie_wiem: ['📷', 'Potrzebuję wyraźniejszego zdjęcia', ['znowu', 'oferta2']],
   };
 
   function stan() {
@@ -229,7 +239,7 @@
     let lista = cta;
     if (r.werdykt === 'pasuje' || r.werdykt === 'powinno') lista = r.rekomendacja === 'zestaw_lan' ? ['lan', 'wifi'] : cta;
     lista.forEach((k) => {
-      const [href, txt, kl] = LINK[k]; const a = document.createElement('a'); a.href = href; a.textContent = txt; a.className = kl;
+      const [href, txt, kl] = LINK[k]; const a = document.createElement('a'); a.href = /^oferta/.test(k) ? mailOferta(r) : href; a.textContent = txt; a.className = kl;
       if (k === 'znowu') a.onclick = (ev) => { ev.preventDefault(); $('pliki').click(); };
       if (/^https:\/\/www\.facebook/.test(href)) { a.target = '_blank'; a.rel = 'noopener'; }
       c.append(a);
