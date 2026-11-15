@@ -46,7 +46,7 @@ th{font-size:13.5px;color:var(--mut);font-weight:700}
 <div class="w">
   <p class="nodruk"><a href="/">← pompa.woleoze.pl</a></p>
   <h1>Polityka prywatności</h1>
-  <p class="pod">„Pompa w Home Assistant” · obowiązuje od 11 listopada 2026 r. · zmiana 12 listopada 2026 r. (statystyka odwiedzin)</p>
+  <p class="pod">„Pompa w Home Assistant” · obowiązuje od 11 listopada 2026 r. · zmiany: 12 listopada 2026 r. (statystyka odwiedzin), 15 listopada 2026 r. (wynik sprawdzenia na e-mail i zgoda na wiadomości)</p>
 
   <section class="k"><h2>1. Administrator</h2>
     <p>Administratorem danych osobowych jest <b>WOLEOZE.PL Sp. z o.o.</b>, ul. Biasowicka 8E, 44-264 Jankowice, KRS 0001048206, NIP 6423246378. Kontakt w sprawach danych: <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a>.</p>
@@ -59,6 +59,8 @@ th{font-size:13.5px;color:var(--mut);font-weight:700}
       <tr><td>Licencja Pro</td><td>e-mail, imię, numer zamówienia, klucz licencji, identyfikatory instalacji Home Assistant (losowy albo skrót adresu, bez adresu IP domu), daty pobrań</td><td>wykonanie umowy (lit. b); ochrona licencji przed nadużyciem (prawnie uzasadniony interes, lit. f)</td></tr>
       <tr><td>„Wyślij raport” w dodatku</td><td>wynik diagnostyki i stany encji pompy (temperatury, nastawy, liczniki); bez haseł i bez danych z reszty domu; wysyłasz go sam przyciskiem</td><td>pomoc i reklamacje (lit. b)</td></tr>
       <tr><td>Automatyczne poprawki</td><td>klucz i identyfikator instalacji, raz na godzinę; możesz to wyłączyć w dodatku</td><td>wykonanie umowy, aktualizacje (lit. b)</td></tr>
+      <tr><td>Wynik sprawdzenia pompy na e-mail (/sprawdz/)</td><td>e-mail, odczytana marka, model, sterownik i wynik, data, skrót adresu IP (2 dni, limit wysyłek)</td><td>wysłanie wyniku i odpowiedź na Twoje zapytanie, działania przed zawarciem umowy na Twoje żądanie (lit. b)</td></tr>
+      <tr><td>E-maile o Pompie w HA (tylko gdy zaznaczysz zgodę)</td><td>e-mail, marka i model pompy, data i treść zgody</td><td>informacje, że Twoja pompa jest obsługiwana, nowości i oferty: zgoda (art. 6 ust. 1 lit. a RODO, art. 398 Prawa komunikacji elektronicznej); zgodę wycofasz w każdej chwili linkiem w stopce maila albo pisząc na pompa@woleoze.pl</td></tr>
       <tr><td>Korespondencja e-mail</td><td>adres e-mail i treść wiadomości</td><td>odpowiedź i pomoc (lit. b albo lit. f)</td></tr>
     </table></div>
     <p>Podanie danych jest dobrowolne, ale bez nich nie zawrzemy i nie wykonamy umowy. Nie profilujemy i nie podejmujemy decyzji automatycznie w rozumieniu art. 22 RODO.</p>
@@ -70,7 +72,7 @@ th{font-size:13.5px;color:var(--mut);font-weight:700}
       <li>Kreator zapisuje w Twojej przeglądarce (localStorage) losowy identyfikator instalacji, potrzebny do licencji. Encje i ustawienia wpisane w kreatorze nie opuszczają przeglądarki; do serwera licencji trafia tylko klucz.</li>
       <li>Karty Pro zapisują w przeglądarce kopię swojego kodu na 7 dni, żeby działały przy przerwie w łączności.</li>
       <li>Serwer hostingu strony (GitHub Pages) zapisuje w logach techniczne dane połączeń, np. adres IP.</li>
-      <li>„Sprawdź, czy Twoja pompa pasuje” (/sprawdz/): zdjęcia i opis wysyłamy do odczytu do modelu AI Claude (Anthropic) przez nasz serwer w Cloudflare. Nie zapisujemy zdjęć ani opisu. Przez 120 dni zostaje tylko odczytana marka, model, sterownik i wynik, bez danych osobowych. Adres IP zapisujemy w postaci skrótu na 2 dni, żeby ograniczyć liczbę sprawdzeń.</li>
+      <li>„Sprawdź, czy Twoja pompa pasuje” (/sprawdz/): zdjęcia i opis wysyłamy do odczytu do modelu AI Claude (Anthropic) przez nasz serwer w Cloudflare. Nie zapisujemy zdjęć ani opisu. Przez 120 dni zostaje tylko odczytana marka, model, sterownik i wynik, bez danych osobowych. Jeśli sam poprosisz o wynik na e-mail, zapisujemy też Twój adres (patrz tabela wyżej). Adres IP zapisujemy w postaci skrótu na 2 dni, żeby ograniczyć liczbę sprawdzeń.</li>
     </ul>
   </section>
 
@@ -79,7 +81,7 @@ th{font-size:13.5px;color:var(--mut);font-weight:700}
       <li>Stripe: obsługa płatności;</li>
       <li>Cloudflare: serwer licencji (klucze, identyfikatory instalacji, raporty), serwer sprawdzania pomp i zbiorcza statystyka odwiedzin strony;</li>
       <li>Anthropic: odczyt zdjęć tabliczek w sprawdzaniu pomp (bez zapisu po naszej stronie);</li>
-      <li>Brevo: wysyłka e-maili z kluczem i potwierdzeniem zamówienia;</li>
+      <li>Brevo: wysyłka e-maili z kluczem i potwierdzeniem zamówienia, wyniku sprawdzenia pompy oraz, za Twoją zgodą, wiadomości o Pompie w HA;</li>
       <li>InPost albo kurier: dostawa Zestawu i odesłanie modułu;</li>
       <li>GitHub: hosting strony;</li>
       <li>dostawca poczty e-mail, biuro rachunkowe i, gdy to konieczne, doradcy prawni.</li>
@@ -92,6 +94,7 @@ th{font-size:13.5px;color:var(--mut);font-weight:700}
       <li>dane zamówień i faktur: 5 lat od końca roku, w którym powstał obowiązek podatkowy;</li>
       <li>dane Licencji Pro: przez okres korzystania z licencji, a potem do upływu terminów przedawnienia roszczeń;</li>
       <li>raporty diagnostyki: 30 dni;</li>
+      <li>zapytania ze sprawdzania pompy (e-mail i wynik): bez zgody najwyżej 12 miesięcy, ze zgodą do jej wycofania;</li>
       <li>korespondencja: do 2 lat od zakończenia sprawy.</li>
     </ul>
   </section>

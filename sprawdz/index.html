@@ -76,6 +76,13 @@
   .brak{margin-top:12px;border-left:3px solid var(--warn);padding:8px 12px;background:rgba(240,179,90,.08);border-radius:6px;font-size:14px}
   .brak:empty{display:none}
   .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .naMail{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+  .naMail .rzad{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+  .naMail input[type=email]{flex:1 1 220px;min-width:0;background:var(--code);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:12px;font-family:inherit;font-size:16px}
+  .naMail input[type=email]:focus{outline:none;border-color:var(--acc)}
+  .zgoda{display:flex;gap:9px;align-items:flex-start;margin-top:10px;font-size:13.5px;color:var(--mut);cursor:pointer}
+  .zgoda input{margin-top:3px;width:18px;height:18px;flex:none}
+  .mInfo{font-size:14.5px;margin-top:8px}.mInfo:empty{display:none}.mInfo.ok{color:var(--ok)}.mInfo.zle{color:var(--bad)}
   .pewnosc{font-size:12px;color:var(--mut);margin-top:12px}
   footer{margin-top:28px;color:var(--mut);font-size:13px;text-align:center}
   footer a{color:var(--mut)}
@@ -119,7 +126,7 @@
     </div>
     <div class="czeka" id="czeka"><span class="krec"></span><span id="czekaTekst">Czytam tabliczkę…</span></div>
     <div class="blad" id="blad" role="alert"></div>
-    <p class="info">Zdjęcia odczytuje model AI (Claude). Nie zapisujemy ich ani opisu, zostaje tylko marka, model i wynik, bez Twoich danych. <a href="/prywatnosc/">Prywatność</a></p>
+    <p class="info">Zdjęcia odczytuje model AI (Claude). Nie zapisujemy ich ani opisu, zostaje tylko marka, model i wynik. Twój e-mail tylko wtedy, gdy sam poprosisz o wynik na maila. <a href="/prywatnosc/">Prywatność</a></p>
   </section>
 
   <section id="wynik" aria-live="polite">
@@ -128,6 +135,13 @@
     <div class="brak" id="wBrak"></div>
     <div class="cta" id="wCta"></div>
     <div class="pewnosc" id="wPewnosc"></div>
+    <form class="naMail" id="naMail" novalidate>
+      <b>📧 Wyślij mi ten wynik na e-mail</b>
+      <div class="rzad"><input id="mEmail" type="email" inputmode="email" autocomplete="email" placeholder="twoj@adres.pl" required><button class="btn" type="submit" id="mWyslij">Wyślij</button></div>
+      <label class="zgoda"><input type="checkbox" id="mZgoda"> <span>Chcę dostawać od WOLEOZE.PL Sp. z o.o. e-maile o Pompie w HA: gdy moja pompa będzie obsługiwana, nowości i oferty. Zgodę mogę w każdej chwili wycofać.</span></label>
+      <div class="mInfo" id="mInfo" role="status"></div>
+      <p class="info">Adres zapisujemy razem z marką i modelem, żeby odpowiedzieć na Twoje zapytanie: bez zgody najwyżej 12 miesięcy, ze zgodą do jej wycofania. Wysyłka przez Brevo. <a href="/prywatnosc/">Prywatność</a></p>
+    </form>
   </section>
 
   <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">Grupa na Facebooku</a></footer>
@@ -245,8 +259,25 @@
       c.append(a);
     });
     $('wPewnosc').textContent = r.pewnosc === 'niska' ? 'Odczyt niepewny: przed zakupem dodaj wyraźniejsze zdjęcie albo zapytaj w grupie.' : '';
+    ostatni = r; $('mInfo').textContent = ''; $('mInfo').className = 'mInfo'; $('mWyslij').disabled = false;
     const w = $('wynik'); w.className = `wid ${r.werdykt}`; w.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+  // 15.11: wynik na e-mail (serwer licencji wysyła przez Brevo i zapisuje zapytanie; zgoda marketingowa osobno, domyślnie odznaczona)
+  let ostatni = null;
+  const ZRODLO = new URLSearchParams(location.search).get('src') || new URLSearchParams(location.search).get('z') || '';
+  $('naMail').addEventListener('submit', async (ev) => {
+    ev.preventDefault(); const info = $('mInfo'), email = $('mEmail').value.trim();
+    if (!ostatni) return;
+    if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(email)) { info.className = 'mInfo zle'; info.textContent = 'Sprawdź adres e-mail.'; return; }
+    $('mWyslij').disabled = true; info.className = 'mInfo'; info.textContent = 'Wysyłam…';
+    try {
+      const r = ostatni, odp = await fetch('https://rotenso-licencje.strefa-tradingu.workers.dev/v1/sprawdzenie', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, zgoda: $('mZgoda').checked, zrodlo: ZRODLO, wynik: { werdykt: r.werdykt, marka: r.marka, model: r.model_jednostki, wew: r.model_wewnetrzny, sterownik: r.sterownik, wyjasnienie: r.wyjasnienie } }) });
+      const j = await odp.json().catch(() => ({}));
+      if (!odp.ok || !j.ok) throw new Error(j.blad || 'Nie udało się wysłać.');
+      info.className = 'mInfo ok'; info.textContent = `✅ Wysłane na ${email}. Nie widzisz maila? Zajrzyj do spamu albo do Ofert.`;
+    } catch (e) { info.className = 'mInfo zle'; info.textContent = e.message && !/fetch|network/i.test(e.message) ? e.message : 'Brak połączenia. Spróbuj ponownie.'; $('mWyslij').disabled = false; }
+  });
 })();
 </script>
 <script src="/docs/czat.js?v=20261115a" defer></script>
