@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/kalkulator-krzywej-grzewczej/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/kalkulator-krzywej-grzewczej/">
+<meta property="og:title" content="Kalkulator krzywej grzewczej – za darmo">
+<meta property="og:description" content="Krzywa grzewcza Twojego domu z prostego testu na stałej temperaturze wody. Wykres, tabela i nastawy do pompy ciepła lub kotła. Bez opłat i bez logowania.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/krzywa.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Kalkulator krzywej grzewczej">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/krzywa.jpg">
+<title>Kalkulator krzywej grzewczej za darmo – Pompa w HA</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Darmowy kalkulator krzywej grzewczej dla pompy ciepła i kotła. Test na stałej temperaturze wody, wykres, tabela i nastawy punktów krzywej. Liczy się w przeglądarce.">
+<style>
+  :root{--bg:#0d1117;--panel:#141b25;--line:#243041;--txt:#dde5f1;--mut:#8b9ab3;--acc:#5cb8ff;--ok:#3ecf8e;--bad:#ff6b7a;--warn:#f0b35a;--code:#0a0f16;--zl:linear-gradient(135deg,#ffe066,#ffb627 55%,#ff8f1f)}
+  *{box-sizing:border-box}
+  html{overflow-x:clip;scroll-padding-top:56px}
+  html,body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,system-ui,sans-serif}
+  main{max-width:760px;margin:0 auto;padding:22px 16px 60px}
+  .wroc{color:var(--mut);text-decoration:none;font-size:14px}.wroc:hover{color:var(--txt)}
+  h1{font-size:clamp(26px,6vw,38px);line-height:1.12;margin:14px 0 8px;letter-spacing:-.02em}
+  h1 em{font-style:normal;background:linear-gradient(90deg,#3cc8ff,#3fe08a);-webkit-background-clip:text;background-clip:text;color:transparent}
+  h2{font-size:20px;margin:0 0 10px;line-height:1.25}
+  h3{font-size:16px;margin:18px 0 6px}
+  .lead{color:var(--mut);margin:0 0 14px}
+  .darmo{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 20px}
+  .darmo span{background:rgba(62,207,142,.1);border:1px solid rgba(62,207,142,.35);color:#bff3da;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}
+  ol.kroki{margin:0;padding-left:20px}ol.kroki li{margin-bottom:6px}
+  details{margin-top:10px;color:var(--mut);font-size:14.5px}details summary{cursor:pointer;color:var(--txt)}
+  .siatka{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px 14px}
+  .pole{display:flex;flex-direction:column;gap:5px;font-size:14px;color:var(--mut);min-width:0}
+  .pole.cale{grid-column:1/-1}
+  .pole small{font-size:12.5px}
+  input,select{width:100%;min-width:0;max-width:100%;text-overflow:ellipsis;background:var(--code);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:16px}
+  input:focus,select:focus{outline:none;border-color:var(--acc)}
+  .akcja{margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;border:0;border-radius:12px;padding:14px 22px;font-family:inherit;font-size:16px;line-height:1.2;font-weight:800;text-decoration:none;color:#1f1300;background:var(--zl);box-shadow:0 8px 24px rgba(255,170,40,.25)}
+  .btn.drugi{background:#1b2534;color:var(--txt);border:1px solid var(--line);box-shadow:none;font-weight:700}
+  .btn.drugi:hover{border-color:var(--acc)}
+  .btn:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+  .blad{color:var(--bad);font-size:15px;margin-top:12px}.blad:empty{display:none}
+  .uwagi{margin-top:12px}.uwagi:empty{display:none}
+  .uwaga{border-left:3px solid var(--warn);padding:8px 12px;background:rgba(240,179,90,.08);border-radius:6px;font-size:14px;margin-top:8px}
+  #wynik{display:none;scroll-margin-top:56px}#wynik.wid{display:block}
+  .teraz{display:flex;gap:16px;flex-wrap:wrap;margin:4px 0 14px}
+  .kafel{flex:1 1 150px;background:var(--code);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+  .kafel small{display:block;color:var(--mut);font-size:12.5px}.kafel b{font-size:26px;letter-spacing:-.02em}
+  svg{display:block;width:100%;height:auto}
+  .legenda{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--mut);margin-top:6px}
+  .legenda i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+  table{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:6px}
+  th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--mut);font-weight:600;font-size:13px}
+  .tabwrap{overflow-x:auto}
+  .nastawy{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:8px}
+  .nastawy div{background:var(--code);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px}
+  .nastawy b{display:block;font-size:15px;margin-bottom:4px}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .mut{color:var(--mut);font-size:14px}
+  .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  footer{margin-top:28px;color:var(--mut);font-size:13px;text-align:center}
+  footer a{color:var(--mut)}
+  .fbpas{position:sticky;top:0;z-index:20;display:flex;justify-content:center;align-items:center;gap:10px;padding:8px 16px;background:#1468e0;color:#fff;text-decoration:none;font-size:14.5px;font-weight:700;line-height:1.3;white-space:nowrap;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+  .fbpas:hover{background:#0d55bd}
+  .fbpas:focus-visible{outline:3px solid var(--warn);outline-offset:-3px}
+  .fbpas b{font-weight:900}
+  .fbpas .dol{flex:none;background:#fff;color:#1468e0;border-radius:999px;padding:3px 12px;font-weight:900}
+  .fbpas .kr{display:none}
+  @media (max-width:640px){.fbpas .dl{display:none}.fbpas .kr{display:inline}.fbpas{padding:6px 12px;font-size:13.5px;gap:8px;height:36px}.fbpas .dol{padding:2px 10px}}
+  @media (max-width:520px){.siatka{grid-template-columns:minmax(0,1fr)}.btn{width:100%}.akcja{flex-direction:column;align-items:stretch}}
+</style>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <a class="wroc" href="/">← Pompa w Home Assistant</a>
+  <h1>Kalkulator <em>krzywej grzewczej</em></h1>
+  <p class="lead">Krzywa grzewcza mówi pompie ciepła albo kotłowi, jak ciepłą wodę dawać do grzejników i podłogówki przy danej temperaturze na dworze. Tu wyznaczysz ją z prostego testu we własnym domu, bez projektu i bez audytu.</p>
+  <div class="darmo"><span>✓ Za darmo</span><span>✓ Bez logowania</span><span>✓ Liczy się w Twojej przeglądarce</span></div>
+
+  <section>
+    <h2>1. Zrób test (2–4 dni)</h2>
+    <ol class="kroki">
+      <li>Ustaw na pompie lub kotle <b>stałą temperaturę wody</b> zamiast krzywej. Dobry start: grzejniki <b>36°C</b>, podłogówka <b>28°C</b>.</li>
+      <li><b>Odkręć głowice</b> na grzejnikach na maksimum, a siłowniki podłogówki zdejmij albo otwórz. Termostat pokojowy ustaw tak wysoko, żeby nie wyłączał grzania.</li>
+      <li>Zostaw tak na <b>2 dni</b> (grzejniki) albo <b>4 dni</b> (podłogówka). Najlepiej w chłodne dni: im większa różnica między domem a dworem, tym dokładniej.</li>
+      <li>Gdy temperatura w domu się ustabilizuje, zapisuj co kilka godzin <b>temperaturę w domu i na dworze</b>. Policz średnie.</li>
+      <li>Po teście załóż z powrotem głowice i ustaw je trochę wyżej niż temperatura, którą chcesz mieć w domu.</li>
+    </ol>
+    <details><summary>Skąd wziąć temperatury?</summary>
+      <p>Temperaturę wody i różnicę zasilanie–powrót pokazuje sterownik większości pomp (menu z parametrami pracy). Na dworze: czujnik pompy albo stacja pogodowa. W domu: zwykły termometr z dala od grzejnika i okna. Jeśli masz Home Assistant, weź średnie z historii czujników.</p>
+    </details>
+  </section>
+
+  <section>
+    <h2>2. Wpisz wyniki</h2>
+    <div class="siatka">
+      <label class="pole cale">Rodzaj ogrzewania
+        <select id="typ">
+          <option value="1.3|5">Grzejniki płytowe (stalowe)</option>
+          <option value="1.3|5">Grzejniki żeliwne lub członowe</option>
+          <option value="1.4|5">Konwektory (grzejniki kanałowe)</option>
+          <option value="1.1|4">Ogrzewanie podłogowe</option>
+          <option value="1.1|4">Ogrzewanie ścienne lub sufitowe</option>
+          <option value="1.0|5">Klimakonwektory (fancoile)</option>
+        </select>
+      </label>
+      <label class="pole">Temperatura wody w teście (zasilanie)
+        <input id="ts" type="text" inputmode="decimal" autocomplete="off" value="36"><small>°C, ta stała z punktu 1</small></label>
+      <label class="pole">Zasilanie minus powrót w teście
+        <input id="dt" type="text" inputmode="decimal" autocomplete="off" value="5"><small>°C, nie wiesz? zostaw podpowiedź</small></label>
+      <label class="pole">Średnia w domu podczas testu
+        <input id="ti0" type="text" inputmode="decimal" autocomplete="off" placeholder="np. 20,5"><small>°C</small></label>
+      <label class="pole">Średnia na dworze podczas testu
+        <input id="to0" type="text" inputmode="decimal" autocomplete="off" placeholder="np. 3"><small>°C, mróz z minusem</small></label>
+      <label class="pole">Ile chcesz mieć w domu
+        <input id="ti" type="text" inputmode="decimal" autocomplete="off" value="21"><small>°C</small></label>
+      <label class="pole">Najzimniejszy dzień w Twojej okolicy
+        <select id="tz">
+          <option value="-16">I strefa (zachód, Szczecin, Wrocław): −16°C</option>
+          <option value="-18">II strefa (Poznań, Gdańsk, Łódź): −18°C</option>
+          <option value="-20" selected>III strefa (Warszawa, Kraków, Katowice): −20°C</option>
+          <option value="-22">IV strefa (Białystok, Olsztyn, Rzeszów): −22°C</option>
+          <option value="-24">V strefa (Suwałki, góry): −24°C</option>
+        </select><small>projektowa temperatura zewnętrzna</small></label>
+      <label class="pole">Teraz na dworze (nieobowiązkowe)
+        <input id="tn" type="text" inputmode="decimal" autocomplete="off" placeholder="np. 0"><small>°C, pokażemy punkt na krzywej</small></label>
+      <label class="pole">Najwyższa woda, jaką daje Twoje źródło
+        <input id="tmax" type="text" inputmode="decimal" autocomplete="off" value="55"><small>°C, pompa ciepła zwykle 55–60</small></label>
+    </div>
+    <div class="akcja">
+      <button class="btn" id="licz" type="button">📈 Wylicz krzywą</button>
+      <button class="btn drugi" id="przyklad" type="button">Pokaż przykład</button>
+    </div>
+    <div class="blad" id="blad" role="alert"></div>
+  </section>
+
+  <section id="wynik" aria-live="polite">
+    <h2>3. Twoja krzywa grzewcza</h2>
+    <div class="teraz" id="kafle"></div>
+    <div id="wykres"></div>
+    <div class="legenda"><span><i style="background:#3fe08a"></i>krzywa z testu</span><span><i style="background:#5cb8ff"></i>prosta z 2 punktów (do pompy)</span><span><i style="background:#f0b35a;height:10px;width:10px;border-radius:50%"></i>punkt testu</span></div>
+    <div class="uwagi" id="uwagi"></div>
+
+    <h3>Nastawy do sterownika</h3>
+    <div class="nastawy" id="nastawy"></div>
+
+    <h3>Tabela</h3>
+    <div class="tabwrap"><table id="tabela"></table></div>
+    <p class="mut">To punkt startowy. Po ustawieniu odczekaj dobę. Za zimno w domu: przesuń całą krzywą o +1°C, za ciepło: o −1°C. Każdy 1°C chłodniejszej wody to zwykle 2–3% mniej prądu.</p>
+    <div class="uwaga" style="border-left-color:var(--ok);background:rgba(62,207,142,.08)">
+      <b>Następny test bez kartki?</b> Moduł Pompa w HA zapisuje wodę, powrót i temperaturę na dworze z czujnika pompy co kilka sekund. Średnie z testu odczytasz z wykresu w Home Assistant, zamiast zapisywać je co kilka godzin.
+      <div class="cta"><a class="btn" href="/sprawdz/?src=kalkulator-krzywej">📷 Sprawdź, czy Twoja pompa pasuje</a></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Jak to liczymy</h2>
+    <p class="mut">Dom traci ciepło proporcjonalnie do różnicy temperatur między wnętrzem a dworem. Grzejnik oddaje ciepło proporcjonalnie do różnicy między średnią temperaturą wody a pokojem, podniesionej do potęgi n (grzejniki ok. 1,3, podłogówka ok. 1,1, norma PN-EN 442). Test na stałej wodzie pokazuje, jak te dwie rzeczy mają się w Twoim domu, a stąd wychodzi temperatura wody dla każdej pogody. Zakładamy stały przepływ, więc różnica zasilanie–powrót rośnie razem z mrozem.</p>
+    <p class="mut">Dlatego krzywa jest łagodnym łukiem: przy mrozie płaska, w łagodne dni stroma. Sterowniki z 2 punktami rysują prostą, więc podajemy prostą najlepiej dopasowaną w całym zakresie i mówimy, o ile się różni.</p>
+    <p class="mut">Podobny test w płatnym kalkulatorze krzywagrzewcza.netlify.app kosztuje 85 zł za 24 godziny dostępu (stan na 15.11.2026). Tutaj jest za darmo, a nic, co wpiszesz, nie wychodzi z Twojej przeglądarki.</p>
+  </section>
+
+  <section>
+    <h2>Masz pompę Midea, Rotenso albo jej bliźniaka?</h2>
+    <p class="mut">Moduł Pompa w HA pokazuje w Home Assistant temperatury potrzebne do tego testu: wodę, powrót i temperaturę na dworze z czujnika pompy, do tego historię każdej doby. Średnie odczytasz z wykresu zamiast zapisywać na kartce.</p>
+    <div class="cta">
+      <a class="btn" href="/sprawdz/">📷 Sprawdź, czy Twoja pompa pasuje</a>
+      <a class="btn drugi" href="/#ceny">Zobacz zestawy</a>
+    </div>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">Grupa na Facebooku</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const num = (id) => { const v = String($(id).value).trim().replace(',', '.'); return v === '' ? NaN : Number(v); };
+  const f1 = (x) => (Math.round(x * 10) / 10).toLocaleString('pl-PL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const f0 = (x) => String(Math.round(x));
+
+  // podpowiedź różnicy zasilanie–powrót zależnie od rodzaju ogrzewania (gdy użytkownik jej nie ruszał)
+  let dtRuszane = false;
+  $('dt').addEventListener('input', () => { dtRuszane = true; });
+  $('typ').addEventListener('change', () => { if (!dtRuszane) $('dt').value = $('typ').value.split('|')[1]; });
+
+  // fizyka: strata domu ~ (Ti − To); moc grzejnika ~ (Tśr − Ti)^n; stały przepływ → ΔT ~ obciążenie
+  function model(p) {
+    const L0 = p.ti0 - p.to0, D0 = (p.ts - p.dt / 2) - p.ti0;
+    return (to, ti = p.ti) => {
+      const L = ti - to;
+      if (L <= 0) return ti;
+      const r = L / L0;
+      return ti + D0 * Math.pow(r, 1 / p.n) + (p.dt * r) / 2;
+    };
+  }
+
+  function prosta(xs, ys) { // najmniejsze kwadraty
+    const n = xs.length, sx = xs.reduce((a, b) => a + b, 0), sy = ys.reduce((a, b) => a + b, 0);
+    const sxx = xs.reduce((a, x) => a + x * x, 0), sxy = xs.reduce((a, x, i) => a + x * ys[i], 0);
+    const a = (n * sxy - sx * sy) / (n * sxx - sx * sx), b = (sy - a * sx) / n;
+    return (x) => a * x + b;
+  }
+
+  function licz() {
+    $('blad').textContent = '';
+    const [n] = $('typ').value.split('|').map(Number);
+    const p = { n, ts: num('ts'), dt: num('dt'), ti0: num('ti0'), to0: num('to0'), ti: num('ti'), tz: Number($('tz').value), tn: num('tn'), tmax: num('tmax') };
+    for (const [k, nazwa] of [['ts', 'temperaturę wody w teście'], ['dt', 'różnicę zasilanie–powrót'], ['ti0', 'średnią w domu'], ['to0', 'średnią na dworze'], ['ti', 'temperaturę, jaką chcesz mieć w domu'], ['tmax', 'najwyższą wodę']])
+      if (!Number.isFinite(p[k])) { $('blad').textContent = `Wpisz ${nazwa}.`; return; }
+    if (p.dt < 0 || p.dt > 15) { $('blad').textContent = 'Różnica zasilanie–powrót powinna mieścić się między 0 a 15°C.'; return; }
+    if (p.ti0 - p.to0 < 3) { $('blad').textContent = 'Na dworze musi być wyraźnie zimniej niż w domu (co najmniej 3°C różnicy), inaczej test nic nie mówi.'; return; }
+    if (p.ts - p.dt / 2 - p.ti0 < 1) { $('blad').textContent = 'Średnia temperatura wody musi być wyższa niż w domu. Sprawdź temperaturę wody i różnicę zasilanie–powrót.'; return; }
+
+    const T = model(p), uwagi = [];
+    const L0 = p.ti0 - p.to0;
+    if (L0 < 10) uwagi.push(`Różnica dom–dwór w teście to tylko ${f1(L0)}°C. Krzywa przy mrozie jest mniej pewna. Jeśli możesz, powtórz test w chłodniejsze dni.`);
+    const tProj = T(p.tz);
+    if (tProj > p.tmax) uwagi.push(`Przy ${p.tz}°C na dworze dom potrzebuje ok. ${f0(tProj)}°C wody, a źródło daje najwyżej ${f0(p.tmax)}°C. W największe mrozy może brakować ciepła: grzałka, większe grzejniki albo docieplenie.`);
+    if (p.n <= 1.1 && tProj > 40) uwagi.push(`Ponad 40°C na podłogówce przy mrozie to dużo. Sprawdź, czy test był zrobiony z otwartymi pętlami i bez ustawionego termostatu.`);
+
+    // zakres krzywej: od projektowej do +15°C
+    const xs = [], ys = [];
+    for (let x = p.tz; x <= 15; x += 0.5) { xs.push(x); ys.push(Math.min(T(x), p.tmax)); }
+    const L = prosta(xs, ys);
+    const odch = Math.max(...xs.map((x, i) => Math.abs(L(x) - ys[i])));
+    const sr = Math.round((p.tz + 15) / 2);
+
+    // kafle
+    const k = [[`Przy ${p.tz}°C na dworze`, `${f0(Math.min(tProj, p.tmax))}°C`], ['Przy 0°C na dworze', `${f0(T(0))}°C`], ['Przy +10°C na dworze', `${f0(T(10))}°C`]];
+    if (Number.isFinite(p.tn)) k.unshift([`Teraz (${f1(p.tn)}°C na dworze)`, `${f0(Math.min(T(p.tn), p.tmax))}°C`]);
+    $('kafle').innerHTML = k.map(([a, b]) => `<div class="kafel"><small>${a}</small><b>${b}</b></div>`).join('');
+
+    rysuj(p, xs, ys, L);
+    $('uwagi').innerHTML = uwagi.map((u) => `<div class="uwaga">⚠️ ${u}</div>`).join('');
+
+    const nach = (L(p.tz) - L(15)) / (15 - p.tz);
+    $('nastawy').innerHTML = [
+      `<div><b>Pompa z 2 punktami</b>(np. Midea/Rotenso krzywa 9, Panasonic, Kaisai)<br><span class="mono">${p.tz}°C → ${f0(L(p.tz))}°C<br>+15°C → ${f0(L(15))}°C</span><br><small class="mut">prosta różni się od łuku najwyżej o ${f1(odch)}°C</small></div>`,
+      `<div><b>Sterownik z 3 punktami</b>(łuk dokładniej)<br><span class="mono">${p.tz}°C → ${f0(Math.min(T(p.tz), p.tmax))}°C<br>${sr}°C → ${f0(T(sr))}°C<br>+15°C → ${f0(T(15))}°C</span></div>`,
+      `<div><b>Kocioł z nachyleniem</b>(np. Vaillant, Viessmann)<br><span class="mono">ok. ${f1(nach)}°C wody na 1°C na dworze</span><br><small class="mut">producenci liczą nachylenie różnie, porównaj z wykresem w instrukcji</small></div>`
+    ].join('');
+
+    const wiersze = [];
+    for (let x = p.tz; x <= 15; x += x < -10 ? 2 : (x < 10 ? 2 : 5)) wiersze.push(x);
+    if (!wiersze.includes(15)) wiersze.push(15);
+    $('tabela').innerHTML = '<tr><th>Na dworze</th><th>Woda z testu</th><th>Prosta 2 pkt</th></tr>' +
+      wiersze.map((x) => `<tr><td>${x > 0 ? '+' : ''}${x}°C</td><td>${f1(Math.min(T(x), p.tmax))}°C</td><td>${f1(L(x))}°C</td></tr>`).join('');
+
+    const w = $('wynik'); w.classList.add('wid'); w.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function rysuj(p, xs, ys, L) {
+    const W = 700, H = 380, ml = 46, mr = 14, mt = 14, mb = 38;
+    const x0 = p.tz, x1 = 15;
+    const yMin = Math.floor(Math.min(...ys, L(15), p.ti) / 5) * 5, yMax = Math.ceil(Math.max(...ys, L(p.tz)) / 5) * 5 + 2;
+    const X = (x) => ml + (x - x0) / (x1 - x0) * (W - ml - mr), Y = (y) => mt + (yMax - y) / (yMax - yMin) * (H - mt - mb);
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Wykres krzywej grzewczej">`;
+    for (let y = yMin; y <= yMax; y += 5) s += `<line x1="${ml}" x2="${W - mr}" y1="${Y(y)}" y2="${Y(y)}" stroke="#243041"/><text x="${ml - 8}" y="${Y(y) + 4}" fill="#8b9ab3" font-size="12" text-anchor="end">${y}°</text>`;
+    for (let x = Math.ceil(x0 / 5) * 5; x <= x1; x += 5) s += `<line y1="${mt}" y2="${H - mb}" x1="${X(x)}" x2="${X(x)}" stroke="#1c2635"/><text x="${X(x)}" y="${H - mb + 18}" fill="#8b9ab3" font-size="12" text-anchor="middle">${x > 0 ? '+' : ''}${x}°</text>`;
+    s += `<text x="${W - mr}" y="${H - 4}" fill="#8b9ab3" font-size="12" text-anchor="end">temperatura na dworze</text>`;
+    s += `<text x="${ml}" y="${mt - 2}" fill="#8b9ab3" font-size="12">woda (zasilanie)</text>`;
+    if (p.tmax < yMax) s += `<line x1="${ml}" x2="${W - mr}" y1="${Y(p.tmax)}" y2="${Y(p.tmax)}" stroke="#ff6b7a" stroke-dasharray="4 4" opacity=".7"/>`;
+    s += `<line x1="${X(x0)}" y1="${Y(L(x0))}" x2="${X(x1)}" y2="${Y(L(x1))}" stroke="#5cb8ff" stroke-width="2" stroke-dasharray="7 5"/>`;
+    s += `<polyline fill="none" stroke="#3fe08a" stroke-width="3.5" stroke-linejoin="round" points="${xs.map((x, i) => `${X(x).toFixed(1)},${Y(ys[i]).toFixed(1)}`).join(' ')}"/>`;
+    if (p.to0 >= x0 && p.to0 <= x1) s += `<circle cx="${X(p.to0)}" cy="${Y(p.ts)}" r="6" fill="#f0b35a" stroke="#0d1117" stroke-width="2"/>`;
+    if (Number.isFinite(p.tn) && p.tn >= x0 && p.tn <= x1) { const yt = Math.min(model(p)(p.tn), p.tmax); s += `<line x1="${X(p.tn)}" x2="${X(p.tn)}" y1="${mt}" y2="${H - mb}" stroke="#dde5f1" stroke-dasharray="3 4" opacity=".5"/><circle cx="${X(p.tn)}" cy="${Y(yt)}" r="5" fill="#dde5f1"/>`; }
+    $('wykres').innerHTML = s + '</svg>';
+  }
+
+  $('licz').addEventListener('click', licz);
+  $('przyklad').addEventListener('click', () => {
+    $('typ').selectedIndex = 0; $('ts').value = 36; $('dt').value = 4; $('ti0').value = '20,5'; $('to0').value = 3; $('ti').value = 21; $('tz').value = '-20'; $('tn').value = 0; $('tmax').value = 55; dtRuszane = true; licz();
+  });
+  document.querySelectorAll('input').forEach((el) => el.addEventListener('keydown', (e) => { if (e.key === 'Enter') licz(); }));
+  if (new URLSearchParams(location.search).has('przyklad')) $('przyklad').click();
+})();
+</script>
+<script src="/docs/czat.js?v=20261115a" defer></script>
+</body>
+</html>

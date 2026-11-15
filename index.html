@@ -42,7 +42,15 @@ a{color:var(--hp)}
 nav{position:relative;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:rgba(5,10,22,.72);border-bottom:1px solid var(--line)}
 nav .w{display:flex;align-items:center;gap:16px;height:58px}
 .logo{font-weight:900;letter-spacing:.06em;text-decoration:none;color:var(--txt);white-space:nowrap}.logo span{color:var(--hp)}
-nav .sp{flex:1}nav a.n{color:var(--mut);text-decoration:none;font-size:14px}nav a.n:hover{color:var(--txt)}
+nav .sp{flex:1}
+.ham{display:none;flex:none;width:42px;height:38px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.04);cursor:pointer;flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:0}
+.ham span{display:block;width:18px;height:2px;border-radius:2px;background:var(--txt);transition:transform .2s,opacity .2s}
+.ham[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}.ham[aria-expanded="true"] span:nth-child(2){opacity:0}.ham[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.menu-tel{position:absolute;left:0;right:0;top:100%;background:#0b1222;border-bottom:1px solid var(--line);box-shadow:0 18px 40px rgba(0,0,0,.5);padding:6px 16px 12px;max-height:calc(100vh - 120px);overflow-y:auto}
+.menu-tel[hidden]{display:none}
+.menu-tel a{display:block;padding:13px 4px;border-bottom:1px solid var(--line);color:var(--txt);text-decoration:none;font-size:17px;font-weight:600}
+.menu-tel a:last-child{border-bottom:0}
+@media (max-width:920px){.ham{display:inline-flex}}nav a.n{color:var(--mut);text-decoration:none;font-size:14px;white-space:nowrap}@media (max-width:1100px){nav a.n.nkr{display:none}}nav a.n:hover{color:var(--txt)}
 /* przyciski */
 .b{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 22px;border-radius:12px;font-weight:800;font-size:16px;text-decoration:none;border:1px solid var(--line2);transition:transform .15s,box-shadow .15s,background .15s;cursor:pointer;font-family:inherit;line-height:1.2;text-align:center}
 .b:hover{transform:translateY(-2px)}
@@ -397,8 +405,14 @@ nav .bm{white-space:nowrap}
 <a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
 <nav><div class="w">
   <a class="logo" href="#">POMPA<span>·HA</span></a><div class="sp"></div>
-  <a class="n" href="#wyniki">Wyniki</a><a class="n" href="#przed-po">Przed / po</a><a class="n" href="#jak">Jak to działa</a><a class="n" href="#ceny">Ceny</a><a class="n" href="#pytania">Pytania</a><a class="b bm bsp" href="/sprawdz/">📷 Sprawdź<span class="dl"> pompę</span></a><a class="b bm bzl" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">👥 <span class="dl">Grupa </span>FB</a>
+  <a class="n" href="#wyniki">Wyniki</a><a class="n" href="#przed-po">Przed / po</a><a class="n" href="#jak">Jak to działa</a><a class="n" href="#ceny">Ceny</a><a class="n" href="#pytania">Pytania</a><a class="n nkr" href="/kalkulator-krzywej-grzewczej/">Krzywa</a><a class="b bm bsp" href="/sprawdz/">📷 Sprawdź<span class="dl"> pompę</span></a><a class="b bm bzl" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">👥 <span class="dl">Grupa </span>FB</a>
   <a class="b b1 bm" href="#start">Zacznij za darmo</a>
+  <button class="ham" id="ham" type="button" aria-label="Otwórz menu" aria-expanded="false" aria-controls="menuTel"><span></span><span></span><span></span></button>
+</div>
+<div class="menu-tel" id="menuTel" hidden>
+  <a href="#wyniki">Wyniki</a><a href="#przed-po">Przed / po</a><a href="#jak">Jak to działa</a><a href="#ceny">Ceny i zestawy</a><a href="#pytania">Pytania</a>
+  <a href="/kalkulator-krzywej-grzewczej/">📈 Kalkulator krzywej grzewczej</a><!--BLOG-MENU--><a href="/instrukcja/">🔧 Instrukcja montażu</a>
+  <a href="/sprawdz/">📷 Sprawdź, czy pompa pasuje</a><a href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener">👥 Grupa na Facebooku</a>
 </div></nav>
 </div>
 
@@ -771,6 +785,8 @@ nav .bm{white-space:nowrap}
     <a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/faq.md">FAQ techniczne</a>
     <a href="https://pompa.woleoze.pl/instrukcja/">Instrukcja montażu</a>
     <a href="/instalator/">Karta dla instalatora</a>
+    <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej grzewczej <small>· za darmo</small></a>
+    <!--BLOG-STOPKA-->
     <a href="https://pompa.woleoze.pl/kreator/">Kreator konfiguracji</a>
     <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a>
     <a href="https://buycoffee.to/woleoze">☕ Postaw kawę</a>
@@ -868,6 +884,18 @@ let czeka=false;const odsw=()=>{czeka=false;const w=hero.getBoundingClientRect()
 addEventListener('scroll',()=>{if(!czeka){czeka=true;requestAnimationFrame(odsw)}},{passive:true});addEventListener('resize',odsw);odsw();
 })();
 </script>
-<script src="/docs/czat.js?v=20261113a" defer></script>
+<script src="/docs/czat.js?v=20261115a" defer></script>
+<script>
+(() => {
+  const b = document.getElementById('ham'), m = document.getElementById('menuTel');
+  if (!b || !m) return;
+  const ustaw = (o) => { m.hidden = !o; b.setAttribute('aria-expanded', o); b.setAttribute('aria-label', o ? 'Zamknij menu' : 'Otwórz menu'); };
+  b.addEventListener('click', (e) => { e.stopPropagation(); ustaw(m.hidden); });
+  m.addEventListener('click', (e) => { if (e.target.closest('a')) ustaw(false); });
+  document.addEventListener('click', (e) => { if (!m.hidden && !m.contains(e.target)) ustaw(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') ustaw(false); });
+  addEventListener('resize', () => { if (innerWidth > 920) ustaw(false); });
+})();
+</script>
 </body>
 </html>
