@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/kaisai-arctic-home-assistant/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/kaisai-arctic-home-assistant/">
+<meta property="og:title" content="Kaisai Arctic w Home Assistant: który model pasuje i jak go podłączyć">
+<meta property="og:description" content="Kaisai Arctic z czarno-białym sterownikiem to płyta Midea M-Thermal i działa z modułem Modbus. Kaisai KHX nie pasuje. Jak to sprawdzić i podłączyć.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-kaisai-arctic-home-assistant.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-kaisai-arctic-home-assistant.jpg">
+<title>Kaisai Arctic w Home Assistant: który model pasuje – Pompa w HA</title>
+<meta name="description" content="Kaisai Arctic z czarno-białym sterownikiem to płyta Midea M-Thermal i działa z modułem Modbus. Kaisai KHX nie pasuje. Jak to sprawdzić i podłączyć.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Kaisai Arctic w Home Assistant: który model pasuje","description":"Kaisai Arctic z czarno-białym sterownikiem to płyta Midea M-Thermal i działa z modułem Modbus. Kaisai KHX nie pasuje. Jak to sprawdzić i podłączyć.","datePublished":"2026-11-15","dateModified":"2026-11-15","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/kaisai-arctic-home-assistant/","image":"https://pompa.woleoze.pl/docs/og/blog-kaisai-arctic-home-assistant.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Czy Kaisai Arctic działa z Home Assistant?", "acceptedAnswer": {"@type": "Answer", "text": "Tak, jeśli ma czarno-biały sterownik z zaciskami H1/H2 i pozycją 17.2 w menu serwisanta. Moduł Modbus podłącza się dwiema żyłami do sterownika."}}, {"@type": "Question", "name": "Czy Kaisai KHX zadziała z modułem?", "acceptedAnswer": {"@type": "Answer", "text": "Nie. KHX ma inną płytę sterującą i inne rejestry, więc ten moduł jej nie odczyta."}}, {"@type": "Question", "name": "Czy trzeba otwierać jednostkę zewnętrzną?", "acceptedAnswer": {"@type": "Answer", "text": "Nie. Moduł podpina się do sterownika ściennego w domu, jednostki zewnętrznej nie ruszasz."}}, {"@type": "Question", "name": "Ile to kosztuje?", "acceptedAnswer": {"@type": "Answer", "text": "Zestaw Wi-Fi kosztuje 499 zł, Wi-Fi z LAN 549 zł. Na własnym module wystarczy licencja Pro za 149 zł, a podstawowe odczyty Start są za darmo."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Pompa ciepła Kaisai Arctic w Home Assistant: który model pasuje i jak go podłączyć</h1>
+    <p class="meta">15 listopada 2026 · 3 min czytania</p>
+    <p class="lead">Kaisai Arctic z czarno-białym sterownikiem ściennym jest zbudowana na płycie Midea M-Thermal, więc podłączysz ją do Home Assistant dwiema żyłami do zacisków H1/H2. Kaisai KHX to inna płyta i z tym modułem nie zadziała. Poniżej: jak odróżnić modele w minutę.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>Kaisai Arctic KHC (monoblok) i KHA (split) z czarno-białym panelem: pasują.</li><li>Kaisai KHX: nie pasuje, to inna płyta i inne rejestry.</li><li>Pewny test: w menu serwisanta jest pozycja 17.2 „ADRES HMI DLA BMS”.</li></ul></div>
+
+    <h2>Kaisai Arctic to Midea M-Thermal</h2>
+    <p>Kaisai to marka pomp i klimatyzatorów sprzedawana w Polsce przez dystrybutora, a seria Arctic korzysta z płyty i sterowników Midea M-Thermal. To ta sama rodzina co Rotenso Aquami, Galmet Prima czy De Dietrich Modena. Dla podłączenia do Home Assistant liczy się właśnie płyta i sterownik, nie logo na obudowie.</p>
+    <p>Potwierdzają to instrukcja sterownika Kaisai Arctic (menu 17.2) i zgłoszenia użytkowników, którzy podłączyli pompę przez Modbus.</p>
+
+    <h2>Jak odróżnić Arctic od KHX</h2>
+    <ul>
+      <li><b>Sterownik</b>: Arctic ma czarno-biały ekran LCD i osiem przycisków (MENU, OK, BACK, ON/OFF, UNLOCK, strzałki). Z tyłu są zaciski H1 i H2.</li>
+      <li><b>Menu serwisanta</b>: wejdź w menu (hasło z instrukcji, zwykle 234) i poszukaj pozycji 17.2 „ADRES HMI DLA BMS”. Jest? Prawie na pewno zadziała.</li>
+      <li><b>Oznaczenie modelu</b>: na tabliczce Arctic to KHC (monoblok) albo KHA (split). KHX to inna seria.</li>
+    </ul>
+    <p>Kolorowy panel dotykowy (np. w Arctic R290) to nowsza generacja sterownika. Program dla niej jest gotowy, ale czeka na pierwszego testera.</p>
+
+    <div class="ramka"><b>Nie masz pewności?</b> <a href="/sprawdz/?src=blog-kaisai">Wrzuć zdjęcie tabliczki albo sterownika</a>, odpowiedź dostaniesz od razu.</div>
+
+    <h2>Jak podłączyć moduł</h2>
+    <ol>
+      <li>W menu serwisanta (hasło z instrukcji, zwykle 234) ustaw <code>17.2 ADRES HMI DLA BMS</code> = 1 i <code>17.1 HMI SET</code> = GŁÓWNA. Po wyjściu z menu pompa się wyłącza, włącz ją z powrotem.</li>
+      <li>Podłącz dwie żyły z tyłu sterownika: H2 do A+, H1 do B− modułu RS-485.</li>
+      <li>Zasil moduł z 5 V przez USB-C. Nie podawaj zasilania na H1/H2.</li>
+      <li>Home Assistant sam wykryje moduł.</li>
+    </ol>
+    <p>Gotowy zestaw przyjeżdża wgrany i sprawdzony (<a href="/instrukcja/">instrukcja montażu</a>). Wolisz złożyć moduł sam? Zobacz <a href="/wlasny-modul/">Pro na własnym module</a>.</p>
+
+    <h2>Co zobaczysz w Home Assistant</h2>
+    <ul>
+      <li>temperatury: zewnętrzna, zasilania, powrotu, ciepłej wody,</li>
+      <li>przepływ wody, częstotliwość sprężarki, pracę grzałki i odszraniania,</li>
+      <li>tryb pracy, błędy i ostrzeżenia,</li>
+      <li>w wersji Pro: COP, koszt ogrzewania w złotówkach, raport i zmianę nastaw z telefonu, w tym krzywej grzewczej.</li>
+    </ul>
+    <p>Odczyty nie wychodzą z domu: moduł rozmawia z pompą po kablu i wysyła dane tylko do Twojego Home Assistant.</p>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Czy Kaisai Arctic działa z Home Assistant?</h3><p>Tak, jeśli ma czarno-biały sterownik z zaciskami H1/H2 i pozycją 17.2 w menu serwisanta. Moduł Modbus podłącza się dwiema żyłami do sterownika.</p>
+    <h3>Czy Kaisai KHX zadziała z modułem?</h3><p>Nie. KHX ma inną płytę sterującą i inne rejestry, więc ten moduł jej nie odczyta.</p>
+    <h3>Czy trzeba otwierać jednostkę zewnętrzną?</h3><p>Nie. Moduł podpina się do sterownika ściennego w domu, jednostki zewnętrznej nie ruszasz.</p>
+    <h3>Ile to kosztuje?</h3><p>Zestaw Wi-Fi kosztuje 499 zł, Wi-Fi z LAN 549 zł. Na własnym module wystarczy licencja Pro za 149 zł, a podstawowe odczyty Start są za darmo.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla"><li><a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/zgodnosc.md">Lista zgodności Pompa w HA</a> (stan 12.11.2026: instrukcja sterownika Kaisai Arctic, zgłoszenia użytkowników)</li></ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/netsu-pompa-ciepla-home-assistant/">Pompa ciepła Netsu w Home Assistant</a></li><li><a href="/blog/krzywa-grzewcza-midea-rotenso/">Krzywa grzewcza w pompie Midea i Rotenso</a></li><li><a href="/blog/taktowanie-pompy-ciepla/">Taktowanie pompy ciepła</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>
