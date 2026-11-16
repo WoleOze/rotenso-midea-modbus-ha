@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/mitsui-vivax-kosner-home-assistant/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/mitsui-vivax-kosner-home-assistant/">
+<meta property="og:title" content="Mitsui, Vivax, Hyundai i Kosner w Home Assistant: czy pasują?">
+<meta property="og:description" content="Pompy Mitsui, Vivax, Hyundai i Kosner często mają płytę Midea M-Thermal. Jak w minutę sprawdzić, czy Twoja działa z modułem Modbus w Home Assistant.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-mitsui-vivax-kosner-home-assistant.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-mitsui-vivax-kosner-home-assistant.jpg">
+<title>Mitsui, Vivax, Hyundai, Kosner w Home Assistant: czy pasują – Pompa w HA</title>
+<meta name="description" content="Pompy Mitsui, Vivax, Hyundai i Kosner często mają płytę Midea M-Thermal. Jak w minutę sprawdzić, czy Twoja działa z modułem Modbus w Home Assistant.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Mitsui, Vivax, Hyundai, Kosner w Home Assistant: czy pasują","description":"Pompy Mitsui, Vivax, Hyundai i Kosner często mają płytę Midea M-Thermal. Jak w minutę sprawdzić, czy Twoja działa z modułem Modbus w Home Assistant.","datePublished":"2026-11-16","dateModified":"2026-11-16","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/mitsui-vivax-kosner-home-assistant/","image":"https://pompa.woleoze.pl/docs/og/blog-mitsui-vivax-kosner-home-assistant.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Czy pompa Mitsui działa z Home Assistant?", "acceptedAnswer": {"@type": "Answer", "text": "Monobloki Mitsui na płycie Midea działają według zgłoszeń użytkowników. Sprawdź tabliczkę, sterownik z zaciskami H1/H2 i menu 17.2."}}, {"@type": "Question", "name": "Czy Vivax i Hyundai to ta sama pompa?", "acceptedAnswer": {"@type": "Answer", "text": "W zgłoszeniach użytkowników obie marki występują jako monobloki na płycie Midea. Przed zakupem sprawdź sterownik i menu 17.2, bo serie bywają różne."}}, {"@type": "Question", "name": "Skąd mam wiedzieć, że moja to Midea?", "acceptedAnswer": {"@type": "Answer", "text": "Na tabliczce znamionowej w polu producenta zwykle widnieje Midea, a sterownik ścienny ma zaciski H1/H2 i pozycję 17.2 w menu serwisanta."}}, {"@type": "Question", "name": "Ile to kosztuje?", "acceptedAnswer": {"@type": "Answer", "text": "Zestaw Wi-Fi kosztuje 499 zł, Wi-Fi z LAN 549 zł. Na własnym module wystarczy licencja Pro za 149 zł, a podstawowe odczyty Start są za darmo."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Mitsui, Vivax, Hyundai i Kosner w Home Assistant: jak sprawdzić, czy Twoja pompa pasuje</h1>
+    <p class="meta">16 listopada 2026 · 3 min czytania</p>
+    <p class="lead">Mitsui, Vivax, Hyundai i Kosner to marki, pod którymi w Polsce sprzedaje się monobloki zbudowane na płycie Midea M-Thermal. Jeśli Twoja ma czarno-biały sterownik z zaciskami H1/H2 i pozycję 17.2 w menu serwisanta, podłączysz ją do Home Assistant tak samo jak Rotenso Aquami. Te marki mają jednak w ofercie różne serie, więc jedno zdjęcie rozstrzyga sprawę lepiej niż nazwa.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>Monobloki Mitsui, Vivax / Hyundai i Kosner na płycie Midea: pasują według zgłoszeń użytkowników.</li><li>Te marki sprzedają też pompy od innych producentów, więc liczy się sterownik, nie logo.</li><li>Test w minutę: czarno-biały sterownik, zaciski H1/H2, menu 17.2.</li></ul></div>
+
+    <h2>Jedna płyta, wiele marek</h2>
+    <p>Midea produkuje pompy powietrze-woda dla wielu firm, które sprzedają je pod własną nazwą. Na obudowie jest Mitsui, Vivax, Hyundai albo Kosner, a w środku płyta i sterownik Midea M-Thermal. Moduł rozmawia ze sterownikiem ściennym, więc dla niego marka nie ma znaczenia.</p>
+    <p>Zgodność tych marek znamy ze zgłoszeń użytkowników, którzy podłączyli je przez Modbus. Pierwszego klienta z żadną z nich jeszcze nie mamy, dlatego przed zakupem prosimy o zdjęcie.</p>
+
+    <h2>Uwaga: nie każda seria to Midea</h2>
+    <p>Marki własne zmieniają dostawców. Ta sama nazwa może w jednym roku oznaczać pompę Midea, a w innym urządzenie od innego producenta, z innym sterownikiem i innymi rejestrami. Dlatego nie kupuj modułu na podstawie samej marki.</p>
+
+    <h2>Test w minutę</h2>
+    <ol>
+      <li><b>Tabliczka znamionowa</b>: szukaj słowa Midea w polu producenta (Manufacturer). Często jest tam GD Midea Heating &amp; Ventilating Equipment.</li>
+      <li><b>Sterownik ścienny</b>: czarno-biały ekran, przyciski MENU, OK, BACK, ON/OFF, UNLOCK i strzałki, z tyłu zaciski H1 i H2.</li>
+      <li><b>Menu serwisanta</b> (hasło z instrukcji, zwykle 234): pozycja 17.2 „ADRES HMI DLA BMS”.</li>
+    </ol>
+    <p>Wszystkie trzy się zgadzają? Prawie na pewno zadziała. Choć jedna się nie zgadza? Napisz, sprawdzimy.</p>
+
+    <div class="ramka"><b>Najszybciej:</b> <a href="/sprawdz/?src=blog-zbiorczy">wrzuć zdjęcie tabliczki albo sterownika</a>, odpowiedź dostaniesz od razu.</div>
+
+    <h2>Jak podłączyć moduł</h2>
+    <ol>
+      <li>W menu serwisanta (hasło z instrukcji, zwykle 234) ustaw <code>17.2 ADRES HMI DLA BMS</code> = 1 i <code>17.1 HMI SET</code> = GŁÓWNA. Po wyjściu z menu pompa się wyłącza, włącz ją z powrotem.</li>
+      <li>Podłącz dwie żyły z tyłu sterownika: H2 do A+, H1 do B− modułu RS-485.</li>
+      <li>Zasil moduł z 5 V przez USB-C. Nie podawaj zasilania na H1/H2.</li>
+      <li>Home Assistant sam wykryje moduł.</li>
+    </ol>
+    <p>Gotowy zestaw przyjeżdża wgrany i sprawdzony (<a href="/instrukcja/">instrukcja montażu</a>). Wolisz złożyć moduł sam? Zobacz <a href="/wlasny-modul/">Pro na własnym module</a>.</p>
+
+    <h2>Co zobaczysz w Home Assistant</h2>
+    <ul>
+      <li>temperatury: zewnętrzna, zasilania, powrotu, ciepłej wody,</li>
+      <li>przepływ wody, częstotliwość sprężarki, pracę grzałki i odszraniania,</li>
+      <li>tryb pracy, błędy i ostrzeżenia,</li>
+      <li>w wersji Pro: COP, koszt w złotówkach, raport i zmianę nastaw z telefonu, w tym krzywej grzewczej.</li>
+    </ul>
+
+    
+    <h2>Najczęstsze pytania</h2>
+    <h3>Czy pompa Mitsui działa z Home Assistant?</h3><p>Monobloki Mitsui na płycie Midea działają według zgłoszeń użytkowników. Sprawdź tabliczkę, sterownik z zaciskami H1/H2 i menu 17.2.</p>
+    <h3>Czy Vivax i Hyundai to ta sama pompa?</h3><p>W zgłoszeniach użytkowników obie marki występują jako monobloki na płycie Midea. Przed zakupem sprawdź sterownik i menu 17.2, bo serie bywają różne.</p>
+    <h3>Skąd mam wiedzieć, że moja to Midea?</h3><p>Na tabliczce znamionowej w polu producenta zwykle widnieje Midea, a sterownik ścienny ma zaciski H1/H2 i pozycję 17.2 w menu serwisanta.</p>
+    <h3>Ile to kosztuje?</h3><p>Zestaw Wi-Fi kosztuje 499 zł, Wi-Fi z LAN 549 zł. Na własnym module wystarczy licencja Pro za 149 zł, a podstawowe odczyty Start są za darmo.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla"><li><a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/zgodnosc.md">Lista zgodności Pompa w HA</a> (stan 12.11.2026)</li></ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/midea-m-thermal-home-assistant/">Midea M-Thermal w Home Assistant</a></li><li><a href="/blog/netsu-pompa-ciepla-home-assistant/">Pompa ciepła Netsu w Home Assistant</a></li><li><a href="/blog/taktowanie-pompy-ciepla/">Taktowanie pompy ciepła</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/midea-m-thermal-home-assistant/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/midea-m-thermal-home-assistant/">
+<meta property="og:title" content="Midea M-Thermal w Home Assistant: Modbus bez chmury">
+<meta property="og:description" content="Midea M-Thermal (MHC-V…, split MHA z HB-A) w Home Assistant przez Modbus: czarno-biały vs kolorowy sterownik, co zobaczysz i jak podłączyć moduł.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-midea-m-thermal-home-assistant.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-midea-m-thermal-home-assistant.jpg">
+<title>Midea M-Thermal w Home Assistant: Modbus bez chmury – Pompa w HA</title>
+<meta name="description" content="Midea M-Thermal (MHC-V…, split MHA z HB-A) w Home Assistant przez Modbus: czarno-biały vs kolorowy sterownik, co zobaczysz i jak podłączyć moduł.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Midea M-Thermal w Home Assistant: Modbus bez chmury","description":"Midea M-Thermal (MHC-V…, split MHA z HB-A) w Home Assistant przez Modbus: czarno-biały vs kolorowy sterownik, co zobaczysz i jak podłączyć moduł.","datePublished":"2026-11-16","dateModified":"2026-11-16","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/midea-m-thermal-home-assistant/","image":"https://pompa.woleoze.pl/docs/og/blog-midea-m-thermal-home-assistant.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Czy Midea M-Thermal działa z Home Assistant bez chmury?", "acceptedAnswer": {"@type": "Answer", "text": "Tak. Moduł Modbus podłącza się do zacisków H1/H2 sterownika ściennego i wysyła dane tylko do Twojego Home Assistant w domowej sieci."}}, {"@type": "Question", "name": "Czy działa z kolorowym panelem KJRH-120L?", "acceptedAnswer": {"@type": "Answer", "text": "Program jest gotowy, ale czeka na pierwszego testera na prawdziwej pompie. Do tego czasu go nie sprzedajemy."}}, {"@type": "Question", "name": "Jakie marki mają tę samą płytę?", "acceptedAnswer": {"@type": "Answer", "text": "Między innymi Rotenso Aquami, Kaisai Arctic, Galmet Prima, De Dietrich Modena, York YKF, Immergas Magis M i Netsu. Pełna lista jest na stronie zgodności."}}, {"@type": "Question", "name": "Ile to kosztuje?", "acceptedAnswer": {"@type": "Answer", "text": "Zestaw Wi-Fi kosztuje 499 zł, Wi-Fi z LAN 549 zł. Na własnym module wystarczy licencja Pro za 149 zł, a podstawowe odczyty Start są za darmo."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Pompa ciepła Midea M-Thermal w Home Assistant: Modbus zamiast chmury</h1>
+    <p class="meta">16 listopada 2026 · 3 min czytania</p>
+    <p class="lead">Midea M-Thermal to płyta, na której działa cała rodzina pomp: od Midea pod własną marką po Rotenso, Kaisai, Galmet i kilkanaście innych. Integracja Midea w chmurze pokazuje tylko część danych. Przez Modbus ze sterownika ściennego Home Assistant dostaje ponad 100 odczytów co kilka sekund i może zmieniać nastawy.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>Midea M-Thermal R32 (MHC-V4–16W/D2(R)N8, split MHA-V… z modułem HB-A) z czarno-białym sterownikiem: pasuje.</li><li>Kolorowy panel KJRH-120L/L2 (np. Arctic R290): program gotowy, czekamy na pierwszego testera.</li><li>Ta sama płyta siedzi w wielu markach, więc o zgodności decyduje sterownik, nie logo.</li></ul></div>
+
+    <h2>Chmura Midea a Modbus</h2>
+    <p>Integracja Midea w Home Assistant łączy się przez chmurę producenta, tak jak aplikacja. Daje włącznik, tryb i kilka temperatur, a liczniki energii z rozdzielczością 1 kWh. Na dobę wystarczy, na analizę pracy pompy już nie.</p>
+    <p>Sterownik ścienny Midea ma wbudowany Modbus RTU dla systemów BMS (zaciski H1/H2). Moduł ESP32 z RS-485 czyta z niego:</p>
+    <ul>
+      <li>temperatury zasilania, powrotu, zewnętrzną, ciepłej wody, bufora i czynnika,</li>
+      <li>przepływ wody, częstotliwość sprężarki, prąd i napięcie jednostki zewnętrznej,</li>
+      <li>pracę grzałek, odszranianie, zawory, kody błędów,</li>
+      <li>a w wersji Pro zapisuje nastawy: krzywą grzewczą, histerezę, zadaną ciepłej wody, moc grzałki.</li>
+    </ul>
+    <p>Odczyty nie wychodzą z domu. Moduł nie potrzebuje chmury ani konta Midea.</p>
+
+    <h2>Czarno-biały czy kolorowy sterownik</h2>
+    <ul>
+      <li><b>Czarno-biały</b> (KJRH-120H, KJRH-120F, KJR-120x): jedna płyta, jeden program. Działa u nas na żywo na Rotenso Aquami, które jest tą samą pompą pod inną marką.</li>
+      <li><b>Kolorowy dotykowy</b> (KJRH-120L / L2, np. Midea Arctic R290, Kaysun Aquantia R290): te same numery rejestrów, ale inne skale. Program jest napisany, ale nikt go jeszcze nie sprawdził na prawdziwej pompie, więc go nie sprzedajemy. <a href="/#testy">Zgłoś się jako tester</a>.</li>
+    </ul>
+    <p>Pewny test: w menu serwisanta jest pozycja 17.2 „ADRES HMI DLA BMS”.</p>
+
+    <div class="ramka"><b>Nie wiesz, który masz?</b> <a href="/sprawdz/?src=blog-midea">Wrzuć zdjęcie sterownika albo tabliczki</a>, odpowiedź dostaniesz od razu.</div>
+
+    <h2>Jak podłączyć moduł</h2>
+    <ol>
+      <li>W menu serwisanta (hasło z instrukcji, zwykle 234) ustaw <code>17.2 ADRES HMI DLA BMS</code> = 1 i <code>17.1 HMI SET</code> = GŁÓWNA. Po wyjściu z menu pompa się wyłącza, włącz ją z powrotem.</li>
+      <li>Podłącz dwie żyły z tyłu sterownika: H2 do A+, H1 do B− modułu RS-485.</li>
+      <li>Zasil moduł z 5 V przez USB-C. Nie podawaj zasilania na H1/H2.</li>
+      <li>Home Assistant sam wykryje moduł.</li>
+    </ol>
+    <p>Gotowy zestaw przyjeżdża wgrany i sprawdzony (<a href="/instrukcja/">instrukcja montażu</a>). Wolisz złożyć moduł sam? Zobacz <a href="/wlasny-modul/">Pro na własnym module</a>.</p>
+
+    <h2>Co zobaczysz w Home Assistant</h2>
+    <ul>
+      <li>temperatury: zewnętrzna, zasilania, powrotu, ciepłej wody,</li>
+      <li>przepływ wody, częstotliwość sprężarki, pracę grzałki i odszraniania,</li>
+      <li>tryb pracy, błędy i ostrzeżenia,</li>
+      <li>w wersji Pro: COP, koszt w złotówkach, raport i zmianę nastaw z telefonu, w tym krzywej grzewczej.</li>
+    </ul>
+
+    
+    <h2>Najczęstsze pytania</h2>
+    <h3>Czy Midea M-Thermal działa z Home Assistant bez chmury?</h3><p>Tak. Moduł Modbus podłącza się do zacisków H1/H2 sterownika ściennego i wysyła dane tylko do Twojego Home Assistant w domowej sieci.</p>
+    <h3>Czy działa z kolorowym panelem KJRH-120L?</h3><p>Program jest gotowy, ale czeka na pierwszego testera na prawdziwej pompie. Do tego czasu go nie sprzedajemy.</p>
+    <h3>Jakie marki mają tę samą płytę?</h3><p>Między innymi Rotenso Aquami, Kaisai Arctic, Galmet Prima, De Dietrich Modena, York YKF, Immergas Magis M i Netsu. Pełna lista jest na stronie zgodności.</p>
+    <h3>Ile to kosztuje?</h3><p>Zestaw Wi-Fi kosztuje 499 zł, Wi-Fi z LAN 549 zł. Na własnym module wystarczy licencja Pro za 149 zł, a podstawowe odczyty Start są za darmo.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla"><li>Własna instalacja: Rotenso Aquami AQM120X3 (płyta Midea M-Thermal), sterownik KJRH-120H</li><li><a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/zgodnosc.md">Lista zgodności Pompa w HA</a> (stan 12.11.2026)</li></ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/rotenso-aquami-home-assistant/">Rotenso Aquami w Home Assistant</a></li><li><a href="/blog/krzywa-grzewcza-midea-rotenso/">Krzywa grzewcza w pompie Midea i Rotenso</a></li><li><a href="/blog/kaisai-arctic-home-assistant/">Kaisai Arctic w Home Assistant</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>
