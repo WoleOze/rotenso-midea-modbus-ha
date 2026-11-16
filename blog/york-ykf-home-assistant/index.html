@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/york-ykf-home-assistant/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/york-ykf-home-assistant/">
+<meta property="og:title" content="Pompa ciepła York YKF w Home Assistant: podłączenie przez Modbus">
+<meta property="og:description" content="York YKF (6, 9 i 14 kW, R32) ma sterownik YKF-KJRH-120F z rodziny Midea, z zaciskami H1/H2. Jak sprawdzić model i podłączyć moduł do Home Assistant.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-york-ykf-home-assistant.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-york-ykf-home-assistant.jpg">
+<title>Pompa ciepła York YKF w Home Assistant: podłączenie Modbus – Pompa w HA</title>
+<meta name="description" content="York YKF (6, 9 i 14 kW, R32) ma sterownik YKF-KJRH-120F z rodziny Midea, z zaciskami H1/H2. Jak sprawdzić model i podłączyć moduł do Home Assistant.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Pompa ciepła York YKF w Home Assistant: podłączenie Modbus","description":"York YKF (6, 9 i 14 kW, R32) ma sterownik YKF-KJRH-120F z rodziny Midea, z zaciskami H1/H2. Jak sprawdzić model i podłączyć moduł do Home Assistant.","datePublished":"2026-11-16","dateModified":"2026-11-16","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/york-ykf-home-assistant/","image":"https://pompa.woleoze.pl/docs/og/blog-york-ykf-home-assistant.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Czy York YKF działa z Home Assistant?", "acceptedAnswer": {"@type": "Answer", "text": "Tak. York YKF ma sterownik YKF-KJRH-120F z zaciskami H1/H2 i menu 17.2, więc moduł Modbus podłącza się dwiema żyłami do sterownika."}}, {"@type": "Question", "name": "Czy ktoś już to podłączył?", "acceptedAnswer": {"@type": "Answer", "text": "Zgodność znamy ze zgłoszeń użytkowników. Pierwszego właściciela Yorka z naszym zestawem jeszcze nie mamy, dlatego przed zakupem prosimy o zdjęcie menu 17.2."}}, {"@type": "Question", "name": "Czy trzeba otwierać jednostkę zewnętrzną?", "acceptedAnswer": {"@type": "Answer", "text": "Nie. Moduł podpina się do sterownika ściennego w domu."}}, {"@type": "Question", "name": "Ile to kosztuje?", "acceptedAnswer": {"@type": "Answer", "text": "Zestaw Wi-Fi kosztuje 499 zł, Wi-Fi z LAN 549 zł. Na własnym module wystarczy licencja Pro za 149 zł, a podstawowe odczyty Start są za darmo."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Pompa ciepła York YKF w Home Assistant: podłączenie przez Modbus</h1>
+    <p class="meta">16 listopada 2026 · 2 min czytania</p>
+    <p class="lead">Pompy York YKF (6, 9 i 14 kW na R32) mają sterownik ścienny YKF-KJRH-120F. To wersja sterownika Midea KJRH-120F z logo York, z tymi samymi zaciskami H1/H2 i tym samym menu serwisowym. Dlatego moduł Modbus podłączysz tak samo jak w Rotenso Aquami: dwiema żyłami do sterownika.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>York YKF 6, 9 i 14 kW (R32): pasuje, to rodzina Midea M-Thermal.</li><li>Znak rozpoznawczy: sterownik YKF-KJRH-120F i pozycja 17.2 w menu serwisanta.</li><li>Moduł podłączasz w domu, do sterownika, a jednostki zewnętrznej nie otwierasz.</li></ul></div>
+
+    <h2>York YKF a Midea</h2>
+    <p>Wiele marek sprzedaje pompy powietrze-woda zbudowane na tej samej płycie Midea M-Thermal. Najprościej poznać to po sterowniku ściennym: w York YKF nazywa się on YKF-KJRH-120F, czyli to sterownik Midea KJRH-120F z dopisanym prefiksem marki. Ma czarno-biały ekran, osiem przycisków i zaciski H1/H2 z tyłu.</p>
+    <p>Zgodność York YKF z modułem znamy ze zgłoszeń użytkowników, którzy podłączyli te pompy przez Modbus. Pierwszego właściciela Yorka z naszym zestawem jeszcze nie mamy, dlatego przed zakupem prosimy o zdjęcie menu 17.2.</p>
+
+    <h2>Jak sprawdzić swoją pompę</h2>
+    <ul>
+      <li><b>Tabliczka</b>: York YKF, moc 6, 9 albo 14 kW, czynnik R32.</li>
+      <li><b>Sterownik</b>: na obudowie albo z tyłu oznaczenie YKF-KJRH-120F, zaciski H1 i H2.</li>
+      <li><b>Menu serwisanta</b>: pozycja 17.2 „ADRES HMI DLA BMS” (w angielskim menu „HMI ADDRESS FOR BMS”).</li>
+    </ul>
+
+    <div class="ramka"><b>Masz Yorka?</b> <a href="/sprawdz/?src=blog-york">Wrzuć zdjęcie tabliczki albo sterownika</a>, odpowiedź dostaniesz od razu.</div>
+
+    <h2>Jak podłączyć moduł</h2>
+    <ol>
+      <li>W menu serwisanta (hasło z instrukcji, zwykle 234) ustaw <code>17.2 ADRES HMI DLA BMS</code> = 1 i <code>17.1 HMI SET</code> = GŁÓWNA. Po wyjściu z menu pompa się wyłącza, włącz ją z powrotem.</li>
+      <li>Podłącz dwie żyły z tyłu sterownika: H2 do A+, H1 do B− modułu RS-485.</li>
+      <li>Zasil moduł z 5 V przez USB-C. Nie podawaj zasilania na H1/H2.</li>
+      <li>Home Assistant sam wykryje moduł.</li>
+    </ol>
+    <p>Gotowy zestaw przyjeżdża wgrany i sprawdzony (<a href="/instrukcja/">instrukcja montażu</a>). Wolisz złożyć moduł sam? Zobacz <a href="/wlasny-modul/">Pro na własnym module</a>.</p>
+
+    <h2>Co zobaczysz w Home Assistant</h2>
+    <ul>
+      <li>temperatury: zewnętrzna, zasilania, powrotu, ciepłej wody,</li>
+      <li>przepływ wody, częstotliwość sprężarki, pracę grzałki i odszraniania,</li>
+      <li>tryb pracy, błędy i ostrzeżenia,</li>
+      <li>w wersji Pro: COP, koszt w złotówkach, raport i zmianę nastaw z telefonu, w tym krzywej grzewczej.</li>
+    </ul>
+
+    
+    <h2>Najczęstsze pytania</h2>
+    <h3>Czy York YKF działa z Home Assistant?</h3><p>Tak. York YKF ma sterownik YKF-KJRH-120F z zaciskami H1/H2 i menu 17.2, więc moduł Modbus podłącza się dwiema żyłami do sterownika.</p>
+    <h3>Czy ktoś już to podłączył?</h3><p>Zgodność znamy ze zgłoszeń użytkowników. Pierwszego właściciela Yorka z naszym zestawem jeszcze nie mamy, dlatego przed zakupem prosimy o zdjęcie menu 17.2.</p>
+    <h3>Czy trzeba otwierać jednostkę zewnętrzną?</h3><p>Nie. Moduł podpina się do sterownika ściennego w domu.</p>
+    <h3>Ile to kosztuje?</h3><p>Zestaw Wi-Fi kosztuje 499 zł, Wi-Fi z LAN 549 zł. Na własnym module wystarczy licencja Pro za 149 zł, a podstawowe odczyty Start są za darmo.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla"><li><a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/zgodnosc.md">Lista zgodności Pompa w HA</a> (stan 12.11.2026)</li></ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/rotenso-aquami-home-assistant/">Rotenso Aquami w Home Assistant</a></li><li><a href="/blog/de-dietrich-modena-home-assistant/">De Dietrich Modena w Home Assistant</a></li><li><a href="/blog/odszranianie-pompy-ciepla/">Odszranianie pompy ciepła</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>
