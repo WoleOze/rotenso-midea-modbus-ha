@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/panasonic-aquarea-home-assistant/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/panasonic-aquarea-home-assistant/">
+<meta property="og:title" content="Panasonic Aquarea w Home Assistant: HeishaMon i karty Pro">
+<meta property="og:description" content="Panasonic Aquarea w Home Assistant: HeishaMon lokalnie zamiast chmury, co daje, czego brakuje i jak nasze karty Pro dokładają koszty w zł, COP i raport.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-panasonic-aquarea-home-assistant.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-panasonic-aquarea-home-assistant.jpg">
+<title>Panasonic Aquarea w Home Assistant: HeishaMon – Pompa w HA</title>
+<meta name="description" content="Panasonic Aquarea w Home Assistant: HeishaMon lokalnie zamiast chmury, co daje, czego brakuje i jak nasze karty Pro dokładają koszty w zł, COP i raport.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Panasonic Aquarea w Home Assistant: HeishaMon","description":"Panasonic Aquarea w Home Assistant: HeishaMon lokalnie zamiast chmury, co daje, czego brakuje i jak nasze karty Pro dokładają koszty w zł, COP i raport.","datePublished":"2026-11-17","dateModified":"2026-11-17","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/panasonic-aquarea-home-assistant/","image":"https://pompa.woleoze.pl/docs/og/blog-panasonic-aquarea-home-assistant.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Czy wasz moduł Modbus działa z Panasonic Aquarea?", "acceptedAnswer": {"@type": "Answer", "text": "Nie. Moduł jest dla pomp na płycie Midea M-Thermal. Do Aquarei służy HeishaMon, a my dokładamy na nim karty Pro."}}, {"@type": "Question", "name": "Czy HeishaMon trzeba kupić u was?", "acceptedAnswer": {"@type": "Answer", "text": "Nie. To niezależny, otwarty projekt społeczności. Płytkę kupuje się u jego twórców albo buduje samemu."}}, {"@type": "Question", "name": "Czy karty Pro działają z chmurą Aquarea zamiast HeishaMon?", "acceptedAnswer": {"@type": "Answer", "text": "Zależy od tego, jakie dane podaje integracja chmurowa. Napisz, której używasz, a sprawdzimy przed zakupem."}}, {"@type": "Question", "name": "Ile kosztują karty Pro?", "acceptedAnswer": {"@type": "Answer", "text": "Licencja Pro kosztuje 149 zł jednorazowo. Przy innych markach to wciąż wersja testowa, więc najpierw napisz do nas."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Panasonic Aquarea w Home Assistant: HeishaMon i karty Pro</h1>
+    <p class="meta">17 listopada 2026 · 2 min czytania</p>
+    <p class="lead">Do Panasonic Aquarea nie sprzedajemy naszego modułu, bo ta pompa nie ma płyty Midea. Ma za to jedną z najlepszych darmowych integracji w świecie Home Assistant: HeishaMon. Piszemy, jak to działa, czego HeishaMon nie daje i co dokładają nasze karty Pro.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>HeishaMon to otwarty projekt: mała płytka podłączana do pompy, dane idą lokalnie przez MQTT do Home Assistant, bez chmury Panasonic.</li><li>Alternatywa to chmura Aquarea Smart Cloud przez integrację społeczności, ale z opóźnieniem i mniejszą liczbą danych.</li><li>Nasze karty Pro działają na danych z HeishaMon: koszty w zł, COP, raport i alarmy po polsku. To jeszcze testy, sprawdzone na symulatorze, nie u klienta.</li></ul></div>
+
+    <h2>Czym jest HeishaMon</h2>
+    <p><a href="https://github.com/Egyras/HeishaMon">HeishaMon</a> to projekt społeczności, który odczytuje protokół pomp Panasonic Aquarea. Płytka z ESP łączy się ze złączem w jednostce wewnętrznej, tym samym, do którego Panasonic podłącza swój moduł sieciowy. Dane wysyła przez MQTT, a Home Assistant odbiera je jak każde inne urządzenie MQTT.</p>
+    <p>Co daje:</p>
+    <ul>
+      <li>temperatury zasilania, powrotu, zewnętrzną, ciepłej wody i czynnika,</li>
+      <li>przepływ, częstotliwość sprężarki, odszranianie, kody błędów,</li>
+      <li>zużycie i produkcję energii wyliczaną przez pompę,</li>
+      <li>zapis nastaw: tryb, zadane temperatury, krzywą grzewczą.</li>
+    </ul>
+    <p>Projekt działa na wielu seriach Aquarea, ale podłączenie wymaga otwarcia jednostki wewnętrznej. Jeśli pompa jest na gwarancji, zapytaj instalatora.</p>
+
+    <h2>Czego brakuje w danych</h2>
+    <p>Na seriach H i J pompa podaje moc w krokach co 200 W. Na dobowe zużycie to wystarczy, ale chwilowy COP przy małej mocy skacze. Dlatego nasze karty liczą COP z dłuższych okresów, a nie z pojedynczych odczytów.</p>
+    <p>Integracja przez chmurę Aquarea Smart Cloud nie wymaga otwierania pompy, ale odświeża dane rzadziej i pokazuje ich mniej. Do analizy pracy pompy lepszy jest HeishaMon.</p>
+
+    <h2>Co dokładają karty Pro</h2>
+    <p>Dodatek „Pompa w HA” (od wersji 1.4) wykrywa integrację pompy w Home Assistant i podpina pod nią nasze karty, bez naszego modułu:</p>
+    <ul>
+      <li>koszt grzania domu i ciepłej wody w złotówkach, z Twoją taryfą,</li>
+      <li>COP dobowy i tygodniowy,</li>
+      <li>raport dzienny i alarmy po polsku (błąd, niski przepływ, praca grzałki przy cieple na dworze).</li>
+    </ul>
+    <p>Sprawdziliśmy to na symulatorze HeishaMon, ale jeszcze nie u klienta. Dlatego zanim kupisz klucz, napisz do nas, jaką masz serię i jaką integrację.</p>
+
+    <div class="ramka"><b>Masz Aquareę z HeishaMon?</b> <a href="mailto:pompa@woleoze.pl?subject=Panasonic%20Aquarea%3A%20Pompa%20w%20HA&amp;body=Seria%20i%20model%3A%0AIntegracja%20%28HeishaMon%20albo%20chmura%29%3A%0AMasz%20Home%20Assistant%20OS%3F%20%28tak/nie%29%3A%0A">Napisz, zanim kupisz</a>, sprawdzimy, czy karty pasują do Twojej konfiguracji.</div>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Czy wasz moduł Modbus działa z Panasonic Aquarea?</h3><p>Nie. Moduł jest dla pomp na płycie Midea M-Thermal. Do Aquarei służy HeishaMon, a my dokładamy na nim karty Pro.</p>
+    <h3>Czy HeishaMon trzeba kupić u was?</h3><p>Nie. To niezależny, otwarty projekt społeczności. Płytkę kupuje się u jego twórców albo buduje samemu.</p>
+    <h3>Czy karty Pro działają z chmurą Aquarea zamiast HeishaMon?</h3><p>Zależy od tego, jakie dane podaje integracja chmurowa. Napisz, której używasz, a sprawdzimy przed zakupem.</p>
+    <h3>Ile kosztują karty Pro?</h3><p>Licencja Pro kosztuje 149 zł jednorazowo. Przy innych markach to wciąż wersja testowa, więc najpierw napisz do nas.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla"><li><a href="https://github.com/Egyras/HeishaMon">HeishaMon na GitHubie</a></li><li><a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/zgodnosc.md">Lista zgodności Pompa w HA, sekcja „Inne marki”</a> (stan 12.11.2026)</li></ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/pompa-ciepla-nie-pasuje-home-assistant/">Moja pompa nie pasuje. Co zamiast?</a></li><li><a href="/blog/temperatura-zasilania-a-cop/">Temperatura zasilania a COP</a></li><li><a href="/blog/krzywa-grzewcza-pompy-ciepla/">Krzywa grzewcza pompy ciepła</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/pompa-ciepla-nie-pasuje-home-assistant/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/pompa-ciepla-nie-pasuje-home-assistant/">
+<meta property="og:title" content="Moja pompa ciepła nie pasuje do modułu. Co zamiast?">
+<meta property="og:description" content="Rotenso Airmi, Kaisai KHX, Thermatec, Airmax3 i inne pompy spoza płyty Midea: dlaczego nasz moduł nie pasuje i jakie masz inne drogi do Home Assistant.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-pompa-ciepla-nie-pasuje-home-assistant.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-pompa-ciepla-nie-pasuje-home-assistant.jpg">
+<title>Pompa ciepła nie pasuje do modułu Modbus? Co zamiast – Pompa w HA</title>
+<meta name="description" content="Rotenso Airmi, Kaisai KHX, Thermatec, Airmax3 i inne pompy spoza płyty Midea: dlaczego nasz moduł nie pasuje i jakie masz inne drogi do Home Assistant.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Pompa ciepła nie pasuje do modułu Modbus? Co zamiast","description":"Rotenso Airmi, Kaisai KHX, Thermatec, Airmax3 i inne pompy spoza płyty Midea: dlaczego nasz moduł nie pasuje i jakie masz inne drogi do Home Assistant.","datePublished":"2026-11-17","dateModified":"2026-11-17","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/pompa-ciepla-nie-pasuje-home-assistant/","image":"https://pompa.woleoze.pl/docs/og/blog-pompa-ciepla-nie-pasuje-home-assistant.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Mam Rotenso, a Rotenso jest na liście zgodności. Czemu nie działa?", "acceptedAnswer": {"@type": "Answer", "text": "Bo Rotenso sprzedaje pompy z różnych fabryk. Aquami ma płytę Midea i działa, Airmi ma inną mapę rejestrów i nie działa. Windmi i Heatmi czekają na pierwszego testera."}}, {"@type": "Question", "name": "Czy moduł może uszkodzić pompę, która nie pasuje?", "acceptedAnswer": {"@type": "Answer", "text": "Nie powinien, bo tylko zadaje pytania na magistrali RS-485, ale też nic nie pokaże. Dlatego zanim kupisz, sprawdź sterownik: zaciski H1/H2 i menu 17.2."}}, {"@type": "Question", "name": "Kiedy obsłużycie moją markę?", "acceptedAnswer": {"@type": "Answer", "text": "Kolejność wybiera ankieta w grupie na Facebooku i to, czy zgłosi się tester z daną pompą. Terminów nie obiecujemy."}}, {"@type": "Question", "name": "Mam Samsunga albo LG. Co z nimi?", "acceptedAnswer": {"@type": "Answer", "text": "LG Therma V ma gotowy program w testach i szukamy pierwszego testera. Samsung jest na liście w ankiecie."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Moja pompa ciepła nie pasuje do modułu. Co zamiast?</h1>
+    <p class="meta">17 listopada 2026 · 3 min czytania</p>
+    <p class="lead">Nasz moduł Modbus działa tylko z pompami na płycie Midea M-Thermal z czarno-białym sterownikiem. Część pomp wygląda podobnie, ma znaną markę z tej samej półki, a w środku ma zupełnie inną elektronikę. Piszemy wprost, których to dotyczy, skąd to wiadomo i co możesz zrobić zamiast kupowania naszego zestawu.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>Nie pasują: Rotenso Airmi, Kaisai KHX R290, Thermatec (PREMIUM i PLUS), Galmet Airmax3, Kospel, Hewalex PCCO MONO, Viessmann Vitocal 100-A, Immergas Magis Pro V2 / Combo V2.</li><li>Powód: inna płyta i inna mapa rejestrów, a nie zła wola. Ta sama marka może mieć jedną serię na Midea, a drugą u innego producenta.</li><li>Zamiast: istniejąca integracja, nasze karty Pro na cudzej integracji (dla kilku marek) albo głos w ankiecie i zgłoszenie jako tester.</li></ul></div>
+
+    <h2>Dlaczego marka nic nie mówi</h2>
+    <p>Polskie marki pomp ciepła rzadko produkują je same. Kupują gotowe urządzenia u kilku fabryk i zmieniają naklejkę. Rotenso ma serię Aquami na płycie Midea (pasuje) i serię Airmi z inną mapą rejestrów (nie pasuje). Kaisai ma Arctic na Midea (pasuje) i KHX R290 na innej platformie (nie pasuje). Galmet ma Primę (pasuje) i Airmax3 (nie pasuje).</p>
+    <p>Dlatego zgodność sprawdzamy po sterowniku, nie po logo. Pasuje pompa, której sterownik ścienny ma z tyłu zaciski H1/H2, a w menu serwisanta pozycję 17.2 „ADRES HMI DLA BMS”.</p>
+
+    <h2>Lista: co nie pasuje i dlaczego</h2>
+    <ul>
+      <li><b>Rotenso Airmi</b>: inna mapa rejestrów niż w Aquami.</li>
+      <li><b>Kaisai KHX R290</b>: inna platforma (ta sama rodzina płyt co Thermatec PREMIUM).</li>
+      <li><b>Thermatec</b>: PREMIUM to płyta PHNIX, PLUS to Solareast.</li>
+      <li><b>Galmet Airmax3</b>, <b>Kospel</b> HPMI2/HPMO2, <b>Hewalex</b> PCCO MONO, <b>Viessmann Vitocal 100-A</b>: własne lub inne platformy.</li>
+      <li><b>Immergas Magis Pro V2 / Combo V2</b>: jednostka Samsung. Uwaga, Immergas Magis M to Midea i pasuje.</li>
+    </ul>
+    <p>Wgranie naszego programu do modułu podłączonego do takiej pompy nic nie zepsuje, ale też nic nie pokaże: pompa nie odpowie na pytania, których nie rozumie. Dlatego nie sprzedajemy zestawu „na próbę”.</p>
+
+    <h2>Co możesz zrobić zamiast</h2>
+    <ol>
+      <li><b>Poszukaj gotowej integracji.</b> Do wielu pomp istnieją projekty społeczności, np. dla płyt PHNIX <a href="https://github.com/dosordie/FoxAir_Control">FoxAir_Control</a>. To nie nasze projekty i nie dajemy na nie gwarancji, ale warto sprawdzić, zanim kupisz cokolwiek.</li>
+      <li><b>Karty Pro na Twojej integracji.</b> Jeśli masz Panasonic Aquarea, NIBE serii S, Mitsubishi Ecodan, Vaillant aroTHERM albo Daikin Altherma, nasz dodatek podpina się pod Twoją obecną integrację i dokłada koszty w zł, COP, raport i alarmy po polsku. To jeszcze testy, więc przed zakupem <a href="/#inne-marki">napisz, jaką masz integrację</a>.</li>
+      <li><b>Zagłosuj i zgłoś się jako tester.</b> W grupie na Facebooku „Pompa Ciepła – Home Assistant” wybieramy w ankiecie następną markę. Na liście są Haier, Samsung, LG, Gree i Kaisai KHX. Kto ma taką pompę i Home Assistant OS, przyspiesza obsługę swojej marki.</li>
+    </ol>
+
+    <div class="ramka"><b>Nie masz pewności, czy Twoja pasuje?</b> <a href="/sprawdz/?src=blog-nie-pasuje">Wrzuć zdjęcie sterownika albo tabliczki</a>, odpowiedź dostaniesz od razu.</div>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Mam Rotenso, a Rotenso jest na liście zgodności. Czemu nie działa?</h3><p>Bo Rotenso sprzedaje pompy z różnych fabryk. Aquami ma płytę Midea i działa, Airmi ma inną mapę rejestrów i nie działa. Windmi i Heatmi czekają na pierwszego testera.</p>
+    <h3>Czy moduł może uszkodzić pompę, która nie pasuje?</h3><p>Nie powinien, bo tylko zadaje pytania na magistrali RS-485, ale też nic nie pokaże. Dlatego zanim kupisz, sprawdź sterownik: zaciski H1/H2 i menu 17.2.</p>
+    <h3>Kiedy obsłużycie moją markę?</h3><p>Kolejność wybiera ankieta w grupie na Facebooku i to, czy zgłosi się tester z daną pompą. Terminów nie obiecujemy.</p>
+    <h3>Mam Samsunga albo LG. Co z nimi?</h3><p>LG Therma V ma gotowy program w testach i szukamy pierwszego testera. Samsung jest na liście w ankiecie.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla"><li><a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/zgodnosc.md">Lista zgodności Pompa w HA</a> (stan 12.11.2026)</li><li><a href="https://github.com/dosordie/FoxAir_Control">FoxAir_Control</a> (projekt społeczności dla płyt PHNIX)</li></ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/midea-m-thermal-home-assistant/">Midea M-Thermal w Home Assistant</a></li><li><a href="/blog/kaisai-arctic-home-assistant/">Kaisai Arctic w Home Assistant</a></li><li><a href="/blog/galmet-prima-home-assistant/">Galmet Prima w Home Assistant</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>
