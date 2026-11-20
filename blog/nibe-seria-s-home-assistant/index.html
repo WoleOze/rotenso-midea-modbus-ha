@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/nibe-seria-s-home-assistant/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/nibe-seria-s-home-assistant/">
+<meta property="og:title" content="NIBE seria S w Home Assistant: Modbus TCP i karty Pro">
+<meta property="og:description" content="NIBE seria S (S1155, S1255, S2125 z SMO S40, VVM S320) w Home Assistant przez wbudowany Modbus TCP: jak włączyć, czego brakuje, co dają karty Pro.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-nibe-seria-s-home-assistant.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-nibe-seria-s-home-assistant.jpg">
+<title>NIBE seria S w Home Assistant: Modbus TCP bez chmury – Pompa w HA</title>
+<meta name="description" content="NIBE seria S (S1155, S1255, S2125 z SMO S40, VVM S320) w Home Assistant przez wbudowany Modbus TCP: jak włączyć, czego brakuje, co dają karty Pro.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"NIBE seria S w Home Assistant: Modbus TCP bez chmury","description":"NIBE seria S (S1155, S1255, S2125 z SMO S40, VVM S320) w Home Assistant przez wbudowany Modbus TCP: jak włączyć, czego brakuje, co dają karty Pro.","datePublished":"2026-11-20","dateModified":"2026-11-20","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/nibe-seria-s-home-assistant/","image":"https://pompa.woleoze.pl/docs/og/blog-nibe-seria-s-home-assistant.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Czy do NIBE potrzebny jest wasz moduł?", "acceptedAnswer": {"@type": "Answer", "text": "Nie. Seria S ma Modbus TCP wbudowany w sterownik. Wystarczy kabel sieciowy i integracja z Home Assistant."}}, {"@type": "Question", "name": "Czy to działa z serią F?", "acceptedAnswer": {"@type": "Answer", "text": "Seria F (np. F1145, F1255, SMO 40) wymaga akcesorium MODBUS 40 albo bramki, która je udaje. Jeśli bramka przestanie odpowiadać, pompa zgłasza alarm. Tego wariantu na razie nie wspieramy."}}, {"@type": "Question", "name": "Czy potrzebuję myUplink Premium?", "acceptedAnswer": {"@type": "Answer", "text": "Do odczytu przez Modbus nie. myUplink to chmura NIBE; lokalny Modbus działa bez niej."}}, {"@type": "Question", "name": "Ile kosztują karty Pro?", "acceptedAnswer": {"@type": "Answer", "text": "Licencja Pro kosztuje 149 zł jednorazowo. Przy innych markach to wciąż wersja testowa, więc najpierw napisz do nas."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>NIBE seria S w Home Assistant: Modbus TCP i karty Pro</h1>
+    <p class="meta">20 listopada 2026 · 2 min czytania</p>
+    <p class="lead">Do NIBE nie sprzedajemy naszego modułu i nie jest on potrzebny. Pompy NIBE serii S mają Modbus TCP wbudowany w sterownik: wystarczy kabel sieciowy i integracja, która jest w samym Home Assistant. Piszemy, jak to działa, czego brakuje i co dokładają nasze karty Pro.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>Seria S (np. S1155, S1255, S2125 ze sterownikiem SMO S40, VVM S320/S325) ma Modbus TCP w menu 7.5.9, bez dodatkowego sprzętu.</li><li>Integracja „NIBE Heat Pump” jest w rdzeniu Home Assistant i działa lokalnie, bez myUplink.</li><li>Starsza seria F potrzebuje akcesorium MODBUS 40 albo bramki, a SMO 20 nie ma drogi lokalnej.</li></ul></div>
+
+    <h2>Jak włączyć Modbus w NIBE serii S</h2>
+    <ol>
+      <li>Podłącz pompę kablem sieciowym do routera.</li>
+      <li>W menu 7.5.9 włącz Modbus TCP (port 502).</li>
+      <li>Wyeksportuj listę rejestrów na pendrive (plik CSV z pompy) i wskaż go w integracji „NIBE Heat Pump” w Home Assistant.</li>
+    </ol>
+    <p>Nie trzeba niczego otwierać. Pompy F2040 i F2120 pod sterownikiem SMO S40 też dają się czytać w ten sposób.</p>
+
+    <h2>Czego brakuje</h2>
+    <ul>
+      <li>Zmiana trybu pracy z poziomu Home Assistant nie działa w całej serii S z powodu otwartego błędu w integracji.</li>
+      <li>Punktów krzywej grzewczej nie zapisujemy, a przepływ jest dostępny tylko przy zamontowanym czujniku BF1.</li>
+      <li>Chmura myUplink odświeża dane co 60 s, a zmiana ustawień wymaga płatnego Premium. Lokalny Modbus tego nie potrzebuje.</li>
+    </ul>
+
+    <h2>Co dokładają karty Pro</h2>
+    <p>Dodatek „Pompa w HA” (od wersji 1.4) wykrywa integrację pompy w Home Assistant i podpina pod nią nasze karty, bez naszego modułu:</p>
+    <ul>
+      <li>koszt grzania domu i ciepłej wody w złotówkach, z Twoją taryfą,</li>
+      <li>COP dobowy i tygodniowy,</li>
+      <li>raport dzienny i alarmy po polsku.</li>
+    </ul>
+    <p>Sprawdziliśmy to na symulatorze, jeszcze nie u klienta. Dlatego zanim kupisz klucz, napisz, jaki masz model i integrację.</p>
+
+    <div class="ramka"><b>Masz NIBE serii S?</b> <a href="mailto:pompa@woleoze.pl?subject=NIBE%3A%20Pompa%20w%20HA&amp;body=Model%20pompy%3A%0AIntegracja%20w%20Home%20Assistant%3A%0AMasz%20Home%20Assistant%20OS%3F%20%28tak/nie%29%3A%0A">Napisz, zanim kupisz</a>, sprawdzimy, czy karty pasują do Twojej konfiguracji.</div>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Czy do NIBE potrzebny jest wasz moduł?</h3><p>Nie. Seria S ma Modbus TCP wbudowany w sterownik. Wystarczy kabel sieciowy i integracja z Home Assistant.</p>
+    <h3>Czy to działa z serią F?</h3><p>Seria F (np. F1145, F1255, SMO 40) wymaga akcesorium MODBUS 40 albo bramki, która je udaje. Jeśli bramka przestanie odpowiadać, pompa zgłasza alarm. Tego wariantu na razie nie wspieramy.</p>
+    <h3>Czy potrzebuję myUplink Premium?</h3><p>Do odczytu przez Modbus nie. myUplink to chmura NIBE; lokalny Modbus działa bez niej.</p>
+    <h3>Ile kosztują karty Pro?</h3><p>Licencja Pro kosztuje 149 zł jednorazowo. Przy innych markach to wciąż wersja testowa, więc najpierw napisz do nas.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla"><li><a href="https://nibe.eu/download/18.3db69dc1795e0d992c5722/1622634529178/Modbus%20S-series%20EN%20M12676EN-1.pdf">NIBE: Modbus S-series (M12676EN)</a></li><li><a href="https://www.home-assistant.io/integrations/nibe_heatpump/">Home Assistant: integracja NIBE Heat Pump</a></li><li><a href="https://github.com/home-assistant/core/issues/178491">Zgłoszenie #178491 (tryb climate w serii S)</a></li><li><a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/zgodnosc.md">Lista zgodności Pompa w HA, sekcja „Inne marki”</a> (stan 12.11.2026)</li></ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/pompa-ciepla-nie-pasuje-home-assistant/">Moja pompa nie pasuje. Co zamiast?</a></li><li><a href="/blog/panasonic-aquarea-home-assistant/">Panasonic Aquarea w Home Assistant</a></li><li><a href="/blog/temperatura-zasilania-a-cop/">Temperatura zasilania a COP</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>

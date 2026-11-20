@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://pompa.woleoze.pl/blog/mitsubishi-ecodan-home-assistant/">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Pompa w HA">
+<meta property="og:url" content="https://pompa.woleoze.pl/blog/mitsubishi-ecodan-home-assistant/">
+<meta property="og:title" content="Mitsubishi Ecodan w Home Assistant: CN105 czy MELCloud">
+<meta property="og:description" content="Mitsubishi Ecodan w Home Assistant: lokalnie przez złącze CN105 (ESPHome) albo przez chmurę MELCloud. Co daje każda droga i co dokładają karty Pro.">
+<meta property="og:image" content="https://pompa.woleoze.pl/docs/og/blog-mitsubishi-ecodan-home-assistant.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pompa.woleoze.pl/docs/og/blog-mitsubishi-ecodan-home-assistant.jpg">
+<title>Mitsubishi Ecodan w Home Assistant: CN105 czy MELCloud – Pompa w HA</title>
+<meta name="description" content="Mitsubishi Ecodan w Home Assistant: lokalnie przez złącze CN105 (ESPHome) albo przez chmurę MELCloud. Co daje każda droga i co dokładają karty Pro.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%99%A8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/blog/blog.css?v=1">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Mitsubishi Ecodan w Home Assistant: CN105 czy MELCloud","description":"Mitsubishi Ecodan w Home Assistant: lokalnie przez złącze CN105 (ESPHome) albo przez chmurę MELCloud. Co daje każda droga i co dokładają karty Pro.","datePublished":"2026-11-20","dateModified":"2026-11-20","inLanguage":"pl","author":{"@type":"Organization","name":"Pompa w HA"},"publisher":{"@type":"Organization","name":"WOLEOZE.PL Sp. z o.o."},"mainEntityOfPage":"https://pompa.woleoze.pl/blog/mitsubishi-ecodan-home-assistant/","image":"https://pompa.woleoze.pl/docs/og/blog-mitsubishi-ecodan-home-assistant.jpg"}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Czy wasz moduł Modbus działa z Ecodanem?", "acceptedAnswer": {"@type": "Answer", "text": "Nie. Ecodan nie ma Modbusa na sterowniku, tylko złącze CN105 z własnym protokołem. Nasze karty działają na danych z ESPHome Ecodan albo MELCloud."}}, {"@type": "Question", "name": "Mogę mieć MELCloud i płytkę lokalną naraz?", "acceptedAnswer": {"@type": "Answer", "text": "Nie bezpośrednio. Złącze CN105 jest jedno, a producent zastrzega, że adaptera MELCloud i innego urządzenia nie podłącza się razem."}}, {"@type": "Question", "name": "Która droga lepiej pasuje do kart Pro?", "acceptedAnswer": {"@type": "Answer", "text": "Lokalna, bo daje energię i dane co kilka sekund. Na MELCloud karty działają, ale koszty i COP są mniej dokładne przez rzadkie odczyty."}}, {"@type": "Question", "name": "Ile kosztują karty Pro?", "acceptedAnswer": {"@type": "Answer", "text": "Licencja Pro kosztuje 149 zł jednorazowo. Przy innych markach to wciąż wersja testowa, więc najpierw napisz do nas."}}]}</script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c299b6e5fd4641e09b44f11a17f70891"}'></script>
+</head>
+<body>
+<a class="fbpas" href="https://www.facebook.com/groups/pompacieplahomeassistant" target="_blank" rel="noopener"><span class="dl">👥 Nowa grupa na Facebooku: <b>Pompa Ciepła – Home Assistant</b></span><span class="kr">👥 Nowa grupa na Facebooku</span><span class="dol">Dołącz →</span></a>
+<main>
+  <nav class="okruchy"><a href="/">Pompa w HA</a> › <a href="/blog/">Poradnik</a></nav>
+  <article>
+    <h1>Mitsubishi Ecodan w Home Assistant: CN105 czy MELCloud</h1>
+    <p class="meta">20 listopada 2026 · 2 min czytania</p>
+    <p class="lead">Ecodan ma bardzo dobre dane, ale jedno złącze: CN105 na płycie sterownika FTC. Do niego wpina się albo oryginalny adapter Wi-Fi MELCloud, albo płytka lokalna z ESPHome. Piszemy, czym się różnią obie drogi i co dokładają nasze karty Pro.</p>
+
+    <div class="wskrocie"><b>W skrócie</b><ul><li>Droga lokalna: płytka z ESP32 na złączu CN105 i otwarty projekt ESPHome Ecodan. Dane co kilka sekund, z energią i przepływem.</li><li>Droga chmurowa: integracja MELCloud. Bez dłubania, ale temperatury odświeżają się co 1–2 godziny.</li><li>Złącze CN105 jest jedno: adaptera MELCloud i płytki lokalnej nie podłączysz naraz.</li></ul></div>
+
+    <h2>Droga lokalna: CN105 i ESPHome</h2>
+    <p>Sterownik FTC w jednostce wewnętrznej ma złącze CN105. Projekt <a href="https://github.com/gekkekoe/esphome-ecodan-hp">ESPHome Ecodan</a> czyta z niego m.in.:</p>
+    <ul>
+      <li>temperatury zasilania, powrotu, zewnętrzną i ciepłej wody,</li>
+      <li>przepływ, częstotliwość sprężarki,</li>
+      <li>dzienną energię zużytą i wyprodukowaną, osobno dla grzania i CWU.</li>
+    </ul>
+    <p>Montaż wymaga zdjęcia panelu hydroboksu i wpięcia wtyczki w płytę, tak jak przy oryginalnym adapterze. Jeśli pompa jest na gwarancji, zapytaj instalatora. Projekt jest na licencji GPL-3.0 i nie jest nasz.</p>
+
+    <h2>Droga chmurowa: MELCloud</h2>
+    <p>Integracja MELCloud jest w samym Home Assistant i nie wymaga otwierania pompy. Klasyczne MELCloud odświeża jednak temperatury zasilania i powrotu co 1–2 godziny i nie pokazuje odszraniania ani kodu błędu. Do analizy pracy pompy to za mało, do podglądu wystarcza.</p>
+
+    <h2>Co dokładają karty Pro</h2>
+    <p>Dodatek „Pompa w HA” (od wersji 1.4) wykrywa integrację pompy w Home Assistant i podpina pod nią nasze karty, bez naszego modułu:</p>
+    <ul>
+      <li>koszt grzania domu i ciepłej wody w złotówkach, z Twoją taryfą,</li>
+      <li>COP dobowy i tygodniowy,</li>
+      <li>raport dzienny i alarmy po polsku.</li>
+    </ul>
+    <p>Sprawdziliśmy to na symulatorze, jeszcze nie u klienta. Dlatego zanim kupisz klucz, napisz, jaki masz model i integrację.</p>
+
+    <div class="ramka"><b>Masz Ecodana?</b> <a href="mailto:pompa@woleoze.pl?subject=Mitsubishi%20Ecodan%3A%20Pompa%20w%20HA&amp;body=Model%20pompy%3A%0AIntegracja%20w%20Home%20Assistant%3A%0AMasz%20Home%20Assistant%20OS%3F%20%28tak/nie%29%3A%0A">Napisz, zanim kupisz</a>, sprawdzimy, czy karty pasują do Twojej konfiguracji.</div>
+
+    <h2>Najczęstsze pytania</h2>
+    <h3>Czy wasz moduł Modbus działa z Ecodanem?</h3><p>Nie. Ecodan nie ma Modbusa na sterowniku, tylko złącze CN105 z własnym protokołem. Nasze karty działają na danych z ESPHome Ecodan albo MELCloud.</p>
+    <h3>Mogę mieć MELCloud i płytkę lokalną naraz?</h3><p>Nie bezpośrednio. Złącze CN105 jest jedno, a producent zastrzega, że adaptera MELCloud i innego urządzenia nie podłącza się razem.</p>
+    <h3>Która droga lepiej pasuje do kart Pro?</h3><p>Lokalna, bo daje energię i dane co kilka sekund. Na MELCloud karty działają, ale koszty i COP są mniej dokładne przez rzadkie odczyty.</p>
+    <h3>Ile kosztują karty Pro?</h3><p>Licencja Pro kosztuje 149 zł jednorazowo. Przy innych markach to wciąż wersja testowa, więc najpierw napisz do nas.</p>
+
+    <h2>Źródła</h2>
+    <ul class="zrodla"><li><a href="https://github.com/gekkekoe/esphome-ecodan-hp">ESPHome Ecodan (gekkekoe)</a></li><li><a href="https://www.home-assistant.io/integrations/melcloud/">Home Assistant: integracja MELCloud</a></li><li><a href="https://github.com/WoleOze/rotenso-midea-modbus-ha/blob/main/docs/zgodnosc.md">Lista zgodności Pompa w HA, sekcja „Inne marki”</a> (stan 12.11.2026)</li></ul>
+  </article>
+
+  <aside class="zobacz"><b>Przeczytaj też</b><ul><li><a href="/blog/pompa-ciepla-nie-pasuje-home-assistant/">Moja pompa nie pasuje. Co zamiast?</a></li><li><a href="/blog/panasonic-aquarea-home-assistant/">Panasonic Aquarea w Home Assistant</a></li><li><a href="/blog/temperatura-zasilania-a-cop/">Temperatura zasilania a COP</a></li></ul></aside>
+
+  <section class="koniec">
+    <b>Pompa Midea, Rotenso albo jej bliźniak?</b>
+    <p>Moduł Pompa w HA pokazuje w Home Assistant temperatury wody, przepływ, COP i pracę sprężarki, bez chmury producenta.</p>
+    <a class="btn" href="/sprawdz/?src=blog">📷 Sprawdź, czy Twoja pompa pasuje</a>
+  </section>
+
+  <footer>WOLEOZE.PL Sp. z o.o. · <a href="mailto:pompa@woleoze.pl">pompa@woleoze.pl</a> · <a href="/blog/">Poradnik</a> · <a href="/kalkulator-krzywej-grzewczej/">Kalkulator krzywej</a> · <a href="/prywatnosc/">Prywatność</a></footer>
+</main>
+<script src="/docs/czat.js?v=20261115b" defer></script>
+</body>
+</html>
